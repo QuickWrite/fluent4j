@@ -1,12 +1,8 @@
 package net.quickwrite.fluent4j.ast;
 
-public class FluentTerm extends FluentElement {
-    private final String identifier;
-    private final String content;
-
+public class FluentTerm extends FluentMessage {
     public FluentTerm(String identifier, String content) {
-        this.identifier = identifier;
-        this.content = content;
+        super(identifier, content);
     }
 
     @Override

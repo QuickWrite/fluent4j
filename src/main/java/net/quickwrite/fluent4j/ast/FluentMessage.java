@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.ast;
 
 public class FluentMessage extends FluentElement {
-    private final String identifier;
-    private final String content;
+    protected final String identifier;
+    protected final String content;
 
     public FluentMessage(String identifier, String content) {
         this.identifier = identifier;
