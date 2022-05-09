@@ -1,10 +1,13 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.FluentResource;
+import net.quickwrite.fluent4j.ast.FluentAttribute;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.exception.FluentParseException;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +42,11 @@ public class FluentParser {
 
                 index++;
 
+                Pair<List<String>, List<FluentAttribute>> pair = getContent();
+
                 // must be a Message
-                elementList.add(new FluentMessage(identifier, getContent()));
+                elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
+
                 continue;
             }
 
@@ -57,8 +63,10 @@ public class FluentParser {
 
                 index++;
 
+                Pair<List<String>, List<FluentAttribute>> pair = getContent();
+
                 // must be a Term
-                elementList.add(new FluentTerm(identifier, getContent()));
+                elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
 
                 continue;
             }
@@ -122,16 +130,69 @@ public class FluentParser {
         return input.substring(start, index);
     }
 
-    private String getContent() {
-        final int start = index;
+    private Pair<List<String>, List<FluentAttribute>> getContent() {
+        List<String> contents = new ArrayList<>();
+        List<FluentAttribute> attributes = new ArrayList<>();
 
         do {
+            int start = index;
+
+            skipWhitespace();
+
+            if (getChar(index) == '.') {
+                break;
+            }
+
             while (getChar(index) != '\0' && getChar(index) != '\n') {
                 index++;
             }
+
+            if (index != start)
+                contents.add(input.substring(start, index));
+
             index++;
         } while(Character.isWhitespace(getChar(index)));
 
-        return input.substring(start, index - 1);
+        if (contents.size() == 0) {
+            throw new FluentParseException("message", getChar(index) + "", index);
+        }
+
+        while (getChar(index) == '.') {
+            index++;
+            String identifier = getIdentifier();
+
+            skipWhitespace();
+
+            if(getChar(index) != '=') {
+                throw new FluentParseException("=", getChar(index) + "", index);
+            }
+
+            index++;
+
+            List<String> attributeContents = new ArrayList<>();
+
+            do {
+                int start = index;
+
+                skipWhitespace();
+
+                if (getChar(index) == '.') {
+                    break;
+                }
+
+                while (getChar(index) != '\0' && getChar(index) != '\n') {
+                    index++;
+                }
+
+                if (index != start)
+                    attributeContents.add(input.substring(start, index));
+
+                index++;
+            } while(Character.isWhitespace(getChar(index)));
+
+            attributes.add(new FluentAttribute(identifier, attributeContents));
+        }
+
+        return new ImmutablePair<>(contents, attributes);
     }
 }

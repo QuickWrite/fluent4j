@@ -1,19 +1,22 @@
 package net.quickwrite.fluent4j.ast;
 
-public class FluentMessage extends FluentElement {
-    protected final String identifier;
-    protected final String content;
+import java.util.List;
 
-    public FluentMessage(String identifier, String content) {
-        this.identifier = identifier;
-        this.content = content;
+public class FluentMessage extends FluentAttribute {
+    protected List<FluentAttribute> attributes;
+
+    public FluentMessage(String identifier, List<String> content, List<FluentAttribute> attributes) {
+        super(identifier, content);
+
+        this.attributes = attributes;
     }
 
     @Override
     public String toString() {
         return "FluentMessage: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
+                "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tattributes: " + this.attributes + "\n" +
                 "\t\t}";
     }
 }
