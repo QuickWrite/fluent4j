@@ -42,7 +42,7 @@ public class FluentParser {
 
                 index++;
 
-                Pair<List<String>, List<FluentAttribute>> pair = getContent();
+                final Pair<String, List<FluentAttribute>> pair = getContent();
 
                 // must be a Message
                 elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
@@ -63,7 +63,7 @@ public class FluentParser {
 
                 index++;
 
-                Pair<List<String>, List<FluentAttribute>> pair = getContent();
+                final Pair<String, List<FluentAttribute>> pair = getContent();
 
                 // must be a Term
                 elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
@@ -130,13 +130,11 @@ public class FluentParser {
         return input.substring(start, index);
     }
 
-    private Pair<List<String>, List<FluentAttribute>> getContent() {
-        List<String> contents = new ArrayList<>();
+    private Pair<String, List<FluentAttribute>> getContent() {
         List<FluentAttribute> attributes = new ArrayList<>();
+        final int start_g = index;
 
         do {
-            int start = index;
-
             skipWhitespace();
 
             if (getChar(index) == '.') {
@@ -147,15 +145,10 @@ public class FluentParser {
                 index++;
             }
 
-            if (index != start)
-                contents.add(input.substring(start, index));
-
             index++;
         } while(Character.isWhitespace(getChar(index)));
 
-        if (contents.size() == 0) {
-            throw new FluentParseException("message", getChar(index) + "", index);
-        }
+        final String content = input.substring(start_g, index - 1);
 
         while (getChar(index) == '.') {
             index++;
@@ -169,11 +162,9 @@ public class FluentParser {
 
             index++;
 
-            List<String> attributeContents = new ArrayList<>();
+            final int start = index;
 
             do {
-                int start = index;
-
                 skipWhitespace();
 
                 if (getChar(index) == '.') {
@@ -184,15 +175,12 @@ public class FluentParser {
                     index++;
                 }
 
-                if (index != start)
-                    attributeContents.add(input.substring(start, index));
-
                 index++;
             } while(Character.isWhitespace(getChar(index)));
 
-            attributes.add(new FluentAttribute(identifier, attributeContents));
+            attributes.add(new FluentAttribute(identifier, input.substring(start, index - 1)));
         }
 
-        return new ImmutablePair<>(contents, attributes);
+        return new ImmutablePair<>(content, attributes);
     }
 }

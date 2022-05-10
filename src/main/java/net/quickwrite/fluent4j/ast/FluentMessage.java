@@ -5,7 +5,7 @@ import java.util.List;
 public class FluentMessage extends FluentAttribute {
     protected List<FluentAttribute> attributes;
 
-    public FluentMessage(String identifier, List<String> content, List<FluentAttribute> attributes) {
+    public FluentMessage(String identifier, String content, List<FluentAttribute> attributes) {
         super(identifier, content);
 
         this.attributes = attributes;
