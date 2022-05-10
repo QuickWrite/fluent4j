@@ -17,7 +17,7 @@ public class FluentParser {
     private int index = 0;
 
     public FluentParser(String input) {
-        this.input = input;
+        this.input = input.replace("\r", "");
     }
 
     public FluentResource parse() {
