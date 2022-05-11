@@ -37,7 +37,7 @@ public class FluentParser {
                 skipWhitespace();
 
                 if(getChar() != '=') {
-                    throw new FluentParseException("=", getChar() + "", index);
+                    throw new FluentParseException('=', getChar(), index);
                 }
 
                 index++;
@@ -58,7 +58,7 @@ public class FluentParser {
                 skipWhitespace();
 
                 if(getChar() != '=') {
-                    throw new FluentParseException("=", getChar() + "", index);
+                    throw new FluentParseException('=', getChar(), index);
                 }
 
                 index++;
@@ -72,7 +72,7 @@ public class FluentParser {
             }
 
             if (!skipWhitespace()) {
-                throw new FluentParseException("whitespace", getChar() + "", index);
+                throw new FluentParseException("whitespace", getChar(), index);
             }
         }
 
@@ -157,7 +157,7 @@ public class FluentParser {
             skipWhitespace();
 
             if(getChar() != '=') {
-                throw new FluentParseException("=", getChar() + "", index);
+                throw new FluentParseException('=', getChar(), index);
             }
 
             index++;
