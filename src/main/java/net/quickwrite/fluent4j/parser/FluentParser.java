@@ -26,18 +26,18 @@ public class FluentParser {
         System.out.println(input);
 
         while(input.length() >= index) {
-            if (getChar(index) == '#') {
+            if (getChar() == '#') {
                 handleComment();
                 continue;
             }
 
-            if (Character.isAlphabetic(getChar(index))) {
+            if (Character.isAlphabetic(getChar())) {
                 String identifier = getIdentifier();
 
                 skipWhitespace();
 
-                if(getChar(index) != '=') {
-                    throw new FluentParseException("=", getChar(index) + "", index);
+                if(getChar() != '=') {
+                    throw new FluentParseException("=", getChar() + "", index);
                 }
 
                 index++;
@@ -50,15 +50,15 @@ public class FluentParser {
                 continue;
             }
 
-            if (getChar(index) == '-') {
+            if (getChar() == '-') {
                 index++;
 
                 String identifier = getIdentifier();
 
                 skipWhitespace();
 
-                if(getChar(index) != '=') {
-                    throw new FluentParseException("=", getChar(index) + "", index);
+                if(getChar() != '=') {
+                    throw new FluentParseException("=", getChar() + "", index);
                 }
 
                 index++;
@@ -72,7 +72,7 @@ public class FluentParser {
             }
 
             if (!skipWhitespace()) {
-                throw new FluentParseException("whitespace", getChar(index) + "", index);
+                throw new FluentParseException("whitespace", getChar() + "", index);
             }
         }
 
@@ -80,12 +80,12 @@ public class FluentParser {
     }
 
     private void handleComment() {
-        while(getChar(index) != '\n' && getChar(index) != '\0') {
+        while(getChar() != '\n' && getChar() != '\0') {
             index++;
         }
     }
 
-    private char getChar(int index) {
+    private char getChar() {
         if (input.length() <= index)
             return '\0';
 
@@ -93,11 +93,11 @@ public class FluentParser {
     }
 
     private boolean skipWhitespace() {
-        if(!(Character.isWhitespace(getChar(index)) && getChar(index) != '\0')) {
+        if(!(Character.isWhitespace(getChar()) && getChar() != '\0')) {
             return false;
         }
 
-        while(Character.isWhitespace(getChar(index)) && getChar(index) != '\0') {
+        while(Character.isWhitespace(getChar()) && getChar() != '\0') {
             index++;
         }
 
@@ -107,7 +107,7 @@ public class FluentParser {
     private String getLine() {
         final int start = index;
 
-        while(getChar(index) != '\n' && getChar(index) != '\0') {
+        while(getChar() != '\n' && getChar() != '\0') {
             index++;
         }
 
@@ -115,7 +115,7 @@ public class FluentParser {
     }
 
     private String getIdentifier() {
-        char character = getChar(index);
+        char character = getChar();
         final int start = index;
 
         while(character != '\0' &&
@@ -124,7 +124,7 @@ public class FluentParser {
                 || character == '-'
                 || character == '_') {
             index++;
-            character = getChar(index);
+            character = getChar();
         }
 
         return input.substring(start, index);
@@ -137,27 +137,27 @@ public class FluentParser {
         do {
             skipWhitespace();
 
-            if (getChar(index) == '.') {
+            if (getChar() == '.') {
                 break;
             }
 
-            while (getChar(index) != '\0' && getChar(index) != '\n') {
+            while (getChar() != '\0' && getChar() != '\n') {
                 index++;
             }
 
             index++;
-        } while(Character.isWhitespace(getChar(index)));
+        } while(Character.isWhitespace(getChar()));
 
         final String content = input.substring(start_g, index - 1);
 
-        while (getChar(index) == '.') {
+        while (getChar() == '.') {
             index++;
             String identifier = getIdentifier();
 
             skipWhitespace();
 
-            if(getChar(index) != '=') {
-                throw new FluentParseException("=", getChar(index) + "", index);
+            if(getChar() != '=') {
+                throw new FluentParseException("=", getChar() + "", index);
             }
 
             index++;
@@ -167,16 +167,16 @@ public class FluentParser {
             do {
                 skipWhitespace();
 
-                if (getChar(index) == '.') {
+                if (getChar() == '.') {
                     break;
                 }
 
-                while (getChar(index) != '\0' && getChar(index) != '\n') {
+                while (getChar() != '\0' && getChar() != '\n') {
                     index++;
                 }
 
                 index++;
-            } while(Character.isWhitespace(getChar(index)));
+            } while(Character.isWhitespace(getChar()));
 
             attributes.add(new FluentAttribute(identifier, input.substring(start, index - 1)));
         }
