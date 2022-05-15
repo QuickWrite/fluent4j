@@ -24,25 +24,39 @@ public class FluentAttribute extends FluentElement {
     }
 
     private List<FluentElement> parse() {
-        List<Pair<Integer, Integer>> textElements = new ArrayList<>();
+        List<FluentElement> elements = new ArrayList<>();
 
-        textElements.add(getNextText());
+        while (index < content.length()) {
+            if (getChar() == '{') {
+                elements.add(getPlaceable());
+                continue;
+            }
 
-        return new ArrayList<>();
+            elements.add(getText());
+        }
+
+        return elements;
     }
 
-    private Pair<Integer, Integer> getNextText() {
+    private FluentTextElement getText() {
         final int start = index;
 
         while (content.length() > index && getChar() != '{') {
             index++;
         }
 
-        return new ImmutablePair<>(start, index);
+        return new FluentTextElement(content.substring(start, index));
     }
 
     private FluentPlaceable getPlaceable() {
+        index++;
         skipWhitespace();
+
+        FluentPlaceable placeable = null;
+
+        boolean canSelect = false;
+
+        char character = getChar();
 
         switch (getChar()) {
             case '"':
@@ -52,38 +66,106 @@ public class FluentAttribute extends FluentElement {
                     index++;
                 }
 
-                String string = content.substring(start, index - 1);
+                String string = content.substring(start, index);
 
-                skipWhitespace();
-
-                if (getChar() != '}') {
-                    throw new FluentParseException('}', getChar(), index);
-                }
-
-                index++;
-
-                return new FluentPlaceable.StringLiteral(string);
+                placeable =  new FluentPlaceable.StringLiteral(string);
             case '$':
                 // TODO: Create VariableReference
+                index++;
+
+                canSelect = true;
 
                 break;
             case '-':
+                canSelect = true;
+                index++;
             default:
-                // TODO: Create SelectExpression
+                // TODO: Create Functions
 
                 // message reference
                 final String identifier = getIdentifier();
-                skipWhitespace();
 
-                if (getChar() != '}') {
-                    throw new FluentParseException('}', getChar(), index);
+                placeable = new FluentPlaceable.MessageReference(identifier);
+        }
+
+        if (canSelect) {
+            index++;
+            skipWhitespace();
+            if (getChar() == '-') {
+                index++;
+                if (getChar() != '>') {
+                    throw new FluentParseException("->", "-" + getChar(), index);
                 }
 
                 index++;
-                return new FluentPlaceable.MessageReference(identifier);
+
+                skipWhitespace();
+
+                List<FluentVariant> fluentVariants = new ArrayList<>();
+
+                while (getChar() != '}') {
+                    fluentVariants.add(getVariant());
+                }
+
+                placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
+            }
         }
 
-        return null;
+        skipWhitespace();
+
+        if (getChar() != '}') {
+            throw new FluentParseException('}', getChar(), index);
+        }
+
+        index++;
+
+        return placeable;
+    }
+
+    private FluentVariant getVariant() {
+        skipWhitespace();
+
+        int start = index;
+
+        if (getChar() != '[') {
+            throw new FluentParseException('[',  getChar(), index);
+        }
+
+        skipWhitespace();
+
+        while (getChar() != ']' && getChar() != ' ' && getChar() != '\n') {
+            index++;
+        }
+
+        final int end = index;
+
+        skipWhitespace();
+
+        if (getChar() != ']') {
+            throw new FluentParseException(']',  getChar(), index);
+        }
+
+        String identifier = content.substring(start + 1, end);
+
+        index++;
+
+        start = index;
+
+        do {
+            skipWhitespace();
+
+            if (getChar() == '[' || getChar() == '*' || getChar() == '}') {
+                break;
+            }
+
+            while (getChar() != '\0' && getChar() != '\n') {
+                index++;
+            }
+
+            index++;
+        } while(Character.isWhitespace(getChar()));
+
+        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, index - 1)));
     }
 
     private String getIdentifier() {
@@ -126,6 +208,7 @@ public class FluentAttribute extends FluentElement {
         return "FluentAttribute: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
                 "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tfluentElements: " + this.fluentElements + "\n" +
                 "\t\t}";
     }
 }
