@@ -11,7 +11,7 @@ public class FluentTerm extends FluentMessage {
     public String toString() {
         return "FluentTerm: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
-                "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\tattributes: " + this.attributes + "\n" +
                 "\t\t\tfluentElements: " + this.fluentElements + "\n" +
                 "\t\t}";

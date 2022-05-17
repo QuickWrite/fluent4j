@@ -10,7 +10,7 @@ public class FluentTextElement extends FluentElement {
     @Override
     public String toString() {
         return "FluentTextElement: {\n" +
-                "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t}";
     }
 }

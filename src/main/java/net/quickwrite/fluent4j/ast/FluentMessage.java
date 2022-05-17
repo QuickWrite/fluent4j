@@ -15,7 +15,7 @@ public class FluentMessage extends FluentAttribute {
     public String toString() {
         return "FluentMessage: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
-                "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\tattributes: " + this.attributes + "\n" +
                 "\t\t\tfluentElements: " + this.fluentElements + "\n" +
                 "\t\t}";

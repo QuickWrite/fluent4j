@@ -67,14 +67,17 @@ public class FluentAttribute extends FluentElement {
                 }
 
                 String string = content.substring(start, index);
-
-                placeable =  new FluentPlaceable.StringLiteral(string);
-            case '$':
-                // TODO: Create VariableReference
                 index++;
+
+                placeable = new FluentPlaceable.StringLiteral(string);
+                break;
+            case '$':
+                index++;
+                final String varIdentifier = getIdentifier();
 
                 canSelect = true;
 
+                placeable = new FluentPlaceable.VariableReference(varIdentifier);
                 break;
             case '-':
                 canSelect = true;
@@ -83,9 +86,9 @@ public class FluentAttribute extends FluentElement {
                 // TODO: Create Functions
 
                 // message reference
-                final String identifier = getIdentifier();
+                final String msgIdentifier = getIdentifier();
 
-                placeable = new FluentPlaceable.MessageReference(identifier);
+                placeable = new FluentPlaceable.MessageReference(msgIdentifier);
         }
 
         if (canSelect) {
@@ -127,6 +130,15 @@ public class FluentAttribute extends FluentElement {
 
         int start = index;
 
+        boolean isDefault = false;
+
+        if (getChar() == '*') {
+            isDefault = true;
+            index++;
+
+            start = index;
+        }
+
         if (getChar() != '[') {
             throw new FluentParseException('[',  getChar(), index);
         }
@@ -165,7 +177,7 @@ public class FluentAttribute extends FluentElement {
             index++;
         } while(Character.isWhitespace(getChar()));
 
-        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, index - 1)));
+        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, index - 1)), isDefault);
     }
 
     private String getIdentifier() {
@@ -207,7 +219,7 @@ public class FluentAttribute extends FluentElement {
     public String toString() {
         return "FluentAttribute: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
-                "\t\t\tcontent: " + this.content + "\n" +
+                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\tfluentElements: " + this.fluentElements + "\n" +
                 "\t\t}";
     }

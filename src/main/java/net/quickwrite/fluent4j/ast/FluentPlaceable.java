@@ -13,13 +13,13 @@ public abstract class FluentPlaceable extends FluentElement {
         @Override
         public String toString() {
             return "FluentStringLiteral: {\n" +
-                    "\t\t\tcontent: " + this.content + "\n" +
+                    "\t\t\tcontent: \"" + this.content + "\"\n" +
                     "\t\t}";
         }
     }
 
     public static class MessageReference extends FluentPlaceable {
-        private final String content;
+        protected final String content;
 
         public MessageReference(String content) {
             this.content = content;
@@ -28,7 +28,20 @@ public abstract class FluentPlaceable extends FluentElement {
         @Override
         public String toString() {
             return "FluentMessageReference: {\n" +
-                    "\t\t\tcontent: " + this.content + "\n" +
+                    "\t\t\tcontent: \"" + this.content + "\"\n" +
+                    "\t\t}";
+        }
+    }
+
+    public static class VariableReference extends MessageReference {
+        public VariableReference(String content) {
+            super(content);
+        }
+
+        @Override
+        public String toString() {
+            return "FluentVariableReference: {\n" +
+                    "\t\t\tcontent: \"" + this.content + "\"\n" +
                     "\t\t}";
         }
     }
@@ -45,7 +58,7 @@ public abstract class FluentPlaceable extends FluentElement {
         @Override
         public String toString() {
             return "FluentSelectExpression: {\n" +
-                    "\t\t\tidentifier: " + this.identifier + "\n" +
+                    "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
                     "\t\t\tvariants: " + this.variants + "\n" +
                     "\t\t}";
         }
