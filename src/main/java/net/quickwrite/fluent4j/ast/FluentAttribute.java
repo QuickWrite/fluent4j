@@ -1,8 +1,7 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.exception.FluentParseException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import net.quickwrite.fluent4j.exception.FluentSelectException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +107,19 @@ public class FluentAttribute extends FluentElement {
 
                 while (getChar() != '}') {
                     fluentVariants.add(getVariant());
+                }
+
+                int defaults = 0;
+                for (FluentVariant variant : fluentVariants) {
+                    if (variant.isDefault())
+                        defaults++;
+                }
+
+                if (defaults == 0) {
+                    throw new FluentSelectException("Expected one of the variants to be marked as default (*)");
+                }
+                if (defaults > 1) {
+                    throw new FluentSelectException("Only one variant can be marked as default (*)");
                 }
 
                 placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
