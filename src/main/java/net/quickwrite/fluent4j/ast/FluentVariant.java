@@ -20,7 +20,7 @@ public class FluentVariant extends FluentElement {
         return "FluentVariant: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
                 "\t\t\tcontent: \"" + this.content + "\"\n" +
-                "\t\t\tdefault: \"" + this.defaultVariant + "\"\n" +
+                "\t\t\tdefault: " + this.defaultVariant + "\n" +
                 "\t\t}";
     }
 }

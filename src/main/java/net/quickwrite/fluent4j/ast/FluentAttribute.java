@@ -56,6 +56,7 @@ public class FluentAttribute extends FluentElement {
         FluentPlaceable placeable = null;
 
         boolean canSelect = false;
+        boolean canFunction = false;
 
         char character = getChar();
 
@@ -83,49 +84,74 @@ public class FluentAttribute extends FluentElement {
             case '-':
                 canSelect = true;
                 index++;
+                String msgIdentifier = getIdentifier();
+
+                placeable = new FluentPlaceable.MessageReference(msgIdentifier);
+                break;
             default:
                 // TODO: Create Functions
 
                 // message reference
-                final String msgIdentifier = getIdentifier();
+                msgIdentifier = getIdentifier();
+
+                canFunction = true;
 
                 placeable = new FluentPlaceable.MessageReference(msgIdentifier);
         }
 
-        if (canSelect) {
+        skipWhitespace();
+
+        if (canFunction && getChar() == '(') {
             index++;
-            skipWhitespace();
-            if (getChar() == '-') {
+
+            int start = index;
+
+            while (getChar() != ')') {
                 index++;
-                if (getChar() != '>') {
-                    throw new FluentParseException("->", "-" + getChar(), index);
-                }
-
-                index++;
-
-                skipWhitespace();
-
-                List<FluentVariant> fluentVariants = new ArrayList<>();
-
-                while (getChar() != '}') {
-                    fluentVariants.add(getVariant());
-                }
-
-                int defaults = 0;
-                for (FluentVariant variant : fluentVariants) {
-                    if (variant.isDefault())
-                        defaults++;
-                }
-
-                if (defaults == 0) {
-                    throw new FluentSelectException("Expected one of the variants to be marked as default (*)");
-                }
-                if (defaults > 1) {
-                    throw new FluentSelectException("Only one variant can be marked as default (*)");
-                }
-
-                placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
             }
+
+            placeable = new FluentPlaceable.FluentFunctionReference(
+                    placeable.getContent(),
+                    content.substring(start, index)
+            );
+
+            index++;
+
+            canSelect = true;
+        }
+
+        skipWhitespace();
+
+        if (canSelect && getChar() == '-') {
+            index++;
+            if (getChar() != '>') {
+                throw new FluentParseException("->", "-" + getChar(), index);
+            }
+
+            index++;
+
+            skipWhitespace();
+
+            List<FluentVariant> fluentVariants = new ArrayList<>();
+
+            while (getChar() != '}') {
+                fluentVariants.add(getVariant());
+            }
+
+            int defaults = 0;
+            for (FluentVariant variant : fluentVariants) {
+                if (variant.isDefault())
+                    defaults++;
+            }
+
+            if (defaults == 0) {
+                throw new FluentSelectException("Expected one of the variants to be marked as default (*)");
+            }
+            if (defaults > 1) {
+                throw new FluentSelectException("Only one variant can be marked as default (*)");
+            }
+
+            placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
         }
 
         skipWhitespace();
