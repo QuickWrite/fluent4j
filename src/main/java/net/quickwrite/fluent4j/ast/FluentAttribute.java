@@ -53,12 +53,10 @@ public class FluentAttribute extends FluentElement {
         index++;
         skipWhitespace();
 
-        FluentPlaceable placeable = null;
+        FluentPlaceable placeable;
 
         boolean canSelect = false;
         boolean canFunction = false;
-
-        char character = getChar();
 
         switch (getChar()) {
             case '"':
@@ -130,7 +128,7 @@ public class FluentAttribute extends FluentElement {
 
             index++;
 
-            skipWhitespace();
+            skipWhitespaceAndNL();
 
             List<FluentVariant> fluentVariants = new ArrayList<>();
 
@@ -154,7 +152,7 @@ public class FluentAttribute extends FluentElement {
             placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
         }
 
-        skipWhitespace();
+        skipWhitespaceAndNL();
 
         if (getChar() != '}') {
             throw new FluentParseException('}', getChar(), index);
@@ -166,7 +164,7 @@ public class FluentAttribute extends FluentElement {
     }
 
     private FluentVariant getVariant() {
-        skipWhitespace();
+        skipWhitespaceAndNL();
 
         int start = index;
 
@@ -202,6 +200,7 @@ public class FluentAttribute extends FluentElement {
         index++;
 
         start = index;
+        int lastWhitespace = start;
 
         do {
             skipWhitespace();
@@ -211,13 +210,16 @@ public class FluentAttribute extends FluentElement {
             }
 
             while (getChar() != '\0' && getChar() != '\n') {
+                if (getChar() != ' ') {
+                    lastWhitespace = index;
+                }
                 index++;
             }
 
             index++;
-        } while(Character.isWhitespace(getChar()));
+        } while(getChar() == ' ');
 
-        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, index - 1)), isDefault);
+        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, lastWhitespace + 1)), isDefault);
     }
 
     private String getIdentifier() {
@@ -244,13 +246,25 @@ public class FluentAttribute extends FluentElement {
     }
 
     private boolean skipWhitespace() {
-        if(!(Character.isWhitespace(getChar()) && getChar() != '\0')) {
+        if(getChar() != ' ' && getChar() != '\0') {
             return false;
         }
 
-        while(Character.isWhitespace(getChar()) && getChar() != '\0') {
+        while(getChar() == ' ' && getChar() != '\0') {
             index++;
         }
+
+        return true;
+    }
+
+    private boolean skipWhitespaceAndNL() {
+        if(getChar() != ' ' && getChar() != '\n' && getChar() != '\0') {
+            return false;
+        }
+
+        do {
+            index++;
+        } while((getChar() == ' ' || getChar() == '\n') && getChar() != '\0');
 
         return true;
     }

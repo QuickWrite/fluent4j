@@ -44,6 +44,7 @@ public class FluentParser {
 
                 // must be a Message
                 elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
+                System.out.println(elementList.get(elementList.size() - 1));
 
                 continue;
             }
@@ -65,11 +66,12 @@ public class FluentParser {
 
                 // must be a Term
                 elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
+                System.out.println(elementList.get(elementList.size() - 1));
 
                 continue;
             }
 
-            if (!skipWhitespace()) {
+            if (!skipWhitespaceAndNL()) {
                 throw new FluentParseException("whitespace", getChar(), index);
             }
         }
@@ -91,13 +93,25 @@ public class FluentParser {
     }
 
     private boolean skipWhitespace() {
-        if(!(Character.isWhitespace(getChar()) && getChar() != '\0')) {
+        if(getChar() != ' ' && getChar() != '\0') {
             return false;
         }
 
-        while(Character.isWhitespace(getChar()) && getChar() != '\0') {
+        do {
             index++;
+        } while(getChar() == ' ' && getChar() != '\0');
+
+        return true;
+    }
+
+    private boolean skipWhitespaceAndNL() {
+        if(getChar() != ' ' && getChar() != '\n' && getChar() != '\0') {
+            return false;
         }
+
+        do {
+            index++;
+        } while((getChar() == ' ' || getChar() == '\n') && getChar() != '\0');
 
         return true;
     }
@@ -130,55 +144,49 @@ public class FluentParser {
 
     private Pair<String, List<FluentAttribute>> getContent() {
         List<FluentAttribute> attributes = new ArrayList<>();
-        final int start_g = index;
-
-        do {
-            skipWhitespace();
-
-            if (getChar() == '.') {
-                break;
-            }
-
-            while (getChar() != '\0' && getChar() != '\n') {
-                index++;
-            }
-
-            index++;
-        } while(Character.isWhitespace(getChar()));
-
-        final String content = input.substring(start_g, index - 1);
+        String content = getMessageContent();
 
         while (getChar() == '.') {
             index++;
             String identifier = getIdentifier();
-
             skipWhitespace();
 
-            if(getChar() != '=') {
+            if (getChar() != '=') {
                 throw new FluentParseException('=', getChar(), index);
             }
 
             index++;
+            skipWhitespace();
 
-            final int start = index;
-
-            do {
-                skipWhitespace();
-
-                if (getChar() == '.') {
-                    break;
-                }
-
-                while (getChar() != '\0' && getChar() != '\n') {
-                    index++;
-                }
-
-                index++;
-            } while(Character.isWhitespace(getChar()));
-
-            attributes.add(new FluentAttribute(identifier, input.substring(start, index - 1)));
+            attributes.add(new FluentAttribute(identifier, getMessageContent()));
         }
 
         return new ImmutablePair<>(content, attributes);
+    }
+
+    private String getMessageContent() {
+        skipWhitespace();
+        final int start = index;
+        int lastWhitespace = start;
+        boolean first = true;
+
+        do {
+            skipWhitespace();
+            if (!first && getChar() == '.') {
+                break;
+            }
+
+            first = false;
+
+            while (getChar() != '\n' && getChar() != '\0') {
+                if (getChar() != ' ') {
+                    lastWhitespace = index;
+                }
+                index++;
+            }
+            index++;
+        } while (getChar() == ' ');
+
+        return input.substring(start, lastWhitespace + 1);
     }
 }
