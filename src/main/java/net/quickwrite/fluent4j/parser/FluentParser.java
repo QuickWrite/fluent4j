@@ -23,8 +23,6 @@ public class FluentParser {
     public FluentResource parse() {
         List<FluentElement> elementList = new ArrayList<>();
 
-        System.out.println(input);
-
         while(input.length() >= index) {
             if (getChar() == '#') {
                 handleComment();

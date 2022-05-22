@@ -10,7 +10,7 @@ public class FluentAttribute extends FluentElement {
     protected final String identifier;
 
     protected final List<FluentElement> fluentElements;
-    protected final String content;
+    protected String content;
 
     protected int index = 0;
 
@@ -20,6 +20,8 @@ public class FluentAttribute extends FluentElement {
         this.content = content;
 
         this.fluentElements = parse();
+
+        this.content = null;
     }
 
     private List<FluentElement> parse() {
@@ -231,7 +233,6 @@ public class FluentAttribute extends FluentElement {
     public String toString() {
         return "FluentAttribute: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\tfluentElements: " + this.fluentElements + "\n" +
                 "\t\t}";
     }
