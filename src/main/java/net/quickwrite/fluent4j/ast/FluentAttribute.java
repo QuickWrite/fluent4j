@@ -108,7 +108,7 @@ public class FluentAttribute extends FluentElement {
                 index++;
             }
 
-            placeable = new FluentPlaceable.FluentFunctionReference(
+            placeable = new FluentPlaceable.FunctionReference(
                     placeable.getContent(),
                     content.substring(start, index)
             );

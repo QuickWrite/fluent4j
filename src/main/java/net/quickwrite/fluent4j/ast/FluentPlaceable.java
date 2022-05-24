@@ -78,11 +78,11 @@ public abstract class FluentPlaceable extends FluentElement {
         }
     }
 
-    public static class FluentFunctionReference extends FluentPlaceable {
+    public static class FunctionReference extends FluentPlaceable {
         private final String functionName;
         private final String content;
 
-        public FluentFunctionReference(String functionName, String content) {
+        public FunctionReference(String functionName, String content) {
             this.functionName = functionName;
             this.content = content;
         }
