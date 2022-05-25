@@ -1,7 +1,9 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.parser.StringSlice;
+
 public class FluentVariant extends FluentElement {
-    private final String identifier;
+    private final StringSlice identifier;
     private final FluentAttribute content;
     private final boolean defaultVariant;
 

@@ -13,34 +13,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FluentParser {
-    private final String input;
-    private int index = 0;
+    private final StringSlice input;
 
     public FluentParser(String input) {
-        this.input = input.replace("\r", "");
+        this.input = new StringSlice(input.replace("\r", ""));
     }
 
     public FluentResource parse() {
         List<FluentElement> elementList = new ArrayList<>();
 
-        while(input.length() >= index) {
-            if (getChar() == '#') {
+        while(input.length() >= input.length()) {
+            if (input.getChar() == '#') {
                 handleComment();
                 continue;
             }
 
-            if (Character.isAlphabetic(getChar())) {
-                String identifier = getIdentifier();
+            if (Character.isAlphabetic(input.getChar())) {
+                StringSlice identifier = getIdentifier();
 
-                skipWhitespace();
+                input.skipWhitespace();
 
-                if(getChar() != '=') {
-                    throw new FluentParseException('=', getChar(), index);
+                if(input.getChar() != '=') {
+                    throw new FluentParseException('=', input.getChar(), input.getPosition());
                 }
 
-                index++;
+                input.increment();
 
-                final Pair<String, List<FluentAttribute>> pair = getContent();
+                final Pair<StringSlice, List<FluentAttribute>> pair = getContent();
 
                 // must be a Message
                 elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
@@ -49,20 +48,20 @@ public class FluentParser {
                 continue;
             }
 
-            if (getChar() == '-') {
-                index++;
+            if (input.getChar() == '-') {
+                input.increment();
 
-                String identifier = getIdentifier();
+                StringSlice identifier = getIdentifier();
 
-                skipWhitespace();
+                input.skipWhitespace();
 
-                if(getChar() != '=') {
-                    throw new FluentParseException('=', getChar(), index);
+                if(input.getChar() != '=') {
+                    throw new FluentParseException('=', input.getChar(), input.getPosition());
                 }
 
-                index++;
+                input.increment();
 
-                final Pair<String, List<FluentAttribute>> pair = getContent();
+                final Pair<StringSlice, List<FluentAttribute>> pair = getContent();
 
                 // must be a Term
                 elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
@@ -71,8 +70,11 @@ public class FluentParser {
                 continue;
             }
 
-            if (!skipWhitespaceAndNL()) {
-                throw new FluentParseException("whitespace", getChar(), index);
+            if (!input.skipWhitespaceAndNL()) {
+                if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
+                    break;
+                }
+                throw new FluentParseException("whitespace", input.getChar(), input.getPosition());
             }
         }
 
@@ -80,83 +82,42 @@ public class FluentParser {
     }
 
     private void handleComment() {
-        while(getChar() != '\n' && getChar() != '\0') {
-            index++;
+        while(input.getChar() != '\n' && input.getChar() != '\0') {
+            input.increment();
         }
     }
 
-    private char getChar() {
-        if (input.length() <= index)
-            return '\0';
-
-        return input.charAt(index);
-    }
-
-    private boolean skipWhitespace() {
-        if(getChar() != ' ' && getChar() != '\0') {
-            return false;
-        }
-
-        do {
-            index++;
-        } while(getChar() == ' ' && getChar() != '\0');
-
-        return true;
-    }
-
-    private boolean skipWhitespaceAndNL() {
-        if(getChar() != ' ' && getChar() != '\n' && getChar() != '\0') {
-            return false;
-        }
-
-        do {
-            index++;
-        } while((getChar() == ' ' || getChar() == '\n') && getChar() != '\0');
-
-        return true;
-    }
-
-    private String getLine() {
-        final int start = index;
-
-        while(getChar() != '\n' && getChar() != '\0') {
-            index++;
-        }
-
-        return input.substring(start, index);
-    }
-
-    private String getIdentifier() {
-        char character = getChar();
-        final int start = index;
+    private StringSlice getIdentifier() {
+        char character = input.getChar();
+        final int start = input.getPosition();
 
         while(character != '\0' &&
                 Character.isAlphabetic(character)
                 || Character.isDigit(character)
                 || character == '-'
                 || character == '_') {
-            index++;
-            character = getChar();
+            input.increment();
+            character = input.getChar();
         }
 
-        return input.substring(start, index);
+        return input.substring(start, input.getPosition());
     }
 
-    private Pair<String, List<FluentAttribute>> getContent() {
+    private Pair<StringSlice, List<FluentAttribute>> getContent() {
         List<FluentAttribute> attributes = new ArrayList<>();
-        String content = getMessageContent();
+        StringSlice content = getMessageContent();
 
-        while (getChar() == '.') {
-            index++;
-            String identifier = getIdentifier();
-            skipWhitespace();
+        while (input.getChar() == '.') {
+            input.increment();
+            StringSlice identifier = getIdentifier();
+            input.skipWhitespace();
 
-            if (getChar() != '=') {
-                throw new FluentParseException('=', getChar(), index);
+            if (input.getChar() != '=') {
+                throw new FluentParseException('=', input.getChar(), input.getPosition());
             }
 
-            index++;
-            skipWhitespace();
+            input.increment();
+            input.skipWhitespace();
 
             attributes.add(new FluentAttribute(identifier, getMessageContent()));
         }
@@ -164,28 +125,28 @@ public class FluentParser {
         return new ImmutablePair<>(content, attributes);
     }
 
-    private String getMessageContent() {
-        skipWhitespace();
-        final int start = index;
+    private StringSlice getMessageContent() {
+        input.skipWhitespace();
+        final int start = input.getPosition();
         int lastWhitespace = start;
         boolean first = true;
 
         do {
-            skipWhitespace();
-            if (!first && getChar() == '.') {
+            input.skipWhitespace();
+            if (!first && input.getChar() == '.') {
                 break;
             }
 
             first = false;
 
-            while (getChar() != '\n' && getChar() != '\0') {
-                if (getChar() != ' ') {
-                    lastWhitespace = index;
+            while (input.getChar() != '\n' && input.getChar() != '\0') {
+                if (input.getChar() != ' ') {
+                    lastWhitespace = input.getPosition();
                 }
-                index++;
+                input.increment();
             }
-            index++;
-        } while (getChar() == ' ');
+            input.increment();
+        } while (input.getChar() == ' ');
 
         return input.substring(start, lastWhitespace + 1);
     }

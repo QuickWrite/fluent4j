@@ -1,18 +1,20 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.parser.StringSlice;
+
 import java.util.List;
 
 public abstract class FluentPlaceable extends FluentElement {
-    public abstract String getContent();
+    public abstract StringSlice getContent();
 
     public static class StringLiteral extends FluentPlaceable {
-        private final String content;
+        private final StringSlice content;
 
-        public StringLiteral(String content) {
+        public StringLiteral(StringSlice content) {
             this.content = content;
         }
 
-        public String getContent() {
+        public StringSlice getContent() {
             return this.content;
         }
 
@@ -25,13 +27,13 @@ public abstract class FluentPlaceable extends FluentElement {
     }
 
     public static class MessageReference extends FluentPlaceable {
-        protected final String content;
+        protected final StringSlice content;
 
-        public MessageReference(String content) {
+        public MessageReference(StringSlice content) {
             this.content = content;
         }
 
-        public String getContent() {
+        public StringSlice getContent() {
             return this.content;
         }
 
@@ -44,7 +46,7 @@ public abstract class FluentPlaceable extends FluentElement {
     }
 
     public static class VariableReference extends MessageReference {
-        public VariableReference(String content) {
+        public VariableReference(StringSlice content) {
             super(content);
         }
 
@@ -65,7 +67,7 @@ public abstract class FluentPlaceable extends FluentElement {
             this.variants = variants;
         }
 
-        public String getContent() {
+        public StringSlice getContent() {
             return this.identifier.getContent();
         }
 
@@ -79,15 +81,15 @@ public abstract class FluentPlaceable extends FluentElement {
     }
 
     public static class FunctionReference extends FluentPlaceable {
-        private final String functionName;
-        private final String content;
+        private final StringSlice functionName;
+        private final StringSlice content;
 
-        public FunctionReference(String functionName, String content) {
+        public FunctionReference(StringSlice functionName, StringSlice content) {
             this.functionName = functionName;
             this.content = content;
         }
 
-        public String getContent() {
+        public StringSlice getContent() {
             return this.content;
         }
 

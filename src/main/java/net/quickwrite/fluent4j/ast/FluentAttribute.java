@@ -2,19 +2,18 @@ package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.exception.FluentSelectException;
+import net.quickwrite.fluent4j.parser.StringSlice;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FluentAttribute extends FluentElement {
-    protected final String identifier;
+    protected final StringSlice identifier;
 
     protected final List<FluentElement> fluentElements;
-    protected String content;
+    protected StringSlice content;
 
-    protected int index = 0;
-
-    public FluentAttribute(String identifier, String content) {
+    public FluentAttribute(StringSlice identifier, StringSlice content) {
         this.identifier = identifier;
 
         this.content = content;
@@ -27,8 +26,8 @@ public class FluentAttribute extends FluentElement {
     private List<FluentElement> parse() {
         List<FluentElement> elements = new ArrayList<>();
 
-        while (index < content.length()) {
-            if (getChar() == '{') {
+        while (!content.isBigger()) {
+            if (content.getChar() == '{' && content.getChar() != '\0') {
                 elements.add(getPlaceable());
                 continue;
             }
@@ -40,40 +39,40 @@ public class FluentAttribute extends FluentElement {
     }
 
     private FluentTextElement getText() {
-        final int start = index;
+        final int start = content.getPosition();
 
-        while (content.length() > index && getChar() != '{') {
-            index++;
+        while (!content.isBigger() && content.getChar() != '{') {
+            content.increment();
         }
 
-        return new FluentTextElement(content.substring(start, index));
+        return new FluentTextElement(content.substring(start, content.getPosition()));
     }
 
     private FluentPlaceable getPlaceable() {
-        index++;
-        skipWhitespace();
+        content.increment();
+        content.skipWhitespace();
 
         FluentPlaceable placeable;
 
         boolean canSelect = false;
         boolean canFunction = false;
 
-        switch (getChar()) {
+        switch (content.getChar()) {
             case '"':
-                index++;
-                final int start = index;
-                while (getChar() != '"') {
-                    index++;
+                content.increment();
+                final int start = content.getPosition();
+                while (content.getChar() != '"') {
+                    content.increment();
                 }
 
-                String string = content.substring(start, index);
-                index++;
+                StringSlice string = content.substring(start, content.getPosition());
+                content.increment();
 
                 placeable = new FluentPlaceable.StringLiteral(string);
                 break;
             case '$':
-                index++;
-                final String varIdentifier = getIdentifier();
+                content.increment();
+                final StringSlice varIdentifier = getIdentifier();
 
                 canSelect = true;
 
@@ -81,8 +80,8 @@ public class FluentAttribute extends FluentElement {
                 break;
             case '-':
                 canSelect = true;
-                index++;
-                String msgIdentifier = getIdentifier();
+                content.increment();
+                StringSlice msgIdentifier = getIdentifier();
 
                 placeable = new FluentPlaceable.MessageReference(msgIdentifier);
                 break;
@@ -97,42 +96,42 @@ public class FluentAttribute extends FluentElement {
                 placeable = new FluentPlaceable.MessageReference(msgIdentifier);
         }
 
-        skipWhitespace();
+        content.skipWhitespace();
 
-        if (canFunction && getChar() == '(') {
-            index++;
+        if (canFunction && content.getChar() == '(') {
+            content.increment();
 
-            int start = index;
+            int start = content.getPosition();
 
-            while (getChar() != ')') {
-                index++;
+            while (content.getChar() != ')') {
+                content.increment();
             }
 
             placeable = new FluentPlaceable.FunctionReference(
                     placeable.getContent(),
-                    content.substring(start, index)
+                    content.substring(start, content.getPosition())
             );
 
-            index++;
+            content.increment();
 
             canSelect = true;
         }
 
-        skipWhitespace();
+        content.skipWhitespace();
 
-        if (canSelect && getChar() == '-') {
-            index++;
-            if (getChar() != '>') {
-                throw new FluentParseException("->", "-" + getChar(), index);
+        if (canSelect && content.getChar() == '-') {
+            content.increment();
+            if (content.getChar() != '>') {
+                throw new FluentParseException("->", "-" + content.getChar(), content.getPosition());
             }
 
-            index++;
+            content.increment();
 
-            skipWhitespaceAndNL();
+            content.skipWhitespaceAndNL();
 
             List<FluentVariant> fluentVariants = new ArrayList<>();
 
-            while (getChar() != '}') {
+            while (content.getChar() != '}') {
                 fluentVariants.add(getVariant());
             }
 
@@ -152,121 +151,90 @@ public class FluentAttribute extends FluentElement {
             placeable = new FluentPlaceable.SelectExpression(placeable, fluentVariants);
         }
 
-        skipWhitespaceAndNL();
+        content.skipWhitespaceAndNL();
 
-        if (getChar() != '}') {
-            throw new FluentParseException('}', getChar(), index);
+        if (content.getChar() != '}') {
+            throw new FluentParseException('}', content.getChar(), content.getPosition());
         }
 
-        index++;
+        content.increment();
 
         return placeable;
     }
 
     private FluentVariant getVariant() {
-        skipWhitespaceAndNL();
+        content.skipWhitespaceAndNL();
 
-        int start = index;
+        int start = content.getPosition();
 
         boolean isDefault = false;
 
-        if (getChar() == '*') {
+        if (content.getChar() == '*') {
             isDefault = true;
-            index++;
+            content.increment();
 
-            start = index;
+            start = content.getPosition();
         }
 
-        if (getChar() != '[') {
-            throw new FluentParseException('[',  getChar(), index);
+        if (content.getChar() != '[') {
+            throw new FluentParseException('[',  content.getChar(), content.getPosition());
         }
 
-        skipWhitespace();
+        content.skipWhitespace();
 
-        while (getChar() != ']' && getChar() != ' ' && getChar() != '\n') {
-            index++;
+        while (content.getChar() != ']' && content.getChar() != ' ' && content.getChar() != '\n') {
+            content.increment();
         }
 
-        final int end = index;
+        final int end = content.getPosition();
 
-        skipWhitespace();
+        content.skipWhitespace();
 
-        if (getChar() != ']') {
-            throw new FluentParseException(']',  getChar(), index);
+        if (content.getChar() != ']') {
+            throw new FluentParseException(']',  content.getChar(), content.getPosition());
         }
 
-        String identifier = content.substring(start + 1, end);
+        StringSlice identifier = content.substring(start + 1, end);
 
-        index++;
+        content.increment();
 
-        start = index;
+        start = content.getPosition();
         int lastWhitespace = start;
 
         do {
-            skipWhitespace();
+            content.skipWhitespace();
 
-            if (getChar() == '[' || getChar() == '*' || getChar() == '}') {
+            if (content.getChar() == '[' || content.getChar() == '*' || content.getChar() == '}') {
                 break;
             }
 
-            while (getChar() != '\0' && getChar() != '\n') {
-                if (getChar() != ' ') {
-                    lastWhitespace = index;
+            while (content.getChar() != '\0' && content.getChar() != '\n') {
+                if (content.getChar() != ' ') {
+                    lastWhitespace = content.getPosition();
                 }
-                index++;
+                content.increment();
             }
 
-            index++;
-        } while(getChar() == ' ');
+            content.increment();
+        } while(content.getChar() == ' ');
 
         return new FluentVariant(new FluentAttribute(identifier, content.substring(start, lastWhitespace + 1)), isDefault);
     }
 
-    private String getIdentifier() {
-        char character = getChar();
-        final int start = index;
+    private StringSlice getIdentifier() {
+        char character = content.getChar();
+        final int start = content.getPosition();
 
         while(character != '\0' &&
                 Character.isAlphabetic(character)
                 || Character.isDigit(character)
                 || character == '-'
                 || character == '_') {
-            index++;
-            character = getChar();
+            content.increment();
+            character = content.getChar();
         }
 
-        return content.substring(start, index);
-    }
-
-    private char getChar() {
-        if (content.length() <= index)
-            return '\0';
-
-        return content.charAt(index);
-    }
-
-    private boolean skipWhitespace() {
-        if(getChar() != ' ' && getChar() != '\0') {
-            return false;
-        }
-
-        while(getChar() == ' ' && getChar() != '\0') {
-            index++;
-        }
-
-        return true;
-    }
-
-    private boolean skipWhitespaceAndNL() {
-        if(getChar() != ' ' && getChar() != '\n' && getChar() != '\0') {
-            return false;
-        }
-
-        do {
-            index++;
-        } while((getChar() == ' ' || getChar() == '\n') && getChar() != '\0');
-
-        return true;
+        return content.substring(start, content.getPosition());
     }
 
     @Override
