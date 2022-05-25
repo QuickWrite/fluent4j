@@ -9,6 +9,18 @@ public class FluentTextElement extends FluentElement {
         this.content = content;
     }
 
+    public boolean isEmpty() {
+        while (!content.isBigger()) {
+            if(content.getChar() != '\n') {
+                return false;
+            }
+
+            content.increment();
+        }
+
+        return true;
+    }
+
     @Override
     public String toString() {
         return "FluentTextElement: {\n" +

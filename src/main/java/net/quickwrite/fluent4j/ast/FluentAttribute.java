@@ -19,8 +19,6 @@ public class FluentAttribute extends FluentElement {
         this.content = content;
 
         this.fluentElements = parse();
-
-        this.content = null;
     }
 
     private List<FluentElement> parse() {
@@ -32,7 +30,13 @@ public class FluentAttribute extends FluentElement {
                 continue;
             }
 
-            elements.add(getText());
+            FluentTextElement text = getText();
+
+            if (text.isEmpty()) {
+                continue;
+            }
+
+            elements.add(text);
         }
 
         return elements;
