@@ -43,7 +43,6 @@ public class FluentParser {
 
                 // must be a Message
                 elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
-                System.out.println(elementList.get(elementList.size() - 1));
 
                 continue;
             }
@@ -65,7 +64,6 @@ public class FluentParser {
 
                 // must be a Term
                 elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
-                System.out.println(elementList.get(elementList.size() - 1));
 
                 continue;
             }
