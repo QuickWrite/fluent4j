@@ -16,4 +16,8 @@ public class FluentParseException extends RuntimeException {
     public FluentParseException(char expected, String got, int index) {
         super("Expected " + expected + " but got " + got + " at " + index);
     }
+
+    public FluentParseException(String reason) {
+        super(reason);
+    }
 }

@@ -58,9 +58,10 @@ public class FluentAttribute extends FluentElement {
 
         FluentPlaceable placeable = content.getExpression();
 
-        boolean canSelect = false;
-        if (!(placeable instanceof FluentPlaceable.StringLiteral)) {
-            canSelect = true;
+        boolean canSelect = true;
+        if (placeable instanceof FluentPlaceable.MessageReference ||
+            placeable instanceof FluentPlaceable.TermReference) {
+            canSelect = false;
         }
 
         content.skipWhitespace();

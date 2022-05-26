@@ -79,8 +79,6 @@ public class StringSlice {
     public FluentPlaceable getExpression() {
         FluentPlaceable expression;
 
-        boolean canFunction = false;
-
         switch (getChar()) {
             case '"':
                 increment();
@@ -100,26 +98,30 @@ public class StringSlice {
 
                 expression = new FluentPlaceable.VariableReference(varIdentifier);
                 break;
-            case '-':
-                increment();
-                StringSlice msgIdentifier = getIdentifier();
-
-                expression = new FluentPlaceable.MessageReference(msgIdentifier);
-                break;
             default:
-                // TODO: Create Functions
-
-                // message reference
-                msgIdentifier = getIdentifier();
-
-                canFunction = true;
-
-                expression = new FluentPlaceable.MessageReference(msgIdentifier);
+                expression = expressionGetDefault();
         }
+
+        return expression;
+    }
+
+    private FluentPlaceable expressionGetDefault() {
+        boolean isTerm = false;
+
+        if (getChar() == '-') {
+            isTerm = true;
+
+            increment();
+        }
+
+        StringSlice msgIdentifier = getIdentifier();
+        // TODO: Create Functions
+
+        FluentPlaceable expression = new FluentPlaceable.MessageReference(msgIdentifier);
 
         skipWhitespace();
 
-        if (canFunction && getChar() == '(') {
+        if (getChar() == '(') {
             increment();
 
             int start = getPosition();
@@ -128,10 +130,17 @@ public class StringSlice {
                 increment();
             }
 
-            expression = new FluentPlaceable.FunctionReference(
-                    expression.getContent(),
-                    substring(start, getPosition())
-            );
+            if (!isTerm) {
+                expression = new FluentPlaceable.FunctionReference(
+                        expression.getContent(),
+                        substring(start, getPosition())
+                );
+            } else {
+                expression = new FluentPlaceable.TermReference(
+                        expression.getContent(),
+                        substring(start, getPosition())
+                );
+            }
 
             increment();
         }
@@ -153,6 +162,10 @@ public class StringSlice {
         }
 
         return substring(start, getPosition());
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public String toString() {
