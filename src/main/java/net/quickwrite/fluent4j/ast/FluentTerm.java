@@ -4,7 +4,36 @@ import net.quickwrite.fluent4j.parser.StringSlice;
 
 import java.util.List;
 
+/**
+ * Terms are similar to regular messages but they can
+ * only be used as references in other messages. Their
+ * identifiers start with a single dash {@code -}
+ * like in the example: {@code -brand-name}. The
+ * runtime cannot retrieve terms directly. They are best
+ * used to define vocabulary and glossary items which
+ * can be used consistently across the localization
+ * of the entire product.
+ *
+ * <pre>
+ *     -brand-name = Firefox
+ *
+ *     about = About { -brand-name }.
+ *     update-successful = { -brand-name } has been updated.
+ * </pre>
+ */
 public class FluentTerm extends FluentMessage {
+
+    /**
+     * Creates a new FluentTerm with the identifier, content and a list
+     * of FluentAttributes.
+     * <br>
+     * The content gets parsed into a list of TextElements and Placeables
+     * that can be queried later.
+     *
+     * @param identifier The information that uniquely represents the Attribute.
+     * @param content The content that needs to be parsed.
+     * @param attributes All of the attributes
+     */
     public FluentTerm(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes) {
         super(identifier, content, attributes);
     }

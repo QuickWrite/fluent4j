@@ -12,13 +12,36 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses a String into a FluentResource so that it can be queried.
+ * <p>
+ *     Instead of the default implementation of Fluent comments are completely ignored
+ *     and Junk nodes are not created while still errors in the Fluent file are getting
+ *     reported. <br>
+ *     This has the added benefit that the generated AST is smaller in Memory and can
+ *     be queried faster.
+ * </p>
+ */
 public class FluentParser {
     private final StringSlice input;
 
+    /**
+     * Initializes the Parser with the input String as the
+     * Ressource.
+     *
+     * @param input The Fluent Ressource
+     */
     public FluentParser(String input) {
         this.input = new StringSlice(input.replace("\r", ""));
     }
 
+    /**
+     * Parses the Fluent Resource that is stored inside of the
+     * Object as an attribute and returns the generated AST inside
+     * of a FluentResource.
+     *
+     * @return FluentResource
+     */
     public FluentResource parse() {
         List<FluentElement> elementList = new ArrayList<>();
 

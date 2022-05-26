@@ -2,6 +2,10 @@ package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.parser.StringSlice;
 
+/**
+ * The TextElement is just storing a text that does
+ * noting.
+ */
 public class FluentTextElement extends FluentElement {
     private StringSlice content;
 

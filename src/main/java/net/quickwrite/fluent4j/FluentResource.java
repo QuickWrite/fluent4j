@@ -4,6 +4,15 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 
 import java.util.List;
 
+/**
+ * A immutable class that is holding the generated AST by the parser
+ * for a single file.
+ *
+ * <p>
+ *     All of the entries that exist are stored inside of a list.
+ * </p>
+ *
+ */
 public class FluentResource {
     private final List<FluentElement> body;
 
