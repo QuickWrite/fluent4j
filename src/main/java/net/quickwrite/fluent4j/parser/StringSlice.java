@@ -1,5 +1,7 @@
 package net.quickwrite.fluent4j.parser;
 
+import net.quickwrite.fluent4j.ast.FluentPlaceable;
+
 public class StringSlice {
     private final String base;
     private final int start;
@@ -15,10 +17,7 @@ public class StringSlice {
         this.base = base;
         this.start = start;
 
-        if (end >= base.length())
-            this.end = base.length();
-        else
-            this.end = end;
+        this.end = Math.min(end, base.length());
 
         this.index = 0;
     }
@@ -75,6 +74,85 @@ public class StringSlice {
         } while((getChar() == ' ' || getChar() == '\n') && !isBigger());
 
         return true;
+    }
+
+    public FluentPlaceable getExpression() {
+        FluentPlaceable expression;
+
+        boolean canFunction = false;
+
+        switch (getChar()) {
+            case '"':
+                increment();
+                final int start = getPosition();
+                while (getChar() != '"') {
+                    increment();
+                }
+
+                StringSlice string = substring(start, getPosition());
+                increment();
+
+                expression = new FluentPlaceable.StringLiteral(string);
+                break;
+            case '$':
+                increment();
+                final StringSlice varIdentifier = getIdentifier();
+
+                expression = new FluentPlaceable.VariableReference(varIdentifier);
+                break;
+            case '-':
+                increment();
+                StringSlice msgIdentifier = getIdentifier();
+
+                expression = new FluentPlaceable.MessageReference(msgIdentifier);
+                break;
+            default:
+                // TODO: Create Functions
+
+                // message reference
+                msgIdentifier = getIdentifier();
+
+                canFunction = true;
+
+                expression = new FluentPlaceable.MessageReference(msgIdentifier);
+        }
+
+        skipWhitespace();
+
+        if (canFunction && getChar() == '(') {
+            increment();
+
+            int start = getPosition();
+
+            while (getChar() != ')') {
+                increment();
+            }
+
+            expression = new FluentPlaceable.FunctionReference(
+                    expression.getContent(),
+                    substring(start, getPosition())
+            );
+
+            increment();
+        }
+
+        return expression;
+    }
+
+    public StringSlice getIdentifier() {
+        char character = getChar();
+        final int start = getPosition();
+
+        while(character != '\0' &&
+                Character.isAlphabetic(character)
+                || Character.isDigit(character)
+                || character == '-'
+                || character == '_') {
+            increment();
+            character = getChar();
+        }
+
+        return substring(start, getPosition());
     }
 
     public String toString() {

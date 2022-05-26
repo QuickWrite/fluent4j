@@ -56,68 +56,10 @@ public class FluentAttribute extends FluentElement {
         content.increment();
         content.skipWhitespace();
 
-        FluentPlaceable placeable;
+        FluentPlaceable placeable = content.getExpression();
 
         boolean canSelect = false;
-        boolean canFunction = false;
-
-        switch (content.getChar()) {
-            case '"':
-                content.increment();
-                final int start = content.getPosition();
-                while (content.getChar() != '"') {
-                    content.increment();
-                }
-
-                StringSlice string = content.substring(start, content.getPosition());
-                content.increment();
-
-                placeable = new FluentPlaceable.StringLiteral(string);
-                break;
-            case '$':
-                content.increment();
-                final StringSlice varIdentifier = getIdentifier();
-
-                canSelect = true;
-
-                placeable = new FluentPlaceable.VariableReference(varIdentifier);
-                break;
-            case '-':
-                canSelect = true;
-                content.increment();
-                StringSlice msgIdentifier = getIdentifier();
-
-                placeable = new FluentPlaceable.MessageReference(msgIdentifier);
-                break;
-            default:
-                // TODO: Create Functions
-
-                // message reference
-                msgIdentifier = getIdentifier();
-
-                canFunction = true;
-
-                placeable = new FluentPlaceable.MessageReference(msgIdentifier);
-        }
-
-        content.skipWhitespace();
-
-        if (canFunction && content.getChar() == '(') {
-            content.increment();
-
-            int start = content.getPosition();
-
-            while (content.getChar() != ')') {
-                content.increment();
-            }
-
-            placeable = new FluentPlaceable.FunctionReference(
-                    placeable.getContent(),
-                    content.substring(start, content.getPosition())
-            );
-
-            content.increment();
-
+        if (!(placeable instanceof FluentPlaceable.StringLiteral)) {
             canSelect = true;
         }
 
@@ -223,22 +165,6 @@ public class FluentAttribute extends FluentElement {
         } while(content.getChar() == ' ');
 
         return new FluentVariant(new FluentAttribute(identifier, content.substring(start, lastWhitespace + 1)), isDefault);
-    }
-
-    private StringSlice getIdentifier() {
-        char character = content.getChar();
-        final int start = content.getPosition();
-
-        while(character != '\0' &&
-                Character.isAlphabetic(character)
-                || Character.isDigit(character)
-                || character == '-'
-                || character == '_') {
-            content.increment();
-            character = content.getChar();
-        }
-
-        return content.substring(start, content.getPosition());
     }
 
     @Override

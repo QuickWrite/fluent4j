@@ -29,7 +29,7 @@ public class FluentParser {
             }
 
             if (Character.isAlphabetic(input.getChar())) {
-                StringSlice identifier = getIdentifier();
+                StringSlice identifier = input.getIdentifier();
 
                 input.skipWhitespace();
 
@@ -51,7 +51,7 @@ public class FluentParser {
             if (input.getChar() == '-') {
                 input.increment();
 
-                StringSlice identifier = getIdentifier();
+                StringSlice identifier = input.getIdentifier();
 
                 input.skipWhitespace();
 
@@ -87,29 +87,13 @@ public class FluentParser {
         }
     }
 
-    private StringSlice getIdentifier() {
-        char character = input.getChar();
-        final int start = input.getPosition();
-
-        while(character != '\0' &&
-                Character.isAlphabetic(character)
-                || Character.isDigit(character)
-                || character == '-'
-                || character == '_') {
-            input.increment();
-            character = input.getChar();
-        }
-
-        return input.substring(start, input.getPosition());
-    }
-
     private Pair<StringSlice, List<FluentAttribute>> getContent() {
         List<FluentAttribute> attributes = new ArrayList<>();
         StringSlice content = getMessageContent();
 
         while (input.getChar() == '.') {
             input.increment();
-            StringSlice identifier = getIdentifier();
+            StringSlice identifier = input.getIdentifier();
             input.skipWhitespace();
 
             if (input.getChar() != '=') {
