@@ -246,6 +246,10 @@ public class StringSlice {
             increment();
         }
 
+        if (Character.isDigit(getChar())) {
+            return new FluentPlaceable.NumberLiteral(getNumber());
+        }
+
         StringSlice msgIdentifier = getIdentifier();
         // TODO: Create Functions
 
@@ -280,6 +284,18 @@ public class StringSlice {
         return expression;
     }
 
+    private StringSlice getNumber() {
+        char character = getChar();
+        final int start = getPosition();
+
+        while(character != '\0' && Character.isDigit(character)) {
+            increment();
+            character = getChar();
+        }
+
+        return substring(start, getPosition());
+    }
+
     /**
      * Returns an identifier.
      * An Identifer only starts with a character from the range
@@ -292,7 +308,6 @@ public class StringSlice {
         char character = getChar();
         final int start = getPosition();
 
-        if (Character.isAlphabetic(character)) {
             throw new FluentParseException("character from range [a-zA-Z]", character, getPosition());
         }
 

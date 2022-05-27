@@ -91,6 +91,30 @@ public abstract class FluentPlaceable extends FluentElement {
         }
     }
 
+    public static class NumberLiteral extends FluentPlaceable {
+        final int value;
+
+        public NumberLiteral(StringSlice number) {
+            this.value = Integer.parseInt(number.toString());
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+
+        @Override
+        public StringSlice getContent() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "FluentNumberLiteral: {\n" +
+                    "\t\t\tvalue: \"" + this.value + "\"\n" +
+                    "\t\t}";
+        }
+    }
+
     /**
      * Variables are pieces of data received from the app.
      * They are provided by the developer of the app and
