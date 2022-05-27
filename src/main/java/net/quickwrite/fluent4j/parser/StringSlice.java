@@ -97,6 +97,10 @@ public class StringSlice {
         this.index--;
     }
 
+    public char peek(int index) {
+        return this.base.charAt(getPosition() + start + index);
+    }
+
     /**
      * Returns a new StringSlice that has only a part
      * of the current StringSlice that reaches from the start
@@ -217,26 +221,25 @@ public class StringSlice {
         FluentPlaceable expression;
 
         switch (getChar()) {
-            case '"':
+            case '"' -> {
                 increment();
                 final int start = getPosition();
                 while (getChar() != '"') {
+                    if (getChar() == '\\' && peek(1) == '"')
+                        increment();
+
                     increment();
                 }
-
                 StringSlice string = substring(start, getPosition());
                 increment();
-
                 expression = new FluentPlaceable.StringLiteral(string);
-                break;
-            case '$':
+            }
+            case '$' -> {
                 increment();
                 final StringSlice varIdentifier = getIdentifier();
-
                 expression = new FluentPlaceable.VariableReference(varIdentifier);
-                break;
-            default:
-                expression = expressionGetDefault();
+            }
+            default -> expression = expressionGetDefault();
         }
 
         return expression;
