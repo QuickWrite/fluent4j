@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.ast.FluentPlaceable;
+import net.quickwrite.fluent4j.exception.FluentParseException;
 
 /**
  * A wrapper class for a String that has added functionality.
@@ -308,6 +309,7 @@ public class StringSlice {
         char character = getChar();
         final int start = getPosition();
 
+        if (!Character.isAlphabetic(character)) {
             throw new FluentParseException("character from range [a-zA-Z]", character, getPosition());
         }
 
