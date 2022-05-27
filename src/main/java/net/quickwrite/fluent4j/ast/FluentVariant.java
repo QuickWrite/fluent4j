@@ -2,6 +2,19 @@ package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.parser.StringSlice;
 
+/**
+ * A variant stores a single variant of a
+ * Fluent Select Expression.
+ *
+ * <p>
+ *     The variants are denoted as
+ *     {@code [&lt;condition&gt;] &lt;The text&gt;}
+ *     and when they should be the default case they
+ *     have a star in front
+ *     {@code *[&lt;condition&gt;] &lt;The text&gt;}
+ * </p>
+ *
+ */
 public class FluentVariant extends FluentElement {
     private final FluentPlaceable identifier;
     private final FluentAttribute content;
@@ -19,7 +32,7 @@ public class FluentVariant extends FluentElement {
 
     private FluentPlaceable getIdentifier(StringSlice slice) {
         if (Character.isDigit(slice.getChar())) {
-            return new FluentPlaceable.NumberLiteral(slice);
+            return FluentPlaceable.NumberLiteral.getNumberLiteral(slice);
         }
 
         return new FluentPlaceable.StringLiteral(slice);

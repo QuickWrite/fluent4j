@@ -93,6 +93,10 @@ public class StringSlice {
         this.index++;
     }
 
+    private void decrement() {
+        this.index--;
+    }
+
     /**
      * Returns a new StringSlice that has only a part
      * of the current StringSlice that reaches from the start
@@ -248,7 +252,10 @@ public class StringSlice {
         }
 
         if (Character.isDigit(getChar())) {
-            return new FluentPlaceable.NumberLiteral(getNumber());
+            if (isTerm)
+                decrement();
+
+            return FluentPlaceable.NumberLiteral.getNumberLiteral(getNumber());
         }
 
         StringSlice msgIdentifier = getIdentifier();
@@ -289,7 +296,11 @@ public class StringSlice {
         char character = getChar();
         final int start = getPosition();
 
-        while(character != '\0' && Character.isDigit(character)) {
+        while(character != '\0' &&
+                Character.isDigit(character)
+                || character == '.'
+                || character == '-'
+        ) {
             increment();
             character = getChar();
         }

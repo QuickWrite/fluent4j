@@ -91,16 +91,34 @@ public abstract class FluentPlaceable extends FluentElement {
         }
     }
 
-    public static class NumberLiteral extends FluentPlaceable {
-        final int value;
-
-        public NumberLiteral(StringSlice number) {
-            this.value = Integer.parseInt(number.toString());
+    /**
+     * The number literal stores numbers. These numbers
+     * are stored in two different containers depending
+     * on their type.
+     *
+     * <p>
+     *     Numbers can be integers or rational numbers
+     * </p>
+     */
+    public abstract static class NumberLiteral extends FluentPlaceable {
+        private NumberLiteral() {
         }
 
-        public int getValue() {
-            return this.value;
+        public static NumberLiteral getNumberLiteral(StringSlice slice) {
+            try {
+                return new IntegerLiteral(Integer.parseInt(slice.toString()));
+            } catch (NumberFormatException ignored) {
+            }
+
+            try {
+                return new DoubleLiteral(Double.parseDouble(slice.toString()));
+            } catch (NumberFormatException ignored) {
+            }
+
+            throw new FluentParseException("Number", slice.toString(), slice.getPosition());
         }
+
+        public abstract Number getNumber();
 
         @Override
         public StringSlice getContent() {
@@ -110,8 +128,34 @@ public abstract class FluentPlaceable extends FluentElement {
         @Override
         public String toString() {
             return "FluentNumberLiteral: {\n" +
-                    "\t\t\tvalue: \"" + this.value + "\"\n" +
+                    "\t\t\tvalue: \"" + this.getNumber() + "\"\n" +
                     "\t\t}";
+        }
+
+        private static class IntegerLiteral extends NumberLiteral {
+            private final int value;
+
+            public IntegerLiteral(int value) {
+                this.value = value;
+            }
+
+            @Override
+            public Number getNumber() {
+                return value;
+            }
+        }
+
+        private static class DoubleLiteral extends NumberLiteral {
+            private final double value;
+
+            public DoubleLiteral(double value) {
+                this.value = value;
+            }
+
+            @Override
+            public Number getNumber() {
+                return value;
+            }
         }
     }
 
