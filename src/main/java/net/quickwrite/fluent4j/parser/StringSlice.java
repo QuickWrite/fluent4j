@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.ast.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.wrapper.FluentTextElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 
 /**
@@ -273,7 +274,21 @@ public class StringSlice {
 
             int start = getPosition();
 
-            while (getChar() != ')') {
+            int open = 0;
+
+            while (!(getChar() == ')' && open == 0)) {
+                if (isBigger()) {
+                    throw new FluentParseException(")", "EOF", getPosition());
+                }
+
+                if (getChar() == '(') {
+                    open++;
+                }
+
+                if (getChar() == ')') {
+                    open--;
+                }
+
                 increment();
             }
 

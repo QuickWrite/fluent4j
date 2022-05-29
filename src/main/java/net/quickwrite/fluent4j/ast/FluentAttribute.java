@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.ast.wrapper.FluentTextElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.exception.FluentSelectException;
 import net.quickwrite.fluent4j.parser.StringSlice;
@@ -83,11 +84,8 @@ public class FluentAttribute extends FluentElement {
 
         FluentPlaceable placeable = content.getExpression();
 
-        boolean canSelect = true;
-        if (placeable instanceof FluentPlaceable.MessageReference ||
-            placeable instanceof FluentPlaceable.TermReference) {
-            canSelect = false;
-        }
+        boolean canSelect = !(placeable instanceof FluentPlaceable.MessageReference) &&
+                !(placeable instanceof FluentPlaceable.TermReference);
 
         content.skipWhitespace();
 
@@ -194,7 +192,7 @@ public class FluentAttribute extends FluentElement {
     }
 
     /**
-     * Returns a serielized version of the object.
+     * Returns a serialized version of the object.
      *
      * @return The object in string form.
      */

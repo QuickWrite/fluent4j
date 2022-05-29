@@ -1,5 +1,6 @@
-package net.quickwrite.fluent4j.ast;
+package net.quickwrite.fluent4j.ast.wrapper;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.parser.StringSlice;
 
 /**

@@ -1,8 +1,10 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.parser.StringSlice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -193,7 +195,7 @@ public abstract class FluentPlaceable extends FluentElement {
 
         @Override
         public String toString() {
-            return "FluentMessageReference: {\n" +
+            return "FluentVariableReference: {\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
                     "\t\t}";
         }
@@ -217,7 +219,7 @@ public abstract class FluentPlaceable extends FluentElement {
 
         @Override
         public String toString() {
-            return "FluentVariableReference: {\n" +
+            return "FluentMessageReference: {\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
                     "\t\t}";
         }
@@ -273,6 +275,7 @@ public abstract class FluentPlaceable extends FluentElement {
     public static class FunctionReference extends FluentPlaceable {
         protected final StringSlice functionName;
         protected final StringSlice content;
+        protected final List<FluentArgument> argumentList;
 
         public FunctionReference(StringSlice functionName, StringSlice content) {
             this.functionName = functionName;
@@ -282,6 +285,48 @@ public abstract class FluentPlaceable extends FluentElement {
             }
 
             this.content = content;
+
+            this.argumentList = getArguments();
+        }
+
+        private List<FluentArgument> getArguments() {
+            List<FluentArgument> arguments = new ArrayList<>();
+
+            while (!content.isBigger()) {
+                content.skipWhitespace();
+
+                arguments.add(getArgument());
+
+                content.skipWhitespace();
+
+                if (content.getChar() != ',') {
+                    if (!content.isBigger()) {
+                        throw new FluentParseException("','", content.getChar(), content.getPosition());
+                    }
+                    break;
+                }
+                content.increment();
+            }
+
+            return arguments;
+        }
+
+        private FluentArgument getArgument() {
+            FluentPlaceable placeable = content.getExpression();
+            StringSlice identifier = null;
+
+            content.skipWhitespace();
+
+            if (content.getChar() == ':') {
+                content.increment();
+                content.skipWhitespace();
+
+                identifier = placeable.getContent();
+
+                placeable = content.getExpression();
+            }
+
+            return new FluentArgument(identifier, placeable);
         }
 
         public StringSlice getContent() {
@@ -307,6 +352,7 @@ public abstract class FluentPlaceable extends FluentElement {
             return "FluentFunctionReference: {\n" +
                     "\t\t\tfunctionName: \"" + this.functionName + "\"\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
+                    "\t\t\targumentList: \"" + this.argumentList + "\"\n" +
                     "\t\t}";
         }
     }
@@ -343,6 +389,7 @@ public abstract class FluentPlaceable extends FluentElement {
             return "FluentTermReference: {\n" +
                     "\t\t\ttermName: \"" + this.functionName + "\"\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
+                    "\t\t\targumentList: \"" + this.argumentList + "\"\n" +
                     "\t\t}";
         }
     }
