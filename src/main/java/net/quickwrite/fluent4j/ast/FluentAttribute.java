@@ -167,6 +167,7 @@ public class FluentAttribute extends FluentElement {
         StringSlice identifier = content.substring(start + 1, end);
 
         content.increment();
+        content.skipWhitespace();
 
         start = content.getPosition();
         int lastWhitespace = start;

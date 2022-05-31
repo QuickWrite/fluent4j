@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.ast.FluentPlaceable;
-import net.quickwrite.fluent4j.ast.wrapper.FluentTextElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 
 /**
