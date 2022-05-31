@@ -13,6 +13,10 @@ public class FluentArgument extends FluentElement {
         this.placeable = placeable;
     }
 
+    public boolean isNamed() {
+        return identifier != null;
+    }
+
     @Override
     public String toString() {
         return "FluentArgument: {\n" +

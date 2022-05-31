@@ -275,7 +275,8 @@ public abstract class FluentPlaceable extends FluentElement {
     public static class FunctionReference extends FluentPlaceable {
         protected final StringSlice functionName;
         protected final StringSlice content;
-        protected final List<FluentArgument> argumentList;
+        protected List<FluentArgument> positionalArgumentList;
+        protected List<FluentArgument> namedArgumentList;
 
         public FunctionReference(StringSlice functionName, StringSlice content) {
             this.functionName = functionName;
@@ -286,16 +287,22 @@ public abstract class FluentPlaceable extends FluentElement {
 
             this.content = content;
 
-            this.argumentList = getArguments();
+            this.positionalArgumentList = new ArrayList<>();
+            this.namedArgumentList = new ArrayList<>();
+
+            getArguments();
         }
 
-        private List<FluentArgument> getArguments() {
-            List<FluentArgument> arguments = new ArrayList<>();
-
+        private void getArguments() {
             while (!content.isBigger()) {
                 content.skipWhitespace();
 
-                arguments.add(getArgument());
+                FluentArgument argument = getArgument();
+                if (argument.isNamed()) {
+                    this.namedArgumentList.add(argument);
+                } else {
+                    this.positionalArgumentList.add(argument);
+                }
 
                 content.skipWhitespace();
 
@@ -307,8 +314,6 @@ public abstract class FluentPlaceable extends FluentElement {
                 }
                 content.increment();
             }
-
-            return arguments;
         }
 
         private FluentArgument getArgument() {
@@ -352,7 +357,8 @@ public abstract class FluentPlaceable extends FluentElement {
             return "FluentFunctionReference: {\n" +
                     "\t\t\tfunctionName: \"" + this.functionName + "\"\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
-                    "\t\t\targumentList: \"" + this.argumentList + "\"\n" +
+                    "\t\t\tpositionalArguments: \"" + this.positionalArgumentList + "\"\n" +
+                    "\t\t\tnamedArguments: \"" + this.namedArgumentList + "\"\n" +
                     "\t\t}";
         }
     }
@@ -389,7 +395,8 @@ public abstract class FluentPlaceable extends FluentElement {
             return "FluentTermReference: {\n" +
                     "\t\t\ttermName: \"" + this.functionName + "\"\n" +
                     "\t\t\tcontent: \"" + this.content + "\"\n" +
-                    "\t\t\targumentList: \"" + this.argumentList + "\"\n" +
+                    "\t\t\tpositionalArguments: \"" + this.positionalArgumentList + "\"\n" +
+                    "\t\t\tnamedArguments: \"" + this.namedArgumentList + "\"\n" +
                     "\t\t}";
         }
     }
