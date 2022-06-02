@@ -92,6 +92,7 @@ public class FluentAttribute extends FluentElement {
             StringSlice slice = content.getIdentifier();
 
             placeable = new FluentPlaceable.AttributeReference(placeable, slice);
+            canSelect = true;
         }
 
         content.skipWhitespace();
