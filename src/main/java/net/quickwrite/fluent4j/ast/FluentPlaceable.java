@@ -290,7 +290,9 @@ public abstract class FluentPlaceable extends FluentElement {
             this.positionalArgumentList = new ArrayList<>();
             this.namedArgumentList = new ArrayList<>();
 
-            getArguments();
+            if (content != null) {
+                getArguments();
+            }
         }
 
         private void getArguments() {
@@ -381,8 +383,12 @@ public abstract class FluentPlaceable extends FluentElement {
      * </pre>
       */
     public static class TermReference extends FunctionReference {
-        public TermReference(StringSlice functionName, StringSlice content) {
-            super(functionName, content);
+
+        public TermReference(StringSlice name) {
+            super(name, null);
+        }
+        public TermReference(StringSlice name, StringSlice content) {
+            super(name, content);
         }
 
         @Override

@@ -264,7 +264,13 @@ public class StringSlice {
         StringSlice msgIdentifier = getIdentifier();
         // TODO: Create Functions
 
-        FluentPlaceable expression = new FluentPlaceable.MessageReference(msgIdentifier);
+        FluentPlaceable expression;
+        if (isTerm) {
+            expression = new FluentPlaceable.TermReference(msgIdentifier);
+        } else {
+            expression = new FluentPlaceable.MessageReference(msgIdentifier);
+        }
+
 
         skipWhitespace();
 

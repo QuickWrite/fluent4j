@@ -87,6 +87,13 @@ public class FluentAttribute extends FluentElement {
         boolean canSelect = !(placeable instanceof FluentPlaceable.MessageReference) &&
                 !(placeable instanceof FluentPlaceable.TermReference);
 
+        if (content.getChar() == '.') {
+            content.increment();
+            StringSlice slice = content.getIdentifier();
+
+            placeable = new FluentPlaceable.AttributeReference(placeable, slice);
+        }
+
         content.skipWhitespace();
 
         if (canSelect && content.getChar() == '-') {
