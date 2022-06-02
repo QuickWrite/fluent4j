@@ -94,6 +94,38 @@ public abstract class FluentPlaceable extends FluentElement {
     }
 
     /**
+     * Can reference the Attributes of a Fluent Message or Term.
+     * <br>
+     * It can be declared like this:
+     * <pre>
+     * message-test = { message.attribute }
+     * -term-test = { -term.attribute }
+     * </pre>
+     */
+    public static class AttributeReference extends FluentPlaceable {
+        private final FluentPlaceable reference;
+        private final StringSlice content;
+
+        public AttributeReference(FluentPlaceable reference, StringSlice content) {
+            this.reference = reference;
+            this.content = content;
+        }
+
+        @Override
+        public StringSlice getContent() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "FluentAttributeReference: {\n" +
+                    "\t\t\tvalue: \"" + this.reference + "\"\n" +
+                    "\t\t\tattribute: \"" + this.content + "\"\n" +
+                    "\t\t}";
+        }
+    }
+
+    /**
      * The number literal stores numbers. These numbers
      * are stored in two different containers depending
      * on their type.
