@@ -151,7 +151,7 @@ public class FluentParser {
                 input.increment();
             }
             input.increment();
-        } while (input.getChar() == ' ');
+        } while (input.getChar() == ' ' || input.getChar() == '\n');
 
         return input.substring(start, lastWhitespace + 1);
     }

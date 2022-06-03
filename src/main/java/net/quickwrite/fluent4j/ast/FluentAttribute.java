@@ -51,7 +51,7 @@ public class FluentAttribute extends FluentElement {
         List<FluentElement> elements = new ArrayList<>();
 
         while (!content.isBigger()) {
-            if (content.getChar() == '{' && content.getChar() != '\0') {
+            if (content.getChar() == '{') {
                 elements.add(getPlaceable());
                 continue;
             }
@@ -80,14 +80,14 @@ public class FluentAttribute extends FluentElement {
 
     private FluentPlaceable getPlaceable() {
         content.increment();
-        content.skipWhitespace();
+        content.skipWhitespaceAndNL();
 
         FluentPlaceable placeable = content.getExpression();
 
         boolean canSelect = !(placeable instanceof FluentPlaceable.MessageReference) &&
                 !(placeable instanceof FluentPlaceable.TermReference);
 
-        if (content.getChar() == '.') {
+        if (!canSelect && content.getChar() == '.') {
             content.increment();
             StringSlice slice = content.getIdentifier();
 
@@ -95,7 +95,7 @@ public class FluentAttribute extends FluentElement {
             canSelect = true;
         }
 
-        content.skipWhitespace();
+        content.skipWhitespaceAndNL();
 
         if (canSelect && content.getChar() == '-') {
             content.increment();
