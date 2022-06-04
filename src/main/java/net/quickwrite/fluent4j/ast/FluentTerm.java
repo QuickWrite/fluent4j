@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.parser.StringSlice;
+import net.quickwrite.fluent4j.util.StringSlice;
 
 import java.util.List;
 

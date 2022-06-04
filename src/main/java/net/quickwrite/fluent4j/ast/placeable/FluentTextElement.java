@@ -1,13 +1,13 @@
-package net.quickwrite.fluent4j.ast.wrapper;
+package net.quickwrite.fluent4j.ast.placeable;
 
-import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.parser.StringSlice;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.util.StringSlice;
 
 /**
  * The TextElement is just storing a text that does
  * nothing at all.
  */
-public class FluentTextElement extends FluentElement {
+public class FluentTextElement implements FluentPlaceable {
     private StringSlice content;
 
     public FluentTextElement(final StringSlice content) {
@@ -24,6 +24,11 @@ public class FluentTextElement extends FluentElement {
         }
 
         return true;
+    }
+
+    @Override
+    public StringSlice getContent() {
+        return this.content;
     }
 
     @Override

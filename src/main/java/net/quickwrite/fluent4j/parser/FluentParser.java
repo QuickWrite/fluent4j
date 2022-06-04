@@ -6,6 +6,8 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.exception.FluentParseException;
+import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.StringSliceUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -52,9 +54,9 @@ public class FluentParser {
             }
 
             if (Character.isAlphabetic(input.getChar())) {
-                StringSlice identifier = input.getIdentifier();
+                StringSlice identifier = StringSliceUtil.getIdentifier(input);
 
-                input.skipWhitespace();
+                StringSliceUtil.skipWhitespace(input);
 
                 if(input.getChar() != '=') {
                     throw new FluentParseException('=', input.getChar(), input.getPosition());
@@ -73,9 +75,9 @@ public class FluentParser {
             if (input.getChar() == '-') {
                 input.increment();
 
-                StringSlice identifier = input.getIdentifier();
+                StringSlice identifier = StringSliceUtil.getIdentifier(input);
 
-                input.skipWhitespace();
+                StringSliceUtil.skipWhitespace(input);
 
                 if(input.getChar() != '=') {
                     throw new FluentParseException('=', input.getChar(), input.getPosition());
@@ -91,7 +93,7 @@ public class FluentParser {
                 continue;
             }
 
-            if (!input.skipWhitespaceAndNL()) {
+            if (!StringSliceUtil.skipWhitespaceAndNL(input)) {
                 if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
                     break;
                 }
@@ -114,15 +116,15 @@ public class FluentParser {
 
         while (input.getChar() == '.') {
             input.increment();
-            StringSlice identifier = input.getIdentifier();
-            input.skipWhitespace();
+            StringSlice identifier = StringSliceUtil.getIdentifier(input);
+            StringSliceUtil.skipWhitespace(input);
 
             if (input.getChar() != '=') {
                 throw new FluentParseException('=', input.getChar(), input.getPosition());
             }
 
             input.increment();
-            input.skipWhitespace();
+            StringSliceUtil.skipWhitespace(input);
 
             attributes.add(new FluentAttribute(identifier, getMessageContent()));
         }
@@ -131,13 +133,13 @@ public class FluentParser {
     }
 
     private StringSlice getMessageContent() {
-        input.skipWhitespace();
+        StringSliceUtil.skipWhitespace(input);
         final int start = input.getPosition();
         int lastWhitespace = start;
         boolean first = true;
 
         do {
-            input.skipWhitespace();
+            StringSliceUtil.skipWhitespace(input);
             if (!first && input.getChar() == '.') {
                 break;
             }

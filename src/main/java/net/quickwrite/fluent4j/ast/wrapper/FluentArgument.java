@@ -1,10 +1,10 @@
 package net.quickwrite.fluent4j.ast.wrapper;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.ast.FluentPlaceable;
-import net.quickwrite.fluent4j.parser.StringSlice;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.util.StringSlice;
 
-public class FluentArgument extends FluentElement {
+public class FluentArgument implements FluentElement {
     private final StringSlice identifier;
     private final FluentPlaceable placeable;
 

@@ -1,6 +1,9 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.parser.StringSlice;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
+import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
+import net.quickwrite.fluent4j.util.StringSlice;
 
 /**
  * A variant stores a single variant of a
@@ -15,7 +18,7 @@ import net.quickwrite.fluent4j.parser.StringSlice;
  * </p>
  *
  */
-public class FluentVariant extends FluentElement {
+public class FluentVariant implements FluentElement {
     private final FluentPlaceable identifier;
     private final FluentAttribute content;
     private final boolean defaultVariant;
@@ -32,10 +35,10 @@ public class FluentVariant extends FluentElement {
 
     private FluentPlaceable getIdentifier(StringSlice slice) {
         if (Character.isDigit(slice.getChar())) {
-            return FluentPlaceable.NumberLiteral.getNumberLiteral(slice);
+            return NumberLiteral.getNumberLiteral(slice);
         }
 
-        return new FluentPlaceable.StringLiteral(slice);
+        return new StringLiteral(slice);
     }
 
     @Override

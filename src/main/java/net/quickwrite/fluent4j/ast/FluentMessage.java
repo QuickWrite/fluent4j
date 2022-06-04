@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.parser.StringSlice;
+import net.quickwrite.fluent4j.util.StringSlice;
 
 import java.util.List;
 
@@ -20,9 +20,8 @@ import java.util.List;
  * </p>
  *
  */
-public class FluentMessage extends FluentAttribute {
+public class FluentMessage extends FluentBase {
     protected List<FluentAttribute> attributes;
-
 
     /**
      * Creates a new FluentMessage with the identifier, content and a list

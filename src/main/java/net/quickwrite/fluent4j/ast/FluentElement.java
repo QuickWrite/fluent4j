@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.ast;
 
 /**
- * The base object for the AST.
+ * The base interface for the AST.
  */
-public abstract class FluentElement {
+public interface FluentElement {
 }
