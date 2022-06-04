@@ -1,21 +1,24 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.ast.placeable.AttributeReference;
-import net.quickwrite.fluent4j.ast.placeable.FluentTextElement;
 import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
 import net.quickwrite.fluent4j.ast.placeable.TermReference;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.exception.FluentSelectException;
+import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class FluentBase implements FluentElement {
     protected final StringSlice identifier;
+    protected final int whitespace;
 
     protected final List<FluentElement> fluentElements;
     protected StringSlice content;
@@ -29,43 +32,44 @@ public abstract class FluentBase implements FluentElement {
      * @param identifier The information that uniquely represents the Attribute.
      * @param content The content that needs to be parsed.
      */
-    public FluentBase(StringSlice identifier, StringSlice content) {
+    public FluentBase(StringSlice identifier, StringSlice content, int whitespace) {
         this.identifier = identifier;
 
         this.content = content;
+        this.whitespace = whitespace;
 
         this.fluentElements = parse();
     }
 
     private List<FluentElement> parse() {
-        List<FluentElement> elements = new ArrayList<>();
+        List<FluentElement> elements = new LinkedList<>();
+
+        StringSliceUtil.skipWhitespace(content);
+        boolean firstLine = true;
 
         while (!content.isBigger()) {
             if (content.getChar() == '{') {
                 elements.add(getPlaceable());
-                continue;
+            } else {
+                FluentTextElement text = getText(firstLine);
+
+                elements.add(text);
             }
 
-            FluentTextElement text = getText();
-
-            if (text.isEmpty()) {
-                continue;
-            }
-
-            elements.add(text);
+            firstLine = false;
         }
 
         return elements;
     }
 
-    private FluentTextElement getText() {
+    private FluentTextElement getText(boolean firstLine) {
         final int start = content.getPosition();
 
         while (!content.isBigger() && content.getChar() != '{') {
             content.increment();
         }
 
-        return new FluentTextElement(content.substring(start, content.getPosition()));
+        return new FluentTextElement(content.substring(start, content.getPosition()), whitespace);
     }
 
     private FluentPlaceable getPlaceable() {
@@ -169,28 +173,13 @@ public abstract class FluentBase implements FluentElement {
         StringSlice identifier = content.substring(start + 1, end);
 
         content.increment();
-        StringSliceUtil.skipWhitespace(content);
 
-        start = content.getPosition();
-        int lastWhitespace = start;
+        Pair<StringSlice, Integer> stringSliceContent = FluentParser.getMessageContent(content,
+                character -> character == '[' || character == '*' || character == '}');
 
-        do {
-            StringSliceUtil.skipWhitespace(content);
-
-            if (content.getChar() == '[' || content.getChar() == '*' || content.getChar() == '}') {
-                break;
-            }
-
-            while (content.getChar() != '\0' && content.getChar() != '\n') {
-                if (content.getChar() != ' ') {
-                    lastWhitespace = content.getPosition();
-                }
-                content.increment();
-            }
-
-            content.increment();
-        } while(content.getChar() == ' ');
-
-        return new FluentVariant(new FluentAttribute(identifier, content.substring(start, lastWhitespace + 1)), isDefault);
+        return new FluentVariant(
+                new FluentAttribute(identifier, stringSliceContent.getLeft(), stringSliceContent.getRight()),
+                isDefault
+        );
     }
 }

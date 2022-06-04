@@ -64,10 +64,10 @@ public class FluentParser {
 
                 input.increment();
 
-                final Pair<StringSlice, List<FluentAttribute>> pair = getContent();
+                final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
 
                 // must be a Message
-                elementList.add(new FluentMessage(identifier, pair.getLeft(), pair.getRight()));
+                elementList.add(new FluentMessage(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight()));
 
                 continue;
             }
@@ -85,10 +85,10 @@ public class FluentParser {
 
                 input.increment();
 
-                final Pair<StringSlice, List<FluentAttribute>> pair = getContent();
+                final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
 
                 // must be a Term
-                elementList.add(new FluentTerm(identifier, pair.getLeft(), pair.getRight()));
+                elementList.add(new FluentTerm(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight()));
 
                 continue;
             }
@@ -110,9 +110,9 @@ public class FluentParser {
         }
     }
 
-    private Pair<StringSlice, List<FluentAttribute>> getContent() {
+    private Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> getContent() {
         List<FluentAttribute> attributes = new ArrayList<>();
-        StringSlice content = getMessageContent();
+        Pair<StringSlice, Integer> content = getMessageContent();
 
         while (input.getChar() == '.') {
             input.increment();
@@ -126,21 +126,32 @@ public class FluentParser {
             input.increment();
             StringSliceUtil.skipWhitespace(input);
 
-            attributes.add(new FluentAttribute(identifier, getMessageContent()));
+            Pair<StringSlice, Integer> messageContent = getMessageContent();
+
+            attributes.add(new FluentAttribute(identifier, messageContent.getLeft(), messageContent.getRight()));
         }
 
         return new ImmutablePair<>(content, attributes);
     }
 
-    private StringSlice getMessageContent() {
+    private Pair<StringSlice, Integer> getMessageContent() {
+        return getMessageContent(input, character -> character == '.');
+    }
+
+    public static Pair<StringSlice, Integer> getMessageContent(StringSlice input, BreakChecker breaker) {
         StringSliceUtil.skipWhitespace(input);
         final int start = input.getPosition();
         int lastWhitespace = start;
         boolean first = true;
+        int leadingWhitespace = Integer.MAX_VALUE;
 
         do {
-            StringSliceUtil.skipWhitespace(input);
-            if (!first && input.getChar() == '.') {
+            int whitespace = StringSliceUtil.skipWhitespace(input);
+            if (!first && whitespace < leadingWhitespace && whitespace != 0) {
+                leadingWhitespace = whitespace;
+            }
+
+            if (!first && breaker.isEndCharacter(input.getChar())) {
                 break;
             }
 
@@ -150,11 +161,20 @@ public class FluentParser {
                 if (input.getChar() != ' ') {
                     lastWhitespace = input.getPosition();
                 }
+
                 input.increment();
             }
             input.increment();
         } while (input.getChar() == ' ' || input.getChar() == '\n');
 
-        return input.substring(start, lastWhitespace + 1);
+        if (leadingWhitespace == Integer.MAX_VALUE) {
+            leadingWhitespace = 0;
+        }
+
+        return new ImmutablePair<>(input.substring(start, lastWhitespace + 1), leadingWhitespace);
+    }
+
+    public interface BreakChecker {
+        boolean isEndCharacter(char character);
     }
 }

@@ -34,8 +34,8 @@ public class FluentMessage extends FluentBase {
      * @param content The content that needs to be parsed.
      * @param attributes All of the attributes
      */
-    public FluentMessage(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes) {
-        super(identifier, content);
+    public FluentMessage(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes, int whitespace) {
+        super(identifier, content, whitespace);
 
         this.attributes = attributes;
     }

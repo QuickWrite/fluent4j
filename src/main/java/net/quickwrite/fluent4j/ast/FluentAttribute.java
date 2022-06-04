@@ -29,8 +29,8 @@ public class FluentAttribute extends FluentBase {
      * @param identifier The information that uniquely represents the Attribute.
      * @param content    The content that needs to be parsed.
      */
-    public FluentAttribute(StringSlice identifier, StringSlice content) {
-        super(identifier, content);
+    public FluentAttribute(StringSlice identifier, StringSlice content, int whitespace) {
+        super(identifier, content, whitespace);
     }
 
     /**

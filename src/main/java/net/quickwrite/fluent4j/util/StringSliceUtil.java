@@ -18,16 +18,18 @@ public final class StringSliceUtil {
      *
      * @return If whitespace could be skipped.
      */
-    public static boolean skipWhitespace(StringSlice slice) {
+    public static int skipWhitespace(StringSlice slice) {
         if(slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
-            return false;
+            return 0;
         }
+
+        int start = slice.getPosition();
 
         do {
             slice.increment();
         } while(slice.getChar() == ' ' && !(slice.getPosition() >= slice.length()));
 
-        return true;
+        return slice.getPosition() - start;
     }
 
     /**

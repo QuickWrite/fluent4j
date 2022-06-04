@@ -34,8 +34,8 @@ public class FluentTerm extends FluentMessage {
      * @param content The content that needs to be parsed.
      * @param attributes All of the attributes
      */
-    public FluentTerm(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes) {
-        super(identifier, content, attributes);
+    public FluentTerm(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes, int whitespace) {
+        super(identifier, content, attributes, whitespace);
     }
 
     @Override

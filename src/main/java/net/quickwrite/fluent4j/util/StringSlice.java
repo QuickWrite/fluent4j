@@ -99,6 +99,10 @@ public class StringSlice {
     }
 
     public char peek(int index) {
+        if(getPosition() + start + index > end) {
+            return '\0';
+        }
+
         return this.base.charAt(getPosition() + start + index);
     }
 
