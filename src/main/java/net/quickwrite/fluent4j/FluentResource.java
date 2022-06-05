@@ -15,9 +15,11 @@ import java.util.List;
  */
 public class FluentResource {
     private final List<FluentElement> body;
+    private final List<Exception> exceptionList;
 
-    public FluentResource(List<FluentElement> elementList) {
+    public FluentResource(List<FluentElement> elementList, List<Exception> exceptionList) {
         this.body = elementList;
+        this.exceptionList = exceptionList;
     }
 
     @Override
@@ -25,6 +27,9 @@ public class FluentResource {
         return "FluentResource: {\n" +
                 "\tbody: [\n\t\t" +
                     this.body +
+                "\n\t]\n" +
+                "\texceptions: [\n\t\t" +
+                this.exceptionList +
                 "\n\t]\n" +
                 "}";
     }

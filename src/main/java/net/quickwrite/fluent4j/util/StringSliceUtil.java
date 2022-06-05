@@ -168,7 +168,7 @@ public final class StringSliceUtil {
 
             while (!(slice.getChar() == ')' && open == 0)) {
                 if (slice.isBigger()) {
-                    throw new FluentParseException(")", "EOF", slice.getPosition());
+                    throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
                 }
 
                 if (slice.getChar() == '(') {
@@ -229,7 +229,7 @@ public final class StringSliceUtil {
         final int start = slice.getPosition();
 
         if (!Character.isAlphabetic(character)) {
-            throw new FluentParseException("character from range [a-zA-Z]", character, slice.getPosition());
+            throw new FluentParseException("character from range [a-zA-Z]", character, slice.getAbsolutePosition());
         }
 
         while(character != '\0' &&

@@ -46,7 +46,7 @@ public abstract class FluentFunction implements FluentPlaceable {
 
             if (content.getChar() != ',') {
                 if (!content.isBigger()) {
-                    throw new FluentParseException("','", content.getChar(), content.getPosition());
+                    throw new FluentParseException("','", content.getChar(), content.getAbsolutePosition());
                 }
                 break;
             }

@@ -32,7 +32,7 @@ public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentS
         } catch (NumberFormatException ignored) {
         }
 
-        throw new FluentParseException("Number", slice.toString(), slice.getPosition());
+        throw new FluentParseException("Number", slice.toString(), slice.getAbsolutePosition());
     }
 
     public T getNumber() {

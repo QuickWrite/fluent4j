@@ -1,10 +1,7 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.FluentResource;
-import net.quickwrite.fluent4j.ast.FluentAttribute;
-import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.ast.FluentMessage;
-import net.quickwrite.fluent4j.ast.FluentTerm;
+import net.quickwrite.fluent4j.ast.*;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
@@ -12,6 +9,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -46,6 +44,7 @@ public class FluentParser {
      */
     public FluentResource parse() {
         List<FluentElement> elementList = new ArrayList<>();
+        List<Exception> exceptionList = new LinkedList<>();
 
         while(input.length() >= input.length()) {
             if (input.getChar() == '#') {
@@ -53,55 +52,66 @@ public class FluentParser {
                 continue;
             }
 
-            if (Character.isAlphabetic(input.getChar())) {
-                StringSlice identifier = StringSliceUtil.getIdentifier(input);
+            try {
+                FluentBase fluentBase = getBase();
 
-                StringSliceUtil.skipWhitespace(input);
-
-                if(input.getChar() != '=') {
-                    throw new FluentParseException('=', input.getChar(), input.getPosition());
+                if (fluentBase != null) {
+                    elementList.add(fluentBase);
+                    continue;
                 }
-
-                input.increment();
-
-                final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
-
-                // must be a Message
-                elementList.add(new FluentMessage(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight()));
-
-                continue;
-            }
-
-            if (input.getChar() == '-') {
-                input.increment();
-
-                StringSlice identifier = StringSliceUtil.getIdentifier(input);
-
-                StringSliceUtil.skipWhitespace(input);
-
-                if(input.getChar() != '=') {
-                    throw new FluentParseException('=', input.getChar(), input.getPosition());
-                }
-
-                input.increment();
-
-                final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
-
-                // must be a Term
-                elementList.add(new FluentTerm(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight()));
-
-                continue;
+            } catch (FluentParseException exception) {
+                exceptionList.add(exception);
             }
 
             if (!StringSliceUtil.skipWhitespaceAndNL(input)) {
                 if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
                     break;
                 }
-                throw new FluentParseException("whitespace", input.getChar(), input.getPosition());
+                exceptionList.add(new FluentParseException("whitespace", input.getChar(), input.getAbsolutePosition()));
             }
         }
 
-        return new FluentResource(elementList);
+        return new FluentResource(elementList, exceptionList);
+    }
+
+    private FluentBase getBase() {
+        if (Character.isAlphabetic(input.getChar())) {
+            StringSlice identifier = StringSliceUtil.getIdentifier(input);
+
+            StringSliceUtil.skipWhitespace(input);
+
+            if(input.getChar() != '=') {
+                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
+            }
+
+            input.increment();
+
+            final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
+
+            // must be a Message
+            return new FluentMessage(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight());
+        }
+
+        if (input.getChar() == '-') {
+            input.increment();
+
+            StringSlice identifier = StringSliceUtil.getIdentifier(input);
+
+            StringSliceUtil.skipWhitespace(input);
+
+            if(input.getChar() != '=') {
+                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
+            }
+
+            input.increment();
+
+            final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
+
+            // must be a Term
+            return new FluentTerm(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight());
+        }
+
+        return null;
     }
 
     private void handleComment() {
@@ -120,7 +130,7 @@ public class FluentParser {
             StringSliceUtil.skipWhitespace(input);
 
             if (input.getChar() != '=') {
-                throw new FluentParseException('=', input.getChar(), input.getPosition());
+                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
             }
 
             input.increment();

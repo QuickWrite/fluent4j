@@ -98,7 +98,7 @@ public abstract class FluentBase implements FluentElement {
         if (canSelect && content.getChar() == '-') {
             content.increment();
             if (content.getChar() != '>') {
-                throw new FluentParseException("->", "-" + content.getChar(), content.getPosition());
+                throw new FluentParseException("->", "-" + content.getChar(), content.getAbsolutePosition());
             }
 
             content.increment();
@@ -130,7 +130,7 @@ public abstract class FluentBase implements FluentElement {
         StringSliceUtil.skipWhitespaceAndNL(content);
 
         if (content.getChar() != '}') {
-            throw new FluentParseException('}', content.getChar(), content.getPosition());
+            throw new FluentParseException('}', content.getChar(), content.getAbsolutePosition());
         }
 
         content.increment();
@@ -153,7 +153,7 @@ public abstract class FluentBase implements FluentElement {
         }
 
         if (content.getChar() != '[') {
-            throw new FluentParseException('[',  content.getChar(), content.getPosition());
+            throw new FluentParseException('[',  content.getChar(), content.getAbsolutePosition());
         }
 
         StringSliceUtil.skipWhitespace(content);
@@ -167,7 +167,7 @@ public abstract class FluentBase implements FluentElement {
         StringSliceUtil.skipWhitespace(content);
 
         if (content.getChar() != ']') {
-            throw new FluentParseException(']',  content.getChar(), content.getPosition());
+            throw new FluentParseException(']',  content.getChar(), content.getAbsolutePosition());
         }
 
         StringSlice identifier = content.substring(start + 1, end);

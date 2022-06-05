@@ -83,6 +83,16 @@ public class StringSlice {
     }
 
     /**
+     * Gets the current position in the whole
+     * String.
+     *
+     * @return The integer index
+     */
+    public int getAbsolutePosition() {
+        return this.start + this.index;
+    }
+
+    /**
      * Increments the index with one. <br>
      * Except when the index is larger than the length
      * of the StringSlice.
