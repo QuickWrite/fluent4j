@@ -14,25 +14,30 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public abstract class NumberLiteral implements FluentPlaceable, FluentSelectable {
-    private NumberLiteral() {
+public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentSelectable {
+    private final T number;
+
+    private NumberLiteral(T number) {
+        this.number = number;
     }
 
-    public static net.quickwrite.fluent4j.ast.placeable.NumberLiteral getNumberLiteral(StringSlice slice) {
+    public static NumberLiteral<? extends Number> getNumberLiteral(StringSlice slice) {
         try {
-            return new IntegerLiteral(Integer.parseInt(slice.toString()));
+            return new NumberLiteral<>(Integer.parseInt(slice.toString()));
         } catch (NumberFormatException ignored) {
         }
 
         try {
-            return new DoubleLiteral(Double.parseDouble(slice.toString()));
+            return new NumberLiteral<>(Double.parseDouble(slice.toString()));
         } catch (NumberFormatException ignored) {
         }
 
         throw new FluentParseException("Number", slice.toString(), slice.getPosition());
     }
 
-    public abstract Number getNumber();
+    public T getNumber() {
+        return this.number;
+    }
 
     @Override
     public StringSlice getContent() {
@@ -44,31 +49,5 @@ public abstract class NumberLiteral implements FluentPlaceable, FluentSelectable
         return "FluentNumberLiteral: {\n" +
                 "\t\t\tvalue: \"" + this.getNumber() + "\"\n" +
                 "\t\t}";
-    }
-
-    private static class IntegerLiteral extends net.quickwrite.fluent4j.ast.placeable.NumberLiteral {
-        private final int value;
-
-        public IntegerLiteral(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public Number getNumber() {
-            return value;
-        }
-    }
-
-    private static class DoubleLiteral extends net.quickwrite.fluent4j.ast.placeable.NumberLiteral {
-        private final double value;
-
-        public DoubleLiteral(double value) {
-            this.value = value;
-        }
-
-        @Override
-        public Number getNumber() {
-            return value;
-        }
     }
 }
