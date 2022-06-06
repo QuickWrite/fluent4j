@@ -75,7 +75,10 @@ public class FluentTextElement implements FluentElement {
         if (onlyWhitespace) {
             return "\n";
         }
-        return content.substring(start, content.getPosition() + (content.peek(1) == '{' ? 0 : 1)).toString();
+
+        char peek = content.peek(1);
+
+        return content.substring(start, content.getPosition() + (peek == '{' || peek == '\0' ? 0 : 1)).toString();
     }
 
     public StringSlice getContent() {
