@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
+import net.quickwrite.fluent4j.exception.FluentParseException;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ import java.util.List;
  */
 public class FluentResource {
     private final List<FluentElement> body;
-    private final List<Exception> exceptionList;
+    private final List<FluentParseException> exceptionList;
 
-    public FluentResource(List<FluentElement> elementList, List<Exception> exceptionList) {
+    public FluentResource(List<FluentElement> elementList, List<FluentParseException> exceptionList) {
         this.body = elementList;
         this.exceptionList = exceptionList;
     }

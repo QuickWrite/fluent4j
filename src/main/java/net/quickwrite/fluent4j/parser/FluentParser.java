@@ -44,7 +44,7 @@ public class FluentParser {
      */
     public FluentResource parse() {
         List<FluentElement> elementList = new ArrayList<>();
-        List<Exception> exceptionList = new LinkedList<>();
+        List<FluentParseException> exceptionList = new LinkedList<>();
 
         while(input.length() >= input.length()) {
             if (input.getChar() == '#') {
@@ -67,7 +67,11 @@ public class FluentParser {
                 if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
                     break;
                 }
-                exceptionList.add(new FluentParseException("whitespace", input.getChar(), input.getAbsolutePosition()));
+                exceptionList.add(new FluentParseException("Expected an entry start at " + input.getPosition()));
+
+                while (input.getChar() != '\n') {
+                    input.increment();
+                }
             }
         }
 
@@ -75,43 +79,35 @@ public class FluentParser {
     }
 
     private FluentBase getBase() {
-        if (Character.isAlphabetic(input.getChar())) {
-            StringSlice identifier = StringSliceUtil.getIdentifier(input);
-
-            StringSliceUtil.skipWhitespace(input);
-
-            if(input.getChar() != '=') {
-                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
-            }
-
-            input.increment();
-
-            final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
-
-            // must be a Message
-            return new FluentMessage(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight());
-        }
+        boolean isIdentifier = false;
 
         if (input.getChar() == '-') {
             input.increment();
 
-            StringSlice identifier = StringSliceUtil.getIdentifier(input);
+            isIdentifier = true;
+        } else if(!Character.isAlphabetic(input.getChar())) {
+            return null;
+        }
 
-            StringSliceUtil.skipWhitespace(input);
+        StringSlice identifier = StringSliceUtil.getIdentifier(input);
 
-            if(input.getChar() != '=') {
-                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
-            }
+        StringSliceUtil.skipWhitespace(input);
 
-            input.increment();
+        if(input.getChar() != '=') {
+            throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
+        }
 
-            final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
+        input.increment();
 
+        final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
+
+        if (!isIdentifier) {
+            // must be a Message
+            return new FluentMessage(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight());
+        } else {
             // must be a Term
             return new FluentTerm(identifier, pair.getLeft().getLeft(), pair.getRight(), pair.getLeft().getRight());
         }
-
-        return null;
     }
 
     private void handleComment() {

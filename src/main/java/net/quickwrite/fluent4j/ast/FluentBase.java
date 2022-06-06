@@ -63,10 +63,18 @@ public abstract class FluentBase implements FluentElement {
     }
 
     private FluentTextElement getText(boolean firstLine) {
+        if (firstLine){
+            StringSliceUtil.skipWhitespaceAndNL(content);
+        }
+
         final int start = content.getPosition();
 
         while (!content.isBigger() && content.getChar() != '{') {
             content.increment();
+        }
+
+        if (start == content.getPosition()) {
+            return null;
         }
 
         return new FluentTextElement(content.substring(start, content.getPosition()), whitespace);
@@ -136,6 +144,10 @@ public abstract class FluentBase implements FluentElement {
         content.increment();
 
         return placeable;
+    }
+
+    public StringSlice getIdentifier() {
+        return this.identifier;
     }
 
     private FluentVariant getVariant() {
