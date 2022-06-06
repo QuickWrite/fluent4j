@@ -1,8 +1,14 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.placeable.base.FluentUnicodeTranslator;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
+import org.apache.commons.text.translate.AggregateTranslator;
+import org.apache.commons.text.translate.CharSequenceTranslator;
+import org.apache.commons.text.translate.LookupTranslator;
+
+import java.util.Map;
 
 /**
  * The string literal is the simplest of the Placeables
@@ -26,20 +32,37 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * </p>
  */
 public class StringLiteral implements FluentPlaceable, FluentSelectable {
+
+    public static final CharSequenceTranslator UNESCAPE_FLUENT;
+
+    static {
+        UNESCAPE_FLUENT = new AggregateTranslator(
+                new FluentUnicodeTranslator(),
+                new LookupTranslator(Map.of("\\\\", "\\", "\\\"", "\""))
+        );
+    }
+
     private final StringSlice content;
+    private final String literal;
 
     public StringLiteral(StringSlice content) {
         this.content = content;
+        this.literal = getLiteral();
     }
 
     public StringSlice getContent() {
         return this.content;
     }
 
+    private String getLiteral() {
+        return UNESCAPE_FLUENT.translate(content.toString());
+    }
+
     @Override
     public String toString() {
         return "FluentStringLiteral: {\n" +
                 "\t\t\tcontent: \"" + this.content + "\"\n" +
+                "\t\t\tliteral: \"" + this.literal + "\"\n" +
                 "\t\t}";
     }
 }

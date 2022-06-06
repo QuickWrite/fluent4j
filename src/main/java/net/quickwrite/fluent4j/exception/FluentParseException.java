@@ -20,4 +20,8 @@ public class FluentParseException extends RuntimeException {
     public FluentParseException(String reason) {
         super(reason);
     }
+
+    public FluentParseException(String reason, Exception exception) {
+        super(reason, exception);
+    }
 }
