@@ -153,36 +153,33 @@ public abstract class FluentBase implements FluentElement {
     private FluentVariant getVariant() {
         StringSliceUtil.skipWhitespaceAndNL(content);
 
-        int start = content.getPosition();
-
         boolean isDefault = false;
 
         if (content.getChar() == '*') {
             isDefault = true;
             content.increment();
-
-            start = content.getPosition();
         }
 
         if (content.getChar() != '[') {
             throw new FluentParseException('[',  content.getChar(), content.getAbsolutePosition());
         }
 
+        content.increment();
+
         StringSliceUtil.skipWhitespace(content);
 
-        while (content.getChar() != ']' && content.getChar() != ' ' && content.getChar() != '\n') {
-            content.increment();
+        StringSlice identifier;
+        try {
+            identifier = StringSliceUtil.getIdentifier(content);
+        } catch (FluentParseException exception) {
+            throw getVariantException("", "Identifier defined as [a-zA-Z][a-zA-Z0-9_-]*");
         }
-
-        final int end = content.getPosition();
 
         StringSliceUtil.skipWhitespace(content);
 
         if (content.getChar() != ']') {
-            throw new FluentParseException(']',  content.getChar(), content.getAbsolutePosition());
+            throw getVariantException(identifier.toString(), "]");
         }
-
-        StringSlice identifier = content.substring(start + 1, end);
 
         content.increment();
 
@@ -193,5 +190,17 @@ public abstract class FluentBase implements FluentElement {
                 new FluentAttribute(identifier, stringSliceContent.getLeft(), stringSliceContent.getRight()),
                 isDefault
         );
+    }
+
+    private FluentParseException getVariantException(String prev, String expected) {
+        int start = content.getPosition();
+
+        while (content.getChar() != ']' && !content.isBigger()) {
+            content.increment();
+        }
+
+        return new FluentParseException(expected,
+                prev + content.substring(start, content.getPosition()).toString(),
+                content.getAbsolutePosition());
     }
 }
