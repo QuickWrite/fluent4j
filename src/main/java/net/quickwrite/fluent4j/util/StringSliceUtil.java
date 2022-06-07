@@ -110,7 +110,7 @@ public final class StringSliceUtil {
             case '"' -> {
                 slice.increment();
                 final int start = slice.getPosition();
-                while (slice.getChar() != '"') {
+                while (slice.getChar() != '"' && !slice.isBigger()) {
                     if (slice.getChar() == '\\' && slice.peek(1) == '"')
                         slice.increment();
 
@@ -148,7 +148,6 @@ public final class StringSliceUtil {
         }
 
         StringSlice msgIdentifier = getIdentifier(slice);
-        // TODO: Create Functions
 
         FluentPlaceable expression;
         if (isTerm) {

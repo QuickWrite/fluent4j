@@ -69,7 +69,7 @@ public class FluentParser {
                 }
                 exceptionList.add(new FluentParseException("Expected an entry start at " + input.getPosition()));
 
-                while (input.getChar() != '\n') {
+                while (input.getChar() != '\n' && !input.isBigger()) {
                     input.increment();
                 }
             }
