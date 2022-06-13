@@ -42,18 +42,23 @@ public final class StringSliceUtil {
      * the StringSlice that does have something else than
      * Whitespace or newline.
      *
-     * @return If something could be skipped.
+     * @return If a Newline was skipped.
      */
     public static boolean skipWhitespaceAndNL(StringSlice slice) {
-        if(slice.getChar() != ' ' && slice.getChar() != '\n' || slice.isBigger()) {
+        if(!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
             return false;
         }
 
+        boolean andNL = false;
         do {
-            slice.increment();
-        } while((slice.getChar() == ' ' || slice.getChar() == '\n') && !slice.isBigger());
+            if (slice.getChar() == '\n') {
+                andNL = true;
+            }
 
-        return true;
+            slice.increment();
+        } while(slice.getChar() == ' ' || slice.getChar() == '\n' && !slice.isBigger());
+
+        return andNL;
     }
 
     /**

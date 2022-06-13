@@ -63,7 +63,10 @@ public class FluentParser {
                 exceptionList.add(exception);
             }
 
-            if (!StringSliceUtil.skipWhitespaceAndNL(input)) {
+            int startSkip = input.getPosition();
+            StringSliceUtil.skipWhitespaceAndNL(input);
+
+            if (startSkip == input.getPosition()) {
                 if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
                     break;
                 }

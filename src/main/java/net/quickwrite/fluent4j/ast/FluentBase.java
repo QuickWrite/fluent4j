@@ -53,7 +53,9 @@ public abstract class FluentBase implements FluentElement {
             } else {
                 FluentTextElement text = getText(firstLine);
 
-                elements.add(text);
+                if (text != null) {
+                    elements.add(text);
+                }
             }
 
             firstLine = false;
@@ -63,8 +65,12 @@ public abstract class FluentBase implements FluentElement {
     }
 
     private FluentTextElement getText(boolean firstLine) {
-        if (firstLine){
-            StringSliceUtil.skipWhitespaceAndNL(content);
+        if (firstLine && StringSliceUtil.skipWhitespaceAndNL(content)){
+            while (content.getChar() != '\n') {
+                content.decrement();
+            }
+            content.increment();
+            content.setIndex(content.getPosition() + whitespace);
         }
 
         final int start = content.getPosition();
