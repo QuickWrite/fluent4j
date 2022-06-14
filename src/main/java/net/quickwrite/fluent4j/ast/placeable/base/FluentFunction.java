@@ -33,7 +33,7 @@ public abstract class FluentFunction implements FluentPlaceable {
 
     private void getArguments() {
         while (!content.isBigger()) {
-            StringSliceUtil.skipWhitespace(content);
+            StringSliceUtil.skipWhitespaceAndNL(content);
 
             FluentArgument argument = getArgument();
             if (argument.isNamed()) {
@@ -42,7 +42,7 @@ public abstract class FluentFunction implements FluentPlaceable {
                 this.positionalArgumentList.add(argument);
             }
 
-            StringSliceUtil.skipWhitespace(content);
+            StringSliceUtil.skipWhitespaceAndNL(content);
 
             if (content.getChar() != ',') {
                 if (!content.isBigger()) {
