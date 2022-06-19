@@ -115,12 +115,17 @@ public final class StringSliceUtil {
             case '"' -> {
                 slice.increment();
                 final int start = slice.getPosition();
-                while (slice.getChar() != '"' && !slice.isBigger()) {
+                while (!(slice.getChar() == '"' || slice.getChar() == '\n') && !slice.isBigger()) {
                     if (slice.getChar() == '\\' && slice.peek(1) == '"')
                         slice.increment();
 
                     slice.increment();
                 }
+
+                if (slice.getChar() != '"') {
+                    throw new FluentParseException("String expression terminator '\"'", slice.getChar(), slice.getPosition() + 1);
+                }
+
                 StringSlice string = slice.substring(start, slice.getPosition());
                 slice.increment();
                 expression = new StringLiteral(string);
