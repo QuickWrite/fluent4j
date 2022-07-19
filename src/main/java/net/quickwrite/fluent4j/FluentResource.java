@@ -15,19 +15,27 @@ import java.util.List;
  *
  */
 public class FluentResource {
-    private final List<FluentElement> body;
+    private final List<FluentElement> elements;
     private final List<FluentParseException> exceptionList;
 
     public FluentResource(List<FluentElement> elementList, List<FluentParseException> exceptionList) {
-        this.body = elementList;
+        this.elements = elementList;
         this.exceptionList = exceptionList;
+    }
+
+    public List<FluentElement> getElements() {
+        return elements;
+    }
+
+    public boolean hasExceptions() {
+        return !exceptionList.isEmpty();
     }
 
     @Override
     public String toString() {
         return "FluentResource: {\n" +
-                "\tbody: [\n\t\t" +
-                    this.body +
+                "\telements: [\n\t\t" +
+                    this.elements +
                 "\n\t]\n" +
                 "\texceptions: [\n\t\t" +
                 this.exceptionList +
