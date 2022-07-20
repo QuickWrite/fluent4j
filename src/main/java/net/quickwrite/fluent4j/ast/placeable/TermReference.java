@@ -1,7 +1,9 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 /**
  * Terms are similar to regular messages but they can
@@ -42,5 +44,10 @@ public class TermReference extends FluentFunction {
                 "\t\t\tpositionalArguments: \"" + this.positionalArgumentList + "\"\n" +
                 "\t\t\tnamedArguments: \"" + this.namedArgumentList + "\"\n" +
                 "\t\t}";
+    }
+
+    @Override
+    public String getResult(FluentBundle bundle, FluentArgumentList arguments) {
+        return bundle.getTerm(this.functionName.toString());
     }
 }

@@ -1,8 +1,11 @@
 package net.quickwrite.fluent4j;
 
 import net.quickwrite.fluent4j.ast.*;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 import java.util.*;
 
@@ -92,6 +95,10 @@ public class FluentBundle {
         return this.messages.containsKey(key);
     }
 
+    public String getTerm(final String key /* TODO: add arguments */) {
+        return this.getBase(this.terms.get(key));
+    }
+
     public String getMessage(final String key /* TODO: add arguments */) {
         return this.getBase(this.messages.get(key));
     }
@@ -103,7 +110,17 @@ public class FluentBundle {
             if (element instanceof FluentTextElement) {
                 builder.append(((FluentTextElement)element).getText());
             } else {
-                builder.append(element.toString());
+                builder.append(((FluentPlaceable)element).getResult(this, new FluentArgumentList() {
+                    @Override
+                    public FluentArgument get(String key) {
+                        return null;
+                    }
+
+                    @Override
+                    public void set(String key, FluentArgument argument) {
+
+                    }
+                }));
             }
         }
 

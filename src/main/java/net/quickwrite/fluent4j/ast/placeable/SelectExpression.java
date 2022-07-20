@@ -1,8 +1,10 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 import java.util.List;
 
@@ -36,6 +38,12 @@ public class SelectExpression implements FluentPlaceable {
 
     public StringSlice getContent() {
         return this.identifier.getContent();
+    }
+
+    @Override
+    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+        // TODO: Implement
+        return null;
     }
 
     @Override

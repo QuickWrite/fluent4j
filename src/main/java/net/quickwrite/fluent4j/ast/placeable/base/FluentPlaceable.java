@@ -1,7 +1,9 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 /**
  * Text in Fluent may use special syntax to incorporate
@@ -48,4 +50,6 @@ public interface FluentPlaceable extends FluentElement {
      * @return content
      */
     StringSlice getContent();
+
+    String getResult(final FluentBundle bundle, final FluentArgumentList arguments);
 }

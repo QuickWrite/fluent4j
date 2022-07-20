@@ -1,8 +1,10 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -13,6 +15,12 @@ import net.quickwrite.fluent4j.util.StringSlice;
 public class FunctionReference extends FluentFunction implements FluentSelectable {
     public FunctionReference(StringSlice functionName, StringSlice content) {
         super(functionName, content);
+    }
+
+    @Override
+    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+        // TODO: Implement
+        return null;
     }
 
     @Override

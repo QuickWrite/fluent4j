@@ -1,9 +1,11 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
+import net.quickwrite.fluent4j.util.args.FluentArgumentList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,11 @@ public abstract class FluentFunction implements FluentPlaceable {
 
     public StringSlice getContent() {
         return this.content;
+    }
+
+    @Override
+    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+        return null;
     }
 
     protected boolean check(StringSlice string) {
