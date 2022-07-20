@@ -1,9 +1,8 @@
 package net.quickwrite.fluent4j;
 
-import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.ast.FluentMessage;
-import net.quickwrite.fluent4j.ast.FluentTerm;
+import net.quickwrite.fluent4j.ast.*;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
+import net.quickwrite.fluent4j.util.BuiltinFunctions;
 
 import java.util.*;
 
@@ -23,16 +22,37 @@ public class FluentBundle {
     private Map<String, FluentTerm> terms;
     private Map<String, FluentMessage> messages;
 
-    private Map<String, AbstractFunction> functions;
+    private Map<String, AbstractFunction> functions = BuiltinFunctions.getBuiltinFunctions();
 
     public FluentBundle(final List<Locale> locales, final FluentResource resource) {
         this.locales = locales;
         this.messages = new HashMap<>();
         this.terms = new HashMap<>();
 
-        addResource(resource);
+        this.addResource(resource);
     }
 
+    public FluentBundle(final Locale locale, final FluentResource resource) {
+        this(List.of(locale), resource);
+    }
+
+    /**
+     * Adds a {@link FluentResource} to the dataset
+     * of terms and messages so that they can be easily
+     * accessed.
+     *
+     * <p>
+     *     If a term or a message key exists twice the old
+     *     key is getting discarded and the new overrides it.
+     * </p>
+     * <p>
+     *     This manual addition of different resources can be
+     *     used for different files so that they don't need
+     *     to be concatenated before they are getting parsed.
+     * </p>
+     *
+     * @param resource The resource that is being added.
+     */
     public void addResource(final FluentResource resource) {
         for (FluentElement element : resource.getElements()) {
             if (element instanceof FluentTerm) {
@@ -65,10 +85,32 @@ public class FluentBundle {
      * @param function The function itself that should be called.
      */
     public void addFunction(final AbstractFunction function) {
-        functions.put(function.getIdentifier(), function);
+        this.functions.put(function.getIdentifier(), function);
+    }
+
+    public boolean hasMessage(final String key) {
+        return this.messages.containsKey(key);
+    }
+
+    public String getMessage(final String key /* TODO: add arguments */) {
+        return this.getBase(this.messages.get(key));
+    }
+
+    private String getBase(final FluentBase base) {
+        StringBuilder builder = new StringBuilder();
+
+        for(FluentElement element : base.getElements()) {
+            if (element instanceof FluentTextElement) {
+                builder.append(((FluentTextElement)element).getText());
+            } else {
+                builder.append(element.toString());
+            }
+        }
+
+        return builder.toString();
     }
 
     public Locale getLocale() {
-        return locales.get(0);
+        return this.locales.get(0);
     }
 }

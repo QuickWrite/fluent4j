@@ -81,8 +81,8 @@ public class FluentTextElement implements FluentElement {
         return content.substring(start, content.getPosition() + (peek == '{' || peek == '\0' ? 0 : 1)).toString();
     }
 
-    public StringSlice getContent() {
-        return this.content;
+    public String getText() {
+        return this.text;
     }
 
     @Override

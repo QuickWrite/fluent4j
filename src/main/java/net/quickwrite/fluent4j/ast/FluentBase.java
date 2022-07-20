@@ -198,6 +198,10 @@ public abstract class FluentBase implements FluentElement {
         );
     }
 
+    public List<FluentElement> getElements() {
+        return fluentElements;
+    }
+
     private FluentParseException getVariantException(String prev, String expected) {
         int start = content.getPosition();
 
