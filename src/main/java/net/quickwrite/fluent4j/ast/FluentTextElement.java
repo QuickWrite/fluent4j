@@ -66,7 +66,7 @@ public class FluentTextElement implements FluentElement {
 
         start = content.getPosition();
         while(content.getChar() != '\n' && !content.isBigger()) {
-            if(content.getChar() != ' ') {
+            if(content.getChar() != ' ' || whitespace == 0) {
                 onlyWhitespace = false;
             }
             content.increment();
@@ -88,7 +88,8 @@ public class FluentTextElement implements FluentElement {
     @Override
     public String toString() {
         return "FluentTextElement: {\n" +
-                "\t\t\tcontent: \"" + this.text + "\"\n" +
+                "\t\t\tcontent: \"" + this.content + "\"\n" +
+                "\t\t\ttext: \"" + this.text + "\"\n" +
                 "\t\t}";
     }
 }
