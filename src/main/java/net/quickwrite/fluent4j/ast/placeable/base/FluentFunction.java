@@ -75,7 +75,7 @@ public abstract class FluentFunction implements FluentPlaceable {
     }
 
     public StringSlice getContent() {
-        return this.content;
+        return this.functionName;
     }
 
     @Override
