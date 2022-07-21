@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
  * Variables are pieces of data received from the app.
@@ -39,9 +39,8 @@ public class VariableReference implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
-        // TODO: Implement
-        return null;
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+        return arguments.getNamed(content.toString()).toString();
     }
 
     @Override

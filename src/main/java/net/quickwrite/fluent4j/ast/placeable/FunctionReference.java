@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -18,7 +18,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         // TODO: Implement
         return null;
     }

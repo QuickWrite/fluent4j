@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
  * Can reference the Attributes of a Fluent Message or Term.
@@ -30,7 +30,7 @@ public class AttributeReference implements FluentPlaceable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         // TODO: Implement
         return null;
     }

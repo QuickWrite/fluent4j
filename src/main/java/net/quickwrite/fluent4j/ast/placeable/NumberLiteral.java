@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
  * The number literal stores numbers. These numbers
@@ -47,7 +47,7 @@ public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentS
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return number.toString();
     }
 

@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentUnicodeTranslator;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
@@ -57,7 +57,7 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return this.literal;
     }
 

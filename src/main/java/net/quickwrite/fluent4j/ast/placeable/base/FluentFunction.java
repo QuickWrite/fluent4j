@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public abstract class FluentFunction implements FluentPlaceable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgumentList arguments) {
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return null;
     }
 
