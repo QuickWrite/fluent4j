@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
-import net.quickwrite.fluent4j.util.args.FluentArgumentList;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 import java.util.*;
 
@@ -95,32 +95,22 @@ public class FluentBundle {
         return this.messages.containsKey(key);
     }
 
-    public String getTerm(final String key /* TODO: add arguments */) {
-        return this.getBase(this.terms.get(key));
+    public String getTerm(final String key, final FluentArgs arguments) {
+        return this.getBase(this.terms.get(key), arguments);
     }
 
-    public String getMessage(final String key /* TODO: add arguments */) {
-        return this.getBase(this.messages.get(key));
+    public String getMessage(final String key, final FluentArgs arguments) {
+        return this.getBase(this.messages.get(key), arguments);
     }
 
-    private String getBase(final FluentBase base) {
+    private String getBase(final FluentBase base, final FluentArgs arguments) {
         StringBuilder builder = new StringBuilder();
 
         for(FluentElement element : base.getElements()) {
             if (element instanceof FluentTextElement) {
                 builder.append(((FluentTextElement)element).getText());
             } else {
-                builder.append(((FluentPlaceable)element).getResult(this, new FluentArgumentList() {
-                    @Override
-                    public FluentArgument get(String key) {
-                        return null;
-                    }
-
-                    @Override
-                    public void set(String key, FluentArgument argument) {
-
-                    }
-                }));
+                builder.append(((FluentPlaceable)element).getResult(this, arguments));
             }
         }
 
