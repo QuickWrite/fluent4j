@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * The number literal stores numbers. These numbers
@@ -16,7 +17,7 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentSelectable {
+public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentSelectable, FluentArgument<T> {
     private final T number;
 
     private NumberLiteral(T number) {
@@ -37,10 +38,6 @@ public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentS
         throw new FluentParseException("Number", slice.toString(), slice.getAbsolutePosition());
     }
 
-    public T getNumber() {
-        return this.number;
-    }
-
     @Override
     public StringSlice getContent() {
         return null;
@@ -52,9 +49,24 @@ public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentS
     }
 
     @Override
+    public T valueOf() {
+        return this.number;
+    }
+
+    @Override
+    public boolean matches(String selector) {
+        return selector.equals(this.number.toString());
+    }
+
+    @Override
+    public String stringValue() {
+        return this.number.toString();
+    }
+
+    @Override
     public String toString() {
         return "FluentNumberLiteral: {\n" +
-                "\t\t\tvalue: \"" + this.getNumber() + "\"\n" +
+                "\t\t\tvalue: \"" + this.valueOf() + "\"\n" +
                 "\t\t}";
     }
 }

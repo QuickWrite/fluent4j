@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
@@ -33,7 +34,7 @@ import java.util.Map;
  *     </pre>
  * </p>
  */
-public class StringLiteral implements FluentPlaceable, FluentSelectable {
+public class StringLiteral implements FluentPlaceable, FluentSelectable, FluentArgument<String> {
 
     public static final CharSequenceTranslator UNESCAPE_FLUENT;
 
@@ -52,6 +53,11 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
         this.literal = getLiteral();
     }
 
+    public StringLiteral(String content) {
+        this.content = new StringSlice(content);
+        this.literal = content;
+    }
+
     public StringSlice getContent() {
         return this.content;
     }
@@ -63,6 +69,21 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
 
     private String getLiteral() {
         return UNESCAPE_FLUENT.translate(content.toString());
+    }
+
+    @Override
+    public String valueOf() {
+        return this.literal;
+    }
+
+    @Override
+    public boolean matches(String selector) {
+        return this.literal.equals(selector);
+    }
+
+    @Override
+    public String stringValue() {
+        return this.literal;
     }
 
     @Override
