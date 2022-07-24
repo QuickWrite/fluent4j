@@ -174,12 +174,7 @@ public abstract class FluentBase implements FluentElement {
 
         StringSliceUtil.skipWhitespace(content);
 
-        StringSlice identifier;
-        try {
-            identifier = StringSliceUtil.getIdentifier(content);
-        } catch (FluentParseException exception) {
-            throw getVariantException("", "Identifier defined as [a-zA-Z][a-zA-Z0-9_-]*");
-        }
+        StringSlice identifier = getVariantIdentifier(content);
 
         StringSliceUtil.skipWhitespace(content);
 
@@ -196,6 +191,25 @@ public abstract class FluentBase implements FluentElement {
                 new FluentAttribute(identifier, stringSliceContent.getLeft(), stringSliceContent.getRight()),
                 isDefault
         );
+    }
+
+    private StringSlice getVariantIdentifier(final StringSlice content) {
+        char character = content.getChar();
+        final int start = content.getPosition();
+
+        while(  character != '\0'
+                && character != '\n'
+                && character != ']'
+        ) {
+            content.increment();
+            character = content.getChar();
+        }
+
+        return content.substring(start, content.getPosition());
+    }
+
+    public List<FluentElement> getElements() {
+        return fluentElements;
     }
 
     private FluentParseException getVariantException(String prev, String expected) {
