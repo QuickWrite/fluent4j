@@ -8,6 +8,8 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
+import java.util.Comparator;
+
 /**
  * The number literal stores numbers. These numbers
  * are stored in two different containers depending
@@ -17,25 +19,36 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentSelectable, FluentArgument<T> {
+public class NumberLiteral<T extends Number & Comparable<T>> implements FluentPlaceable, FluentSelectable, FluentArgument<T>, Comparator<T> {
     private final T number;
+    private final String stringValue;
 
     private NumberLiteral(T number) {
         this.number = number;
+        this.stringValue = number.toString();
+    }
+
+    private NumberLiteral(T number, String stringValue) {
+        this.number = number;
+        this.stringValue = stringValue;
     }
 
     public static NumberLiteral<? extends Number> getNumberLiteral(StringSlice slice) {
+        String stringValue = slice.toString();
+
         try {
-            return new NumberLiteral<>(Integer.parseInt(slice.toString()));
+            double dble = Double.parseDouble(stringValue);
+
+            // checks if the double is an integer
+            if ((dble % 1) == 0) {
+                return new NumberLiteral<>((int)dble, stringValue);
+            }
+
+            return new NumberLiteral<>(dble, stringValue);
         } catch (NumberFormatException ignored) {
         }
 
-        try {
-            return new NumberLiteral<>(Double.parseDouble(slice.toString()));
-        } catch (NumberFormatException ignored) {
-        }
-
-        throw new FluentParseException("Number", slice.toString(), slice.getAbsolutePosition());
+        throw new FluentParseException("Number", stringValue, slice.getAbsolutePosition());
     }
 
     @Override
@@ -54,19 +67,39 @@ public class NumberLiteral<T extends Number> implements FluentPlaceable, FluentS
     }
 
     @Override
-    public boolean matches(String selector) {
-        return selector.equals(this.number.toString());
+    public boolean matches(FluentArgument<?> selector) {
+        if (selector instanceof NumberLiteral) {
+            return matches((T) selector.valueOf());
+        }
+
+        return selector.stringValue().equals(this.stringValue);
+    }
+
+    public boolean matches(T selector) {
+        System.out.println(selector);
+        System.out.println(number);
+
+        try {
+            return compare(number, selector) == 0;
+        } catch (ClassCastException exception) {
+            return false;
+        }
+    }
+
+    public int compare(T a, T b) throws ClassCastException {
+        return a.compareTo(b);
     }
 
     @Override
     public String stringValue() {
-        return this.number.toString();
+        return this.stringValue;
     }
 
     @Override
     public String toString() {
         return "FluentNumberLiteral: {\n" +
-                "\t\t\tvalue: \"" + this.valueOf() + "\"\n" +
+                "\t\t\tvalue: " + this.valueOf() + "\n" +
+                "\t\t\tstringValue: \"" + this.stringValue + "\"\n" +
                 "\t\t}";
     }
 }
