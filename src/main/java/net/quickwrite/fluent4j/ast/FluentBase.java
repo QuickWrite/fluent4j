@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.AttributeReference;
 import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
 import net.quickwrite.fluent4j.ast.placeable.TermReference;
@@ -10,6 +11,8 @@ import net.quickwrite.fluent4j.exception.FluentSelectException;
 import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -120,25 +123,29 @@ public abstract class FluentBase implements FluentElement {
             StringSliceUtil.skipWhitespaceAndNL(content);
 
             List<FluentVariant> fluentVariants = new ArrayList<>();
+            FluentVariant defaultVariant = null;
 
             while (content.getChar() != '}') {
-                fluentVariants.add(getVariant());
+                Pair<FluentVariant, Boolean> variant = getVariant();
+
+                fluentVariants.add(variant.getLeft());
+
+                if (!variant.getRight()) {
+                    continue;
+                }
+
+                if (defaultVariant != null) {
+                    throw new FluentSelectException("Only one variant can be marked as default (*)");
+                }
+
+                defaultVariant = variant.getLeft();
             }
 
-            int defaults = 0;
-            for (FluentVariant variant : fluentVariants) {
-                if (variant.isDefault())
-                    defaults++;
-            }
-
-            if (defaults == 0) {
+            if (defaultVariant == null) {
                 throw new FluentSelectException("Expected one of the variants to be marked as default (*)");
             }
-            if (defaults > 1) {
-                throw new FluentSelectException("Only one variant can be marked as default (*)");
-            }
 
-            placeable = new SelectExpression(placeable, fluentVariants);
+            placeable = new SelectExpression(placeable, fluentVariants, defaultVariant);
         }
 
         StringSliceUtil.skipWhitespaceAndNL(content);
@@ -156,7 +163,7 @@ public abstract class FluentBase implements FluentElement {
         return this.identifier;
     }
 
-    private FluentVariant getVariant() {
+    private Pair<FluentVariant, Boolean> getVariant() {
         StringSliceUtil.skipWhitespaceAndNL(content);
 
         boolean isDefault = false;
@@ -184,13 +191,16 @@ public abstract class FluentBase implements FluentElement {
 
         content.increment();
 
-        Pair<StringSlice, Integer> stringSliceContent = FluentParser.getMessageContent(content,
+        final Pair<StringSlice, Integer> stringSliceContent = FluentParser.getMessageContent(content,
                 character -> character == '[' || character == '*' || character == '}');
 
-        return new FluentVariant(
-                new FluentAttribute(identifier, stringSliceContent.getLeft(), stringSliceContent.getRight()),
-                isDefault
+        final FluentAttribute attribute = new FluentAttribute(
+                identifier,
+                stringSliceContent.getLeft(),
+                stringSliceContent.getRight()
         );
+
+        return new ImmutablePair<>(new FluentVariant(attribute), isDefault);
     }
 
     private StringSlice getVariantIdentifier(final StringSlice content) {
@@ -206,6 +216,20 @@ public abstract class FluentBase implements FluentElement {
         }
 
         return content.substring(start, content.getPosition());
+    }
+
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+        StringBuilder builder = new StringBuilder();
+
+        for (FluentElement element : this.fluentElements) {
+            if (element instanceof FluentTextElement) {
+                builder.append(((FluentTextElement) element).getText());
+            } else {
+                builder.append(((FluentPlaceable) element).getResult(bundle, arguments));
+            }
+        }
+
+        return builder.toString();
     }
 
     public List<FluentElement> getElements() {

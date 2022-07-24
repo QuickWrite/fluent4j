@@ -99,26 +99,14 @@ public class FluentBundle {
     }
 
     public String getTerm(final String key, final FluentArgs arguments) {
-        return this.getBase(this.terms.get(key), arguments);
+        return this.terms.get(key).getResult(this, arguments);
     }
 
     public String getMessage(final String key, final FluentArgs arguments) {
-        return this.getBase(this.messages.get(key), arguments);
+        return this.messages.get(key).getResult(this, arguments);
     }
 
-    private String getBase(final FluentBase base, final FluentArgs arguments) {
-        StringBuilder builder = new StringBuilder();
 
-        for (FluentElement element : base.getElements()) {
-            if (element instanceof FluentTextElement) {
-                builder.append(((FluentTextElement) element).getText());
-            } else {
-                builder.append(((FluentPlaceable) element).getResult(this, arguments));
-            }
-        }
-
-        return builder.toString();
-    }
 
     public Locale getLocale() {
         return this.locales.get(0);

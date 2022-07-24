@@ -1,9 +1,11 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
  * A variant stores a single variant of a
@@ -21,16 +23,10 @@ import net.quickwrite.fluent4j.util.StringSlice;
 public class FluentVariant implements FluentElement {
     private final FluentPlaceable identifier;
     private final FluentAttribute content;
-    private final boolean defaultVariant;
 
-    public FluentVariant(FluentAttribute content, boolean defaultVariant) {
+    public FluentVariant(FluentAttribute content) {
         this.identifier = getIdentifier(content.identifier);
         this.content = content;
-        this.defaultVariant = defaultVariant;
-    }
-
-    public boolean isDefault() {
-        return this.defaultVariant;
     }
 
     private FluentPlaceable getIdentifier(StringSlice slice) {
@@ -41,12 +37,19 @@ public class FluentVariant implements FluentElement {
         return new StringLiteral(slice);
     }
 
+    public FluentPlaceable getIdentifier() {
+        return this.identifier;
+    }
+
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+        return this.content.getResult(bundle, arguments);
+    }
+
     @Override
     public String toString() {
         return "FluentVariant: {\n" +
                 "\t\t\tidentifier: \"" + this.identifier + "\"\n" +
                 "\t\t\tcontent: \"" + this.content + "\"\n" +
-                "\t\t\tdefault: " + this.defaultVariant + "\n" +
                 "\t\t}";
     }
 }
