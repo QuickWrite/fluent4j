@@ -78,6 +78,8 @@ public class FluentParser {
             }
         }
 
+        input.setIndex(0);
+
         return new FluentResource(elementList, exceptionList);
     }
 

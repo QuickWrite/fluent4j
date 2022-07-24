@@ -76,9 +76,6 @@ public class NumberLiteral<T extends Number & Comparable<T>> implements FluentPl
     }
 
     public boolean matches(T selector) {
-        System.out.println(selector);
-        System.out.println(number);
-
         try {
             return compare(number, selector) == 0;
         } catch (ClassCastException exception) {
