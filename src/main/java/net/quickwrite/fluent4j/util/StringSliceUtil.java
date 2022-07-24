@@ -5,13 +5,14 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 
 public final class StringSliceUtil {
-    private StringSliceUtil() {}
+    private StringSliceUtil() {
+    }
 
     /**
      * Skips whitespace in the StringSlice. <br>
-     *
+     * <p>
      * (Only includes spaces and does not consider TAB) <br>
-     *
+     * <p>
      * It is incrementing the index until there is a part of
      * the StringSlice that does have something else than
      * Whitespace.
@@ -19,7 +20,7 @@ public final class StringSliceUtil {
      * @return If whitespace could be skipped.
      */
     public static int skipWhitespace(StringSlice slice) {
-        if(slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
+        if (slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
             return 0;
         }
 
@@ -27,17 +28,17 @@ public final class StringSliceUtil {
 
         do {
             slice.increment();
-        } while(slice.getChar() == ' ' && !(slice.getPosition() >= slice.length()));
+        } while (slice.getChar() == ' ' && !(slice.getPosition() >= slice.length()));
 
         return slice.getPosition() - start;
     }
 
     /**
      * Skips whitespace and newlines in the StringSlice.
-     *
+     * <p>
      * (Only includes spaces and newlines and does not
      * consider TAB) <br>
-     *
+     * <p>
      * It is incrementing the index until there is a part of
      * the StringSlice that does have something else than
      * Whitespace or newline.
@@ -45,7 +46,7 @@ public final class StringSliceUtil {
      * @return If a Newline was skipped.
      */
     public static boolean skipWhitespaceAndNL(StringSlice slice) {
-        if(!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
+        if (!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
             return false;
         }
 
@@ -56,7 +57,7 @@ public final class StringSliceUtil {
             }
 
             slice.increment();
-        } while(slice.getChar() == ' ' || slice.getChar() == '\n' && !slice.isBigger());
+        } while (slice.getChar() == ' ' || slice.getChar() == '\n' && !slice.isBigger());
 
         return andNL;
     }
@@ -213,7 +214,7 @@ public final class StringSliceUtil {
         char character = slice.getChar();
         final int start = slice.getPosition();
 
-        while(character != '\0' &&
+        while (character != '\0' &&
                 Character.isDigit(character)
                 || character == '.'
                 || character == '-'
@@ -241,7 +242,7 @@ public final class StringSliceUtil {
             throw new FluentParseException("character from range [a-zA-Z]", character, slice.getAbsolutePosition());
         }
 
-        while(character != '\0' &&
+        while (character != '\0' &&
                 Character.isAlphabetic(character)
                 || Character.isDigit(character)
                 || character == '-'

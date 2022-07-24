@@ -14,7 +14,7 @@ import net.quickwrite.fluent4j.util.StringSlice;
  *     .aria-label = Login input value
  *     .title = Type your login email
  * </pre>
- *
+ * <p>
  * In this example the {@code login-input} has three different attributes:
  * A{@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
  * </p>

@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Parses a String into a FluentResource so that it can be queried.
  * <p>
- *     Instead of the default implementation of Fluent comments are completely ignored
- *     and Junk nodes are not created while still errors in the Fluent file are getting
- *     reported. <br>
- *     This has the added benefit that the generated AST is smaller in Memory and can
- *     be queried faster.
+ * Instead of the default implementation of Fluent comments are completely ignored
+ * and Junk nodes are not created while still errors in the Fluent file are getting
+ * reported. <br>
+ * This has the added benefit that the generated AST is smaller in Memory and can
+ * be queried faster.
  * </p>
  */
 public class FluentParser {
@@ -46,7 +46,7 @@ public class FluentParser {
         List<FluentElement> elementList = new ArrayList<>();
         List<FluentParseException> exceptionList = new LinkedList<>();
 
-        while(input.length() >= input.length()) {
+        while (input.length() >= input.length()) {
             if (input.getChar() == '#') {
                 handleComment();
                 continue;
@@ -88,7 +88,7 @@ public class FluentParser {
             input.increment();
 
             isIdentifier = true;
-        } else if(!Character.isAlphabetic(input.getChar())) {
+        } else if (!Character.isAlphabetic(input.getChar())) {
             return null;
         }
 
@@ -96,7 +96,7 @@ public class FluentParser {
 
         StringSliceUtil.skipWhitespace(input);
 
-        if(input.getChar() != '=') {
+        if (input.getChar() != '=') {
             throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
         }
 
@@ -114,7 +114,7 @@ public class FluentParser {
     }
 
     private void handleComment() {
-        while(input.getChar() != '\n' && input.getChar() != '\0') {
+        while (input.getChar() != '\n' && input.getChar() != '\0') {
             input.increment();
         }
     }

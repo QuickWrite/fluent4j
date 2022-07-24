@@ -2,12 +2,14 @@ package net.quickwrite.fluent4j;
 
 import net.quickwrite.fluent4j.ast.*;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Bundles are single-language stores of translations.  They are
@@ -45,13 +47,13 @@ public class FluentBundle {
      * accessed.
      *
      * <p>
-     *     If a term or a message key exists twice the old
-     *     key is getting discarded and the new overrides it.
+     * If a term or a message key exists twice the old
+     * key is getting discarded and the new overrides it.
      * </p>
      * <p>
-     *     This manual addition of different resources can be
-     *     used for different files so that they don't need
-     *     to be concatenated before they are getting parsed.
+     * This manual addition of different resources can be
+     * used for different files so that they don't need
+     * to be concatenated before they are getting parsed.
      * </p>
      *
      * @param resource The resource that is being added.
@@ -68,7 +70,7 @@ public class FluentBundle {
             }
 
             if (element instanceof FluentMessage) {
-                FluentMessage message = (FluentMessage)element;
+                FluentMessage message = (FluentMessage) element;
                 if (messages.put(message.getIdentifier().toString(), message) != null) {
                     // TODO: handle duplicate messages
                 }
@@ -85,6 +87,7 @@ public class FluentBundle {
      * Adds a function to the list of functions that can be accessed
      * by the entire FluentBundle.
      * </p>
+     *
      * @param function The function itself that should be called.
      */
     public void addFunction(final AbstractFunction function) {
@@ -106,11 +109,11 @@ public class FluentBundle {
     private String getBase(final FluentBase base, final FluentArgs arguments) {
         StringBuilder builder = new StringBuilder();
 
-        for(FluentElement element : base.getElements()) {
+        for (FluentElement element : base.getElements()) {
             if (element instanceof FluentTextElement) {
-                builder.append(((FluentTextElement)element).getText());
+                builder.append(((FluentTextElement) element).getText());
             } else {
-                builder.append(((FluentPlaceable)element).getResult(this, arguments));
+                builder.append(((FluentPlaceable) element).getResult(this, arguments));
             }
         }
 

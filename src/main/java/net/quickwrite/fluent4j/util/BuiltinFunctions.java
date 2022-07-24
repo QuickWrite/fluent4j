@@ -24,6 +24,6 @@ public class BuiltinFunctions {
      */
     @SuppressWarnings("unchecked")
     public static Map<String, AbstractFunction> getBuiltinFunctions() {
-        return (Map<String, AbstractFunction>) ((HashMap)BUILTIN_FUNCTIONS).clone();
+        return (Map<String, AbstractFunction>) ((HashMap) BUILTIN_FUNCTIONS).clone();
     }
 }

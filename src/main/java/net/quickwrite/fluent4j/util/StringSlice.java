@@ -1,21 +1,17 @@
 package net.quickwrite.fluent4j.util;
 
-import net.quickwrite.fluent4j.ast.placeable.*;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.exception.FluentParseException;
-
 /**
  * A wrapper class for a String that has added functionality.
  * <p>
- *     It is mainly storing the start and the end of the String
- *     as integer values so that only a part of the string can
- *     be used.<br>
- *     This allows the creation of more StringSlices faster with
- *     less Memory as it does not need to copy a part of a String
- *     and does not need to store that String.
+ * It is mainly storing the start and the end of the String
+ * as integer values so that only a part of the string can
+ * be used.<br>
+ * This allows the creation of more StringSlices faster with
+ * less Memory as it does not need to copy a part of a String
+ * and does not need to store that String.
  * </p>
  * <p>
- *     It has also an index and functions like a stream.
+ * It has also an index and functions like a stream.
  * </p>
  */
 public class StringSlice {
@@ -66,7 +62,7 @@ public class StringSlice {
      * length of the StringSlice itself.
      *
      * @return True if it is bigger<br>
-     *         False if it is smaller
+     * False if it is smaller
      */
     public boolean isBigger() {
         return index >= end - start;
@@ -109,7 +105,7 @@ public class StringSlice {
     }
 
     public char peek(int index) {
-        if(getPosition() + start + index > end) {
+        if (getPosition() + start + index > end) {
             return '\0';
         }
 
@@ -122,7 +118,7 @@ public class StringSlice {
      * to the end.
      *
      * @param start The start position the StringSlice should start
-     * @param end The end position the StringSlice should end
+     * @param end   The end position the StringSlice should end
      * @return StringSlice
      */
     public StringSlice substring(int start, int end) {

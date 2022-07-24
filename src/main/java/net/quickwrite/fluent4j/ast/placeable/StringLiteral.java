@@ -1,9 +1,9 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentUnicodeTranslator;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentUnicodeTranslator;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;

@@ -30,7 +30,7 @@ public abstract class FluentBase implements FluentElement {
      * that can be queried later.
      *
      * @param identifier The information that uniquely represents the Attribute.
-     * @param content The content that needs to be parsed.
+     * @param content    The content that needs to be parsed.
      */
     public FluentBase(StringSlice identifier, StringSlice content, int whitespace) {
         this.identifier = identifier;
@@ -65,7 +65,7 @@ public abstract class FluentBase implements FluentElement {
     }
 
     private FluentTextElement getText(boolean firstLine) {
-        if (firstLine && StringSliceUtil.skipWhitespaceAndNL(content)){
+        if (firstLine && StringSliceUtil.skipWhitespaceAndNL(content)) {
             while (content.getChar() != '\n') {
                 content.decrement();
             }
@@ -167,7 +167,7 @@ public abstract class FluentBase implements FluentElement {
         }
 
         if (content.getChar() != '[') {
-            throw new FluentParseException('[',  content.getChar(), content.getAbsolutePosition());
+            throw new FluentParseException('[', content.getChar(), content.getAbsolutePosition());
         }
 
         content.increment();
@@ -197,7 +197,7 @@ public abstract class FluentBase implements FluentElement {
         char character = content.getChar();
         final int start = content.getPosition();
 
-        while(  character != '\0'
+        while (character != '\0'
                 && character != '\n'
                 && character != ']'
         ) {

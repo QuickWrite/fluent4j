@@ -10,9 +10,8 @@ import java.util.List;
  * for a single file.
  *
  * <p>
- *     All of the entries that exist are stored inside of a list.
+ * All of the entries that exist are stored inside of a list.
  * </p>
- *
  */
 public class FluentResource {
     private final List<FluentElement> elements;
@@ -35,7 +34,7 @@ public class FluentResource {
     public String toString() {
         return "FluentResource: {\n" +
                 "\telements: [\n\t\t" +
-                    this.elements +
+                this.elements +
                 "\n\t]\n" +
                 "\texceptions: [\n\t\t" +
                 this.exceptionList +

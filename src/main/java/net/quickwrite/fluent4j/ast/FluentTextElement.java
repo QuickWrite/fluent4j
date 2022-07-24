@@ -29,24 +29,6 @@ public class FluentTextElement implements FluentElement {
         return true;
     }
 
-    private String getText(int whitespace) {
-        StringBuilder text = new StringBuilder();
-        boolean first = true;
-
-        while (!content.isBigger()) {
-            text.append(getLine(first ? 0 : whitespace));
-
-            first = false;
-            content.increment();
-        }
-
-        if(text.charAt(text.length() - 1) == '\n') {
-            text.deleteCharAt(text.length() - 1);
-        }
-
-        return text.toString();
-    }
-
     private String getLine(int whitespace) {
         if (content.getChar() == '\n') {
             return "\n";
@@ -79,6 +61,24 @@ public class FluentTextElement implements FluentElement {
         char peek = content.peek(1);
 
         return content.substring(start, content.getPosition() + (peek == '{' || peek == '\0' ? 0 : 1)).toString();
+    }
+
+    private String getText(int whitespace) {
+        StringBuilder text = new StringBuilder();
+        boolean first = true;
+
+        while (!content.isBigger()) {
+            text.append(getLine(first ? 0 : whitespace));
+
+            first = false;
+            content.increment();
+        }
+
+        if(text.charAt(text.length() - 1) == '\n') {
+            text.deleteCharAt(text.length() - 1);
+        }
+
+        return text.toString();
     }
 
     public String getText() {
