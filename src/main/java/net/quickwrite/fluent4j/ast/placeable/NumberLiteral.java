@@ -22,24 +22,25 @@ import java.util.Locale;
  * </p>
  */
 public class NumberLiteral implements FluentPlaceable, FluentSelectable, FluentArgument<Number> {
-    private final Number number;
-    private final String stringValue;
+    protected final Number number;
+    protected final String stringValue;
 
-    private NumberLiteral(Number number) {
-        this.number = number;
-        this.stringValue = number.toString();
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.ENGLISH);
+
+    protected NumberLiteral(final Number number) {
+        this(number, number.toString());
     }
 
-    private NumberLiteral(Number number, String stringValue) {
+    protected NumberLiteral(final Number number, final String stringValue) {
         this.number = number;
         this.stringValue = stringValue;
     }
 
-    public static NumberLiteral getNumberLiteral(StringSlice slice) {
+    public static NumberLiteral getNumberLiteral(final StringSlice slice) {
         String stringValue = slice.toString();
 
         try {
-            return new NumberLiteral(NumberFormat.getNumberInstance(Locale.ENGLISH).parse(stringValue), stringValue);
+            return new NumberLiteral(numberFormatter.parse(stringValue), stringValue);
         } catch (ParseException exception) {
             throw new FluentParseException("Number", stringValue, slice.getAbsolutePosition());
         }
@@ -61,7 +62,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable, FluentA
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentArgument<?> selector) {
         if (selector instanceof NumberLiteral) {
             return matches((Number)selector.valueOf());
         }
@@ -69,7 +70,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable, FluentA
         return selector.stringValue().equals(this.stringValue);
     }
 
-    public boolean matches(Number selector) {
+    public boolean matches(final Number selector) {
         return selector.equals(this.number);
     }
 

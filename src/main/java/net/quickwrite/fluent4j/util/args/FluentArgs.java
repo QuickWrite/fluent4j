@@ -1,5 +1,7 @@
 package net.quickwrite.fluent4j.util.args;
 
+import net.quickwrite.fluent4j.FluentBundle;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,5 +30,40 @@ public class FluentArgs {
 
     public void addPositional(final FluentArgument<?> argument) {
         this.positionalArguments.add(argument);
+    }
+
+    public <T> FluentArgument<T> getOrDefault(String key, T defaultValue) {
+        FluentArgument<?> argument = namedArguments.get(key);
+
+        if (argument == null || argument.valueOf().getClass() != defaultValue.getClass()) {
+            return new FluentArgument<T>() {
+                @Override
+                public T valueOf() {
+                    return defaultValue;
+                }
+
+                @Override
+                public boolean matches(FluentArgument<?> selector) {
+                    return selector.valueOf().equals(defaultValue);
+                }
+
+                @Override
+                public String stringValue() {
+                    return defaultValue.toString();
+                }
+
+                @Override
+                public String getResult(FluentBundle bundle, FluentArgs arguments) {
+                    return stringValue();
+                }
+
+                @Override
+                public String toString() {
+                    return stringValue();
+                }
+            };
+        }
+
+        return (FluentArgument<T>) argument;
     }
 }
