@@ -12,8 +12,12 @@ public class FluentArgs {
     private final List<FluentArgument<?>> positionalArguments;
 
     public FluentArgs() {
-        this.namedArguments = new HashMap<>();
-        this.positionalArguments = new ArrayList<>();
+        this(new HashMap<>(), new ArrayList<>());
+    }
+
+    public FluentArgs(Map<String, FluentArgument<?>> namedArguments, List<FluentArgument<?>> positionalArguments) {
+        this.namedArguments = namedArguments;
+        this.positionalArguments = positionalArguments;
     }
 
     public FluentArgument<?> getNamed(final String key) {
@@ -65,5 +69,13 @@ public class FluentArgs {
         }
 
         return (FluentArgument<T>) argument;
+    }
+
+    @Override
+    public String toString() {
+        return "FluentArgumentList: {\n" +
+                "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
+                "\t\t\tpositionalArguments: \"" + this.positionalArguments + "\"\n" +
+                "\t\t}";
     }
 }

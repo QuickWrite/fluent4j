@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * Terms are similar to regular messages but they can
@@ -37,17 +38,16 @@ public class TermReference extends FluentFunction {
     }
 
     @Override
+    public String getResult(FluentBundle bundle, FluentArgs arguments) {
+        return bundle.getTerm(this.functionName.toString(), this.arguments);
+    }
+
+    @Override
     public String toString() {
         return "FluentTermReference: {\n" +
                 "\t\t\ttermName: \"" + this.functionName + "\"\n" +
                 "\t\t\tcontent: \"" + this.content + "\"\n" +
-                "\t\t\tpositionalArguments: \"" + this.positionalArgumentList + "\"\n" +
-                "\t\t\tnamedArguments: \"" + this.namedArgumentList + "\"\n" +
+                "\t\t\targuments: " + this.arguments + "\n" +
                 "\t\t}";
-    }
-
-    @Override
-    public String getResult(FluentBundle bundle, FluentArgs arguments) {
-        return bundle.getTerm(this.functionName.toString(), arguments);
     }
 }

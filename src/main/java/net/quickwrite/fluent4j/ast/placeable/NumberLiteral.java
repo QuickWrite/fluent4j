@@ -21,7 +21,7 @@ import java.util.Locale;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public class NumberLiteral implements FluentPlaceable, FluentSelectable, FluentArgument<Number> {
+public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable {
     protected final Number number;
     protected final String stringValue;
 

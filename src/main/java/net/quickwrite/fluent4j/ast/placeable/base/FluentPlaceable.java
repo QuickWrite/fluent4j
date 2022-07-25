@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * Text in Fluent may use special syntax to incorporate
@@ -42,7 +43,7 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
  *     </pre>
  * </p>
  */
-public interface FluentPlaceable extends FluentElement {
+public interface FluentPlaceable<T> extends FluentElement, FluentArgument<T> {
 
     /**
      * Returns the content the placeable uses inside.
@@ -50,6 +51,4 @@ public interface FluentPlaceable extends FluentElement {
      * @return content
      */
     StringSlice getContent();
-
-    String getResult(final FluentBundle bundle, final FluentArgs arguments);
 }

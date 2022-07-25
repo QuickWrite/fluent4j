@@ -28,12 +28,12 @@ import java.util.List;
  * based on the value of the selector. The * indicator identifies
  * the default variant. A default variant is required.
  */
-public class SelectExpression implements FluentPlaceable {
+public class SelectExpression implements FluentPlaceable<FluentPlaceable<?>> {
     private final List<FluentVariant> variants;
     private final FluentVariant defaultVariant;
-    private final FluentPlaceable identifier;
+    private final FluentPlaceable<?> identifier;
 
-    public SelectExpression(FluentPlaceable identifier, List<FluentVariant> variants, FluentVariant defaultVariant) {
+    public SelectExpression(FluentPlaceable<?> identifier, List<FluentVariant> variants, FluentVariant defaultVariant) {
         this.identifier = identifier;
         this.variants = variants;
         this.defaultVariant = defaultVariant;
@@ -44,8 +44,23 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
+    public FluentPlaceable<?> valueOf() {
+        return this.identifier;
+    }
+
+    @Override
+    public boolean matches(FluentArgument<?> selector) {
+        return false;
+    }
+
+    @Override
+    public String stringValue() {
+        return this.toString();
+    }
+
+    @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        if (identifier instanceof FluentArgument) {
+        if (identifier != null) {
             final FluentArgument<?> argument = ((FluentArgument<?>)identifier);
 
             for (FluentVariant variant : variants) {

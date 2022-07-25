@@ -109,8 +109,8 @@ public final class StringSliceUtil {
      *
      * @return The expression
      */
-    public static FluentPlaceable getExpression(StringSlice slice) {
-        FluentPlaceable expression;
+    public static FluentPlaceable<?> getExpression(StringSlice slice) {
+        FluentPlaceable<?> expression;
 
         switch (slice.getChar()) {
             case '"' -> {
@@ -142,7 +142,7 @@ public final class StringSliceUtil {
         return expression;
     }
 
-    private static FluentPlaceable expressionGetDefault(StringSlice slice) {
+    private static FluentPlaceable<?> expressionGetDefault(StringSlice slice) {
         boolean isTerm = false;
 
         if (slice.getChar() == '-') {
@@ -160,7 +160,7 @@ public final class StringSliceUtil {
 
         StringSlice msgIdentifier = getIdentifier(slice);
 
-        FluentPlaceable expression;
+        FluentPlaceable<?> expression;
         if (isTerm) {
             expression = new TermReference(msgIdentifier);
         } else {

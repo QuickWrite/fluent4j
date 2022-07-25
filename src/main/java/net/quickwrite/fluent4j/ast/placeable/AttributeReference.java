@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * Can reference the Attributes of a Fluent Message or Term.
@@ -15,11 +16,11 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
  * -term-test = { -term.attribute }
  * </pre>
  */
-public class AttributeReference implements FluentPlaceable {
-    private final FluentPlaceable reference;
+public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>> {
+    private final FluentPlaceable<?> reference;
     private final StringSlice content;
 
-    public AttributeReference(FluentPlaceable reference, StringSlice content) {
+    public AttributeReference(FluentPlaceable<?> reference, StringSlice content) {
         this.reference = reference;
         this.content = content;
     }
@@ -27,6 +28,21 @@ public class AttributeReference implements FluentPlaceable {
     @Override
     public StringSlice getContent() {
         return null;
+    }
+
+    @Override
+    public FluentPlaceable<?> valueOf() {
+        return this.reference;
+    }
+
+    @Override
+    public boolean matches(FluentArgument<?> selector) {
+        return false;
+    }
+
+    @Override
+    public String stringValue() {
+        return this.reference.stringValue();
     }
 
     @Override
@@ -44,7 +60,7 @@ public class AttributeReference implements FluentPlaceable {
     }
 
     public static class TermAttributeReference extends AttributeReference implements FluentSelectable {
-        public TermAttributeReference(FluentPlaceable reference, StringSlice content) {
+        public TermAttributeReference(FluentPlaceable<?> reference, StringSlice content) {
             super(reference, content);
         }
     }

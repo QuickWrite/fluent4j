@@ -1,20 +1,18 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
 import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.ast.wrapper.FluentArgument;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class FluentFunction implements FluentPlaceable {
+public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?>> {
     protected final StringSlice functionName;
     protected final StringSlice content;
-    protected List<FluentArgument> positionalArgumentList;
-    protected List<FluentArgument> namedArgumentList;
+    protected FluentArgs arguments;
 
     public FluentFunction(StringSlice functionName, StringSlice content) {
         this.functionName = functionName;
@@ -25,8 +23,7 @@ public abstract class FluentFunction implements FluentPlaceable {
 
         this.content = content;
 
-        this.positionalArgumentList = new ArrayList<>();
-        this.namedArgumentList = new ArrayList<>();
+        this.arguments = new FluentArgs();
 
         if (content != null) {
             getArguments();
@@ -37,11 +34,11 @@ public abstract class FluentFunction implements FluentPlaceable {
         while (!content.isBigger()) {
             StringSliceUtil.skipWhitespaceAndNL(content);
 
-            FluentArgument argument = getArgument();
-            if (argument.isNamed()) {
-                this.namedArgumentList.add(argument);
+            Pair<StringSlice, FluentArgument<?>> argument = getArgument();
+            if (argument.getLeft() != null) {
+                this.arguments.setNamed(argument.getLeft().toString(), argument.getRight());
             } else {
-                this.positionalArgumentList.add(argument);
+                this.arguments.addPositional(argument.getRight());
             }
 
             StringSliceUtil.skipWhitespaceAndNL(content);
@@ -56,8 +53,8 @@ public abstract class FluentFunction implements FluentPlaceable {
         }
     }
 
-    private FluentArgument getArgument() {
-        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
+    private Pair<StringSlice, FluentArgument<?>> getArgument() {
+        FluentPlaceable<?> placeable = StringSliceUtil.getExpression(content);
         StringSlice identifier = null;
 
         StringSliceUtil.skipWhitespace(content);
@@ -71,7 +68,7 @@ public abstract class FluentFunction implements FluentPlaceable {
             placeable = StringSliceUtil.getExpression(content);
         }
 
-        return new FluentArgument(identifier, placeable);
+        return new ImmutablePair<>(identifier, placeable);
     }
 
     public StringSlice getContent() {
@@ -79,8 +76,18 @@ public abstract class FluentFunction implements FluentPlaceable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument<?> valueOf() {
         return null;
+    }
+
+    @Override
+    public boolean matches(FluentArgument<?> selector) {
+        return this.equals(selector);
+    }
+
+    @Override
+    public String stringValue() {
+        return this.functionName.toString();
     }
 
     protected boolean check(StringSlice string) {

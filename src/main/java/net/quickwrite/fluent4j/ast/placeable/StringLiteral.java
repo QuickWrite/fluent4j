@@ -34,7 +34,7 @@ import java.util.Map;
  *     </pre>
  * </p>
  */
-public class StringLiteral implements FluentPlaceable, FluentSelectable, FluentArgument<String> {
+public class StringLiteral implements FluentPlaceable<String>, FluentSelectable {
 
     public static final CharSequenceTranslator UNESCAPE_FLUENT;
 
