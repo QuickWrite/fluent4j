@@ -8,7 +8,9 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
-import java.util.Comparator;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * The number literal stores numbers. These numbers
@@ -19,72 +21,56 @@ import java.util.Comparator;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public class NumberLiteral<T extends Number & Comparable<T>> implements FluentPlaceable, FluentSelectable, FluentArgument<T>, Comparator<T> {
-    private final T number;
+public class NumberLiteral implements FluentPlaceable, FluentSelectable, FluentArgument<Number> {
+    private final Number number;
     private final String stringValue;
 
-    private NumberLiteral(T number) {
+    private NumberLiteral(Number number) {
         this.number = number;
         this.stringValue = number.toString();
     }
 
-    private NumberLiteral(T number, String stringValue) {
+    private NumberLiteral(Number number, String stringValue) {
         this.number = number;
         this.stringValue = stringValue;
     }
 
-    public static NumberLiteral<? extends Number> getNumberLiteral(StringSlice slice) {
+    public static NumberLiteral getNumberLiteral(StringSlice slice) {
         String stringValue = slice.toString();
 
         try {
-            double dble = Double.parseDouble(stringValue);
-
-            // checks if the double is an integer
-            if ((dble % 1) == 0) {
-                return new NumberLiteral<>((int)dble, stringValue);
-            }
-
-            return new NumberLiteral<>(dble, stringValue);
-        } catch (NumberFormatException ignored) {
+            return new NumberLiteral(NumberFormat.getNumberInstance(Locale.ENGLISH).parse(stringValue), stringValue);
+        } catch (ParseException exception) {
+            throw new FluentParseException("Number", stringValue, slice.getAbsolutePosition());
         }
-
-        throw new FluentParseException("Number", stringValue, slice.getAbsolutePosition());
     }
 
     @Override
     public StringSlice getContent() {
-        return null;
+        return new StringSlice(this.stringValue);
     }
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        return number.toString();
+        return NumberFormat.getInstance(bundle.getLocale()).format(number);
     }
 
     @Override
-    public T valueOf() {
+    public Number valueOf() {
         return this.number;
     }
 
     @Override
     public boolean matches(FluentArgument<?> selector) {
         if (selector instanceof NumberLiteral) {
-            return matches((T) selector.valueOf());
+            return matches((Number)selector.valueOf());
         }
 
         return selector.stringValue().equals(this.stringValue);
     }
 
-    public boolean matches(T selector) {
-        try {
-            return compare(number, selector) == 0;
-        } catch (ClassCastException exception) {
-            return false;
-        }
-    }
-
-    public int compare(T a, T b) throws ClassCastException {
-        return a.compareTo(b);
+    public boolean matches(Number selector) {
+        return selector.equals(this.number);
     }
 
     @Override
