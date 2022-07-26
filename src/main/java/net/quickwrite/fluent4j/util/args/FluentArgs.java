@@ -36,10 +36,11 @@ public class FluentArgs {
         this.positionalArguments.add(argument);
     }
 
-    public <T> FluentArgument<T> getOrDefault(String key, T defaultValue) {
+    @SuppressWarnings("unchecked")
+    public <T> FluentArgument<T> getOrDefault(String key, T defaultValue, Class<T> clazz) {
         FluentArgument<?> argument = namedArguments.get(key);
 
-        if (argument == null || argument.valueOf().getClass() != defaultValue.getClass()) {
+        if (argument == null || !clazz.isInstance(argument.valueOf())) {
             return new FluentArgument<T>() {
                 @Override
                 public T valueOf() {

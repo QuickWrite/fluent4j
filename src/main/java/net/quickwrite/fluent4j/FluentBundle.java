@@ -94,6 +94,10 @@ public class FluentBundle {
         this.functions.put(function.getIdentifier(), function);
     }
 
+    public AbstractFunction getFunction(final String key) {
+        return this.functions.get(key);
+    }
+
     public boolean hasMessage(final String key) {
         return this.messages.containsKey(key);
     }
@@ -105,8 +109,6 @@ public class FluentBundle {
     public String getMessage(final String key, final FluentArgs arguments) {
         return this.messages.get(key).getResult(this, arguments);
     }
-
-
 
     public Locale getLocale() {
         return this.locales.get(0);

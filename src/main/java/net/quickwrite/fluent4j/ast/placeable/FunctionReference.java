@@ -14,13 +14,24 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * platform, or time of the day) to fine tune the translation.
  */
 public class FunctionReference extends FluentFunction implements FluentSelectable {
+    private final String functionNameString;
+
     public FunctionReference(StringSlice functionName, StringSlice content) {
         super(functionName, content);
+
+        this.functionNameString = functionName.toString();
     }
 
     @Override
     public String getResult(FluentBundle bundle, FluentArgs arguments) {
-        return null;
+        try {
+            return bundle
+                    .getFunction(this.functionNameString)
+                    .getResult(bundle, this.arguments)
+                    .getResult(bundle, arguments);
+        } catch (Exception exception) {
+            return "{" + functionNameString + "()}";
+        }
     }
 
     @Override

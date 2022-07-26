@@ -25,7 +25,7 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     protected final Number number;
     protected final String stringValue;
 
-    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.ENGLISH);
+    protected static final NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.ENGLISH);
 
     protected NumberLiteral(final Number number) {
         this(number, number.toString());

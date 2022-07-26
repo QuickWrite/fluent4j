@@ -1,6 +1,10 @@
 package net.quickwrite.fluent4j.functions;
 
-public class AbstractFunction {
+import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+
+public abstract class AbstractFunction {
     private final String identifier;
 
     /**
@@ -27,4 +31,6 @@ public class AbstractFunction {
     public String getIdentifier() {
         return this.identifier;
     }
+
+    public abstract FluentPlaceable<?> getResult(final FluentBundle bundle, final FluentArgs arguments);
 }

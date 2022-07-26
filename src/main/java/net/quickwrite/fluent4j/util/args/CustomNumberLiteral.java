@@ -4,41 +4,40 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 
 public class CustomNumberLiteral extends NumberLiteral {
-    private final int minimumFractionDigits;
-    private final int maximumFractionDigits;
-    private final int minimumIntegerDigits;
-    private final boolean useGrouping;
+    private int minimumFractionDigits = 0;
+    private int maximumFractionDigits = Integer.MAX_VALUE;
+    private int minimumIntegerDigits = 0;
+    private boolean useGrouping = true;
 
-    public CustomNumberLiteral(final Number number, final FluentArgs arguments) {
-        this(number, number.toString(), arguments);
+    public CustomNumberLiteral(final String number) throws ParseException {
+        this(numberFormatter.parse(number), number);
     }
 
-    public CustomNumberLiteral(final Number number, final String stringValue, final FluentArgs arguments) {
+    public CustomNumberLiteral(final Number number) {
+        this(number, number.toString());
+    }
+
+    public CustomNumberLiteral(final Number number, final String stringValue) {
         super(number, stringValue);
-
-        // TODO: Move this into the NUMBER function and add setter
-        this.minimumFractionDigits = getIntValue("minimumFractionDigits", 0, arguments);
-        this.maximumFractionDigits = getIntValue("maximumFractionDigits", Integer.MAX_VALUE, arguments);
-        this.minimumIntegerDigits = getIntValue("minimumIntegerDigits", 0, arguments);
-        this.useGrouping = getBooleanValue("useGrouping", true, arguments);
-
-        // TODO: Add "currencyDisplay"
     }
 
-    private int getIntValue(final String key, final int defaultValue, final FluentArgs arguments) {
-        return arguments
-                .getOrDefault(key, (Number)defaultValue)
-                .valueOf()
-                .intValue();
+    public void setMinimumFractionDigits(int minimumFractionDigits) {
+        this.minimumFractionDigits = minimumFractionDigits;
     }
 
-    private boolean getBooleanValue(final String key, final boolean defaultValue, final FluentArgs arguments) {
-        return !arguments
-                .getOrDefault(key, String.valueOf(defaultValue))
-                .valueOf()
-                .equals("false");
+    public void setMaximumFractionDigits(int maximumFractionDigits) {
+        this.maximumFractionDigits = maximumFractionDigits;
+    }
+
+    public void setMinimumIntegerDigits(int minimumIntegerDigits) {
+        this.minimumIntegerDigits = minimumIntegerDigits;
+    }
+
+    public void setUseGrouping(boolean useGrouping) {
+        this.useGrouping = useGrouping;
     }
 
     @Override
