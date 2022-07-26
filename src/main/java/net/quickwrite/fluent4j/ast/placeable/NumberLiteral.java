@@ -8,6 +8,7 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -25,8 +26,6 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     protected final Number number;
     protected final String stringValue;
 
-    protected static final NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.ENGLISH);
-
     protected NumberLiteral(final Number number) {
         this(number, number.toString());
     }
@@ -39,11 +38,7 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     public static NumberLiteral getNumberLiteral(final StringSlice slice) {
         String stringValue = slice.toString();
 
-        try {
-            return new NumberLiteral(numberFormatter.parse(stringValue), stringValue);
-        } catch (ParseException exception) {
-            throw new FluentParseException("Number", stringValue, slice.getAbsolutePosition());
-        }
+        return new NumberLiteral(new BigDecimal(stringValue), stringValue);
     }
 
     @Override

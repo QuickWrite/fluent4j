@@ -3,6 +3,7 @@ package net.quickwrite.fluent4j.util.args;
 import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -13,7 +14,7 @@ public class CustomNumberLiteral extends NumberLiteral {
     private boolean useGrouping = true;
 
     public CustomNumberLiteral(final String number) throws ParseException {
-        this(numberFormatter.parse(number), number);
+        this(new BigDecimal(number), number);
     }
 
     public CustomNumberLiteral(final Number number) {
@@ -44,8 +45,8 @@ public class CustomNumberLiteral extends NumberLiteral {
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         NumberFormat numberFormat = NumberFormat.getInstance(bundle.getLocale());
         numberFormat.setGroupingUsed(useGrouping);
-        numberFormat.setMinimumFractionDigits(minimumFractionDigits);
         numberFormat.setMaximumFractionDigits(maximumFractionDigits);
+        numberFormat.setMinimumFractionDigits(minimumFractionDigits);
 
         numberFormat.setMinimumIntegerDigits(minimumIntegerDigits);
 
