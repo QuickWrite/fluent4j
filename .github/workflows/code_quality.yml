@@ -1,8 +1,16 @@
 name: Qodana
 on:
-  workflow_dispatch:
-  pull_request:
   push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - unlocked
     branches:
       - master
       - develop
