@@ -169,6 +169,10 @@ public class FluentParser {
             first = false;
 
             while (input.getChar() != '\n' && input.getChar() != '\0') {
+                if (input.getChar() == '{') {
+                    skipPlaceable(input);
+                }
+
                 if (input.getChar() != ' ') {
                     lastWhitespace = input.getPosition();
                 }
@@ -183,6 +187,28 @@ public class FluentParser {
         }
 
         return new ImmutablePair<>(input.substring(start, lastWhitespace + 1), leadingWhitespace);
+    }
+
+    private static void skipPlaceable(final StringSlice input) {
+        input.increment();
+
+        int openCurly = 1;
+
+        while (openCurly != 0 && !input.isBigger()) {
+            input.increment();
+
+            char character = input.getChar();
+
+            if (character == '{') {
+                openCurly++;
+                continue;
+            }
+            if (character == '}') {
+                openCurly--;
+            }
+        }
+
+        //input.increment();
     }
 
     public interface BreakChecker {
