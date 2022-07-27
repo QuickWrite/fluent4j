@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,12 +103,16 @@ public class FluentBundle {
         return this.messages.containsKey(key);
     }
 
-    public String getTerm(final String key, final FluentArgs arguments) {
-        return this.terms.get(key).getResult(this, arguments);
+    public FluentTerm getTerm(final String key) {
+        return this.terms.get(key);
+    }
+
+    public FluentMessage getMessage(final String key) {
+        return this.messages.get(key);
     }
 
     public String getMessage(final String key, final FluentArgs arguments) {
-        return this.messages.get(key).getResult(this, arguments);
+        return this.getMessage(key).getResult(this, arguments);
     }
 
     public Locale getLocale() {

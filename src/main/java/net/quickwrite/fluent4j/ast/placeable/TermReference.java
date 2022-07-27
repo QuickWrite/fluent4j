@@ -39,7 +39,11 @@ public class TermReference extends FluentFunction {
 
     @Override
     public String getResult(FluentBundle bundle, FluentArgs arguments) {
-        return bundle.getTerm(this.functionName.toString(), this.arguments);
+        return this.getArgumentResult(bundle).getResult(bundle, arguments);
+    }
+
+    public FluentArgument<?> getArgumentResult(FluentBundle bundle) {
+        return (FluentArgument<?>) bundle.getTerm(this.functionName.toString());
     }
 
     @Override

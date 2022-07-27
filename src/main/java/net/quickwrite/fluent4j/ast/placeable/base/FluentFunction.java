@@ -90,6 +90,8 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
         return this.functionName.toString();
     }
 
+    public abstract FluentArgument<?> getArgumentResult(final FluentBundle bundle);
+
     protected boolean check(StringSlice string) {
         while (!string.isBigger()) {
             if (!Character.isUpperCase(string.getChar())) {

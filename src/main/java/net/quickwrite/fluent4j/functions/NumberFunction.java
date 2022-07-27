@@ -16,8 +16,6 @@ public class NumberFunction extends AbstractFunction {
 
     @Override
     public FluentPlaceable<?> getResult(FluentBundle bundle, FluentArgs arguments) {
-        System.out.println(arguments);
-
         Object number = arguments.getPositional(0).valueOf();
 
         CustomNumberLiteral numberLiteral;

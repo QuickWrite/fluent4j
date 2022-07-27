@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.FluentVariant;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
@@ -60,21 +61,12 @@ public class SelectExpression implements FluentPlaceable<FluentPlaceable<?>> {
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        if (identifier != null) {
-            final FluentArgument<?> argument = ((FluentArgument<?>)identifier);
+        final FluentArgument<?> argument = (identifier instanceof FluentFunction) ?
+                ((FluentFunction)identifier).getArgumentResult(bundle) : identifier;
 
-            for (FluentVariant variant : variants) {
-                if (argument.matches((FluentArgument<?>) variant.getIdentifier())) {
-                    return variant.getResult(bundle, arguments);
-                }
-            }
-        } else {
-            final String result = identifier.getResult(bundle, arguments);
-
-            for (FluentVariant variant : variants) {
-                if (result.equals(variant.getIdentifier().getContent().toString())) {
-                    return variant.getResult(bundle, arguments);
-                }
+        for (final FluentVariant variant : variants) {
+            if (argument.matches((FluentArgument<?>) variant.getIdentifier())) {
+                return variant.getResult(bundle, arguments);
             }
         }
 

@@ -46,7 +46,7 @@ public class MessageReference implements FluentPlaceable<StringSlice> {
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        return bundle.getMessage(this.content.toString(), arguments);
+        return bundle.getMessage(this.content.toString()).getResult(bundle, arguments);
     }
 
     @Override
