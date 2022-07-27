@@ -36,9 +36,11 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     }
 
     public static NumberLiteral getNumberLiteral(final StringSlice slice) {
-        String stringValue = slice.toString();
+        return getNumberLiteral(slice.toString());
+    }
 
-        return new NumberLiteral(new BigDecimal(stringValue), stringValue);
+    public static NumberLiteral getNumberLiteral(final String value) {
+        return new NumberLiteral(new BigDecimal(value), value);
     }
 
     @Override

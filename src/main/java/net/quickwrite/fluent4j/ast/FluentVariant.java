@@ -21,7 +21,7 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
  *
  */
 public class FluentVariant implements FluentElement {
-    private final FluentPlaceable identifier;
+    private final FluentPlaceable<?> identifier;
     private final FluentAttribute content;
 
     public FluentVariant(FluentAttribute content) {
@@ -29,15 +29,15 @@ public class FluentVariant implements FluentElement {
         this.content = content;
     }
 
-    private FluentPlaceable getIdentifier(StringSlice slice) {
-        if (Character.isDigit(slice.getChar())) {
+    private FluentPlaceable<?> getIdentifier(String slice) {
+        if (Character.isDigit(slice.charAt(0))) {
             return NumberLiteral.getNumberLiteral(slice);
         }
 
         return new StringLiteral(slice);
     }
 
-    public FluentPlaceable getIdentifier() {
+    public FluentPlaceable<?> getIdentifier() {
         return this.identifier;
     }
 

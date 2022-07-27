@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class FluentBase implements FluentElement {
-    protected final StringSlice identifier;
+    protected final String identifier;
     protected final int whitespace;
 
     protected final List<FluentElement> fluentElements;
@@ -35,9 +35,10 @@ public abstract class FluentBase implements FluentElement {
      * @param identifier The information that uniquely represents the Attribute.
      * @param content    The content that needs to be parsed.
      */
-    public FluentBase(StringSlice identifier, StringSlice content, int whitespace) {
-        this.identifier = identifier;
-
+    public FluentBase(final StringSlice identifier,
+                      final StringSlice content,
+                      final int whitespace) {
+        this.identifier = identifier.toString();
         this.content = content;
         this.whitespace = whitespace;
 
@@ -67,7 +68,7 @@ public abstract class FluentBase implements FluentElement {
         return elements;
     }
 
-    private FluentTextElement getText(boolean firstLine) {
+    private FluentTextElement getText(final boolean firstLine) {
         if (firstLine && StringSliceUtil.skipWhitespaceAndNL(content)) {
             while (content.getChar() != '\n') {
                 content.decrement();
@@ -89,11 +90,11 @@ public abstract class FluentBase implements FluentElement {
         return new FluentTextElement(content.substring(start, content.getPosition()), whitespace);
     }
 
-    private FluentPlaceable getPlaceable() {
+    private FluentPlaceable<?> getPlaceable() {
         content.increment();
         StringSliceUtil.skipWhitespaceAndNL(content);
 
-        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
+        FluentPlaceable<?> placeable = StringSliceUtil.getExpression(content);
 
         boolean canSelect = placeable instanceof FluentSelectable;
 
@@ -159,7 +160,7 @@ public abstract class FluentBase implements FluentElement {
         return placeable;
     }
 
-    public StringSlice getIdentifier() {
+    public String getIdentifier() {
         return this.identifier;
     }
 
@@ -223,9 +224,9 @@ public abstract class FluentBase implements FluentElement {
 
         for (FluentElement element : this.fluentElements) {
             if (element instanceof FluentTextElement) {
-                builder.append(((FluentTextElement) element).getText());
+                builder.append(((FluentTextElement) element).valueOf());
             } else {
-                builder.append(((FluentPlaceable) element).getResult(bundle, arguments));
+                builder.append(((FluentPlaceable<?>) element).getResult(bundle, arguments));
             }
         }
 
@@ -233,10 +234,10 @@ public abstract class FluentBase implements FluentElement {
     }
 
     public List<FluentElement> getElements() {
-        return fluentElements;
+        return this.fluentElements;
     }
 
-    private FluentParseException getVariantException(String prev, String expected) {
+    private FluentParseException getVariantException(final String prev, final String expected) {
         int start = content.getPosition();
 
         while (content.getChar() != ']' && !content.isBigger()) {

@@ -63,7 +63,7 @@ public class FluentBundle {
         for (FluentElement element : resource.getElements()) {
             if (element instanceof FluentTerm) {
                 FluentTerm term = (FluentTerm) element;
-                if (terms.put(term.getIdentifier().toString(), term) != null) {
+                if (terms.put(term.getIdentifier(), term) != null) {
                     // TODO: handle duplicate terms
                 }
 
@@ -72,7 +72,7 @@ public class FluentBundle {
 
             if (element instanceof FluentMessage) {
                 FluentMessage message = (FluentMessage) element;
-                if (messages.put(message.getIdentifier().toString(), message) != null) {
+                if (messages.put(message.getIdentifier(), message) != null) {
                     // TODO: handle duplicate messages
                 }
 

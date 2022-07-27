@@ -1,12 +1,15 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * The TextElement is just storing a text that does
  * nothing at all.
  */
-public class FluentTextElement implements FluentElement {
+public class FluentTextElement implements FluentElement, FluentArgument<String> {
     private final StringSlice content;
     private final String text;
 
@@ -81,7 +84,23 @@ public class FluentTextElement implements FluentElement {
         return text.toString();
     }
 
-    public String getText() {
+    @Override
+    public String valueOf() {
+        return this.text;
+    }
+
+    @Override
+    public boolean matches(FluentArgument<?> selector) {
+        return selector.stringValue().equals(this.text);
+    }
+
+    @Override
+    public String stringValue() {
+        return this.text;
+    }
+
+    @Override
+    public String getResult(FluentBundle bundle, FluentArgs arguments) {
         return this.text;
     }
 

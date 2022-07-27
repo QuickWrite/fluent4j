@@ -1,6 +1,5 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
-import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
@@ -9,7 +8,7 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?>> {
+public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?>>, FluentArgumentResult {
     protected final StringSlice functionName;
     protected final StringSlice content;
     protected FluentArgs arguments;
@@ -89,8 +88,6 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
     public String stringValue() {
         return this.functionName.toString();
     }
-
-    public abstract FluentArgument<?> getArgumentResult(final FluentBundle bundle);
 
     protected boolean check(StringSlice string) {
         while (!string.isBigger()) {

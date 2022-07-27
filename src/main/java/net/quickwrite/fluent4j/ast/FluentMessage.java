@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.util.List;
 
@@ -34,10 +35,23 @@ public class FluentMessage extends FluentBase {
      * @param content The content that needs to be parsed.
      * @param attributes All of the attributes
      */
-    public FluentMessage(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes, int whitespace) {
+    public FluentMessage(final StringSlice identifier,
+                         final StringSlice content,
+                         final List<FluentAttribute> attributes,
+                         final int whitespace) {
         super(identifier, content, whitespace);
 
         this.attributes = attributes;
+    }
+
+    public FluentAttribute getAttribute(final String identifier) {
+        for(final FluentAttribute attribute : this.attributes) {
+            if (attribute.getIdentifier().equals(identifier)) {
+                return attribute;
+            }
+        }
+
+        return null;
     }
 
     @Override
