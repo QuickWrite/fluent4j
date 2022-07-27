@@ -4,7 +4,6 @@ import com.ibm.icu.number.FormattedNumber;
 import com.ibm.icu.number.LocalizedNumberFormatter;
 import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.NumberFormat;
-import com.ibm.icu.text.PluralFormat;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.FluentBundle;

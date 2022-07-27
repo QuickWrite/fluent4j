@@ -4,7 +4,6 @@ import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
-import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**

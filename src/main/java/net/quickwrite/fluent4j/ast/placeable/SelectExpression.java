@@ -3,7 +3,6 @@ package net.quickwrite.fluent4j.ast.placeable;
 import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
