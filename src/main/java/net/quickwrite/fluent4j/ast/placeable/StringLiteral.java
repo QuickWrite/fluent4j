@@ -77,7 +77,7 @@ public class StringLiteral implements FluentPlaceable<String>, FluentSelectable 
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return this.literal.equals(selector.stringValue());
     }
 

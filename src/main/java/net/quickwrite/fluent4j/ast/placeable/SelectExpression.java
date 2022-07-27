@@ -51,7 +51,7 @@ public class SelectExpression implements FluentPlaceable<FluentPlaceable<?>> {
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return false;
     }
 
@@ -66,7 +66,7 @@ public class SelectExpression implements FluentPlaceable<FluentPlaceable<?>> {
                 ((FluentArgumentResult)identifier).getArgumentResult(bundle) : identifier;
 
         for (final FluentVariant variant : variants) {
-            if (argument.matches(variant.getIdentifier())) {
+            if (argument.matches(bundle, variant.getIdentifier())) {
                 return variant.getResult(bundle, arguments);
             }
         }

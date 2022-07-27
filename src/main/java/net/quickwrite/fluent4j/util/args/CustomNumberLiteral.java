@@ -1,10 +1,10 @@
 package net.quickwrite.fluent4j.util.args;
 
+import com.ibm.icu.text.NumberFormat;
 import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.text.ParseException;
 
 public class CustomNumberLiteral extends NumberLiteral {

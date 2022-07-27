@@ -48,7 +48,7 @@ public class FluentArgs {
                 }
 
                 @Override
-                public boolean matches(FluentArgument<?> selector) {
+                public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
                     return selector.valueOf().equals(defaultValue);
                 }
 

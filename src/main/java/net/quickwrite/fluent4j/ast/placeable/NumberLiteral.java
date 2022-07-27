@@ -1,17 +1,20 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import com.ibm.icu.number.FormattedNumber;
+import com.ibm.icu.number.LocalizedNumberFormatter;
+import com.ibm.icu.number.NumberFormatter;
+import com.ibm.icu.text.NumberFormat;
+import com.ibm.icu.text.PluralFormat;
+import com.ibm.icu.text.PluralRules;
+import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
-import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 /**
  * The number literal stores numbers. These numbers
@@ -25,6 +28,9 @@ import java.util.Locale;
 public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable {
     protected final Number number;
     protected final String stringValue;
+    protected final FormattedNumber formattedNumber;
+
+    private static final LocalizedNumberFormatter numberFormatter = NumberFormatter.withLocale(ULocale.ENGLISH);
 
     protected NumberLiteral(final Number number) {
         this(number, number.toString());
@@ -33,6 +39,7 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     protected NumberLiteral(final Number number, final String stringValue) {
         this.number = number;
         this.stringValue = stringValue;
+        this.formattedNumber = numberFormatter.format(number);
     }
 
     public static NumberLiteral getNumberLiteral(final StringSlice slice) {
@@ -59,9 +66,13 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     }
 
     @Override
-    public boolean matches(final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         if (selector instanceof NumberLiteral) {
             return matches((Number)selector.valueOf());
+        }
+
+        if (PluralRules.forLocale(bundle.getLocale()).select(this.formattedNumber).equals(selector.stringValue())) {
+            return true;
         }
 
         return selector.stringValue().equals(this.stringValue);

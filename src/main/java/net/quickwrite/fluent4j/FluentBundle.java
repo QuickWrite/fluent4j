@@ -1,11 +1,10 @@
 package net.quickwrite.fluent4j;
 
+import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.*;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,14 +22,14 @@ public class FluentBundle {
      * one specific locale (the first) but it can have other locales
      * that act as a fallback when a function is not supported.
      */
-    private final List<Locale> locales;
+    private final List<ULocale> locales;
 
-    private Map<String, FluentTerm> terms;
-    private Map<String, FluentMessage> messages;
+    private final Map<String, FluentTerm> terms;
+    private final Map<String, FluentMessage> messages;
 
-    private Map<String, AbstractFunction> functions = BuiltinFunctions.getBuiltinFunctions();
+    private final Map<String, AbstractFunction> functions = BuiltinFunctions.getBuiltinFunctions();
 
-    public FluentBundle(final List<Locale> locales, final FluentResource resource) {
+    public FluentBundle(final List<ULocale> locales, final FluentResource resource) {
         this.locales = locales;
         this.messages = new HashMap<>();
         this.terms = new HashMap<>();
@@ -38,7 +37,7 @@ public class FluentBundle {
         this.addResource(resource);
     }
 
-    public FluentBundle(final Locale locale, final FluentResource resource) {
+    public FluentBundle(final ULocale locale, final FluentResource resource) {
         this(List.of(locale), resource);
     }
 
@@ -115,7 +114,7 @@ public class FluentBundle {
         return this.getMessage(key).getResult(this, arguments);
     }
 
-    public Locale getLocale() {
+    public ULocale getLocale() {
         return this.locales.get(0);
     }
 }

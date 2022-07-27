@@ -45,7 +45,7 @@ public class VariableReference implements FluentPlaceable<StringSlice>, FluentSe
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return selector.valueOf().toString().equals(content.toString());
     }
 

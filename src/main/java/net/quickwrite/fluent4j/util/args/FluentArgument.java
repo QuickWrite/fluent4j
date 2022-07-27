@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.FluentBundle;
 public interface FluentArgument<T> {
     T valueOf();
 
-    boolean matches(FluentArgument<?> selector);
+    boolean matches(final FluentBundle bundle, final FluentArgument<?> selector);
 
     String stringValue();
 

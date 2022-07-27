@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
+import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
@@ -80,7 +81,7 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return this.equals(selector);
     }
 

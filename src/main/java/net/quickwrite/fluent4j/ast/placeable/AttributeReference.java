@@ -42,7 +42,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return false;
     }
 

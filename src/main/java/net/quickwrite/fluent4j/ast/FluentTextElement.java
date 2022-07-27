@@ -90,7 +90,7 @@ public class FluentTextElement implements FluentElement, FluentArgument<String> 
     }
 
     @Override
-    public boolean matches(FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
         return selector.stringValue().equals(this.text);
     }
 
