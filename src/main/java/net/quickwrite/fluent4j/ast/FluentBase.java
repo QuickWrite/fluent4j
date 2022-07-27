@@ -197,9 +197,10 @@ public abstract class FluentBase implements FluentElement {
         char character = content.getChar();
         final int start = content.getPosition();
 
-        while(  character != '\0'
+        while(  character != ' '
                 && character != '\n'
                 && character != ']'
+                && character != '\0'
         ) {
             content.increment();
             character = content.getChar();
