@@ -91,8 +91,17 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
     }
 
     protected boolean check(StringSlice string) {
+        char character;
+
         while (!string.isBigger()) {
-            if (!Character.isUpperCase(string.getChar())) {
+            character = string.getChar();
+
+            if (
+                    !Character.isUpperCase(character)
+                    && !Character.isDigit(character)
+                    && character != '-'
+                    && character != '_'
+            ) {
                 return false;
             }
 
