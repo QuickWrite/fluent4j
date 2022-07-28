@@ -28,35 +28,41 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  *     Jane has 5 unread emails.
  * </pre>
  */
-public class VariableReference implements FluentPlaceable<StringSlice>, FluentSelectable {
-    private final StringSlice content;
+public class VariableReference implements FluentPlaceable<String>, FluentSelectable {
+    private final String content;
 
     public VariableReference(StringSlice content) {
-        this.content = content;
+        this.content = content.toString();
     }
 
     public StringSlice getContent() {
-        return this.content;
+        return new StringSlice(this.content);
     }
 
     @Override
-    public StringSlice valueOf() {
+    public String valueOf() {
         return this.content;
     }
 
     @Override
     public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
-        return selector.valueOf().toString().equals(content.toString());
+        return selector.valueOf().toString().equals(content);
     }
 
     @Override
     public String stringValue() {
-        return content.toString();
+        return content;
     }
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        return arguments.getNamed(content.toString()).getResult(bundle, arguments);
+        final FluentArgument<?> argument = arguments.getNamed(content);
+
+        if (argument == null) {
+            return "{$" + content + "}";
+        }
+
+        return argument.getResult(bundle, arguments);
     }
 
     @Override
