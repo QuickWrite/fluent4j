@@ -68,7 +68,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
     }
 
     @Override
-    public FluentArgument<?> getArgumentResult(final FluentBundle bundle) {
+    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         final FluentAttribute attribute = this.getMessage(bundle, reference.getContent().toString())
                 .getAttribute(this.attributeIdentifier);
         if (attribute == null) {

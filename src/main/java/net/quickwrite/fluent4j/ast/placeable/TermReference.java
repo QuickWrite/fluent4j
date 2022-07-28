@@ -24,25 +24,25 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * </pre>
  */
 public class TermReference extends FluentFunction {
-    public TermReference(StringSlice name) {
+    public TermReference(final StringSlice name) {
         super(name, null);
     }
 
-    public TermReference(StringSlice name, StringSlice content) {
+    public TermReference(final StringSlice name, final StringSlice content) {
         super(name, content);
     }
 
     @Override
-    protected boolean check(StringSlice string) {
+    protected boolean check(final StringSlice string) {
         return true;
     }
 
     @Override
-    public String getResult(FluentBundle bundle, FluentArgs arguments) {
-        return this.getArgumentResult(bundle).getResult(bundle, this.arguments);
+    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+        return this.getArgumentResult(bundle, arguments).getResult(bundle, this.arguments);
     }
 
-    public FluentArgument<?> getArgumentResult(FluentBundle bundle) {
+    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle.getTerm(this.functionName.toString());
     }
 

@@ -22,7 +22,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
         this.functionNameString = functionName.toString();
     }
 
-    public FluentArgument<?> getArgumentResult(final FluentBundle bundle) {
+    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle
                 .getFunction(this.functionNameString)
                 .getResult(bundle, this.arguments);
@@ -31,7 +31,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         try {
-            return this.getArgumentResult(bundle).getResult(bundle, arguments);
+            return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
         } catch (Exception exception) {
             return "{" + functionNameString + "()}";
         }

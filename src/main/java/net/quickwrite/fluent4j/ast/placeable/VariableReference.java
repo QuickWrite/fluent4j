@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
@@ -28,8 +29,9 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  *     Jane has 5 unread emails.
  * </pre>
  */
-public class VariableReference implements FluentPlaceable<String>, FluentSelectable {
+public class VariableReference implements FluentPlaceable<String>, FluentSelectable, FluentArgumentResult {
     private final String content;
+    private FluentArgument<?> cache = null;
 
     public VariableReference(StringSlice content) {
         this.content = content.toString();
@@ -52,6 +54,11 @@ public class VariableReference implements FluentPlaceable<String>, FluentSelecta
     @Override
     public String stringValue() {
         return content;
+    }
+
+    @Override
+    public FluentArgument<?> getArgumentResult(FluentBundle bundle, final FluentArgs arguments) {
+        return arguments.getNamed(content);
     }
 
     @Override
