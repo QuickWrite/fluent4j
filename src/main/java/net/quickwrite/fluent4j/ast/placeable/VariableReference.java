@@ -63,7 +63,7 @@ public class VariableReference implements FluentPlaceable<String>, FluentSelecta
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument<?> argument = arguments.getNamed(content);
+        FluentArgument<?> argument = arguments.getNamed(content);
 
         if (argument == null) {
             return "{$" + content + "}";

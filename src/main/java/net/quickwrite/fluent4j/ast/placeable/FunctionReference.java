@@ -25,7 +25,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle
                 .getFunction(this.functionNameString)
-                .getResult(bundle, this.arguments);
+                .getResult(bundle, this.getArguments(bundle, arguments));
     }
 
     @Override

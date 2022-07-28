@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?>>, FluentArgumentResult {
     protected final StringSlice functionName;
     protected final StringSlice content;
-    protected FluentArgs arguments;
+    protected final FluentArgs arguments;
 
     public FluentFunction(StringSlice functionName, StringSlice content) {
         this.functionName = functionName;
@@ -78,6 +78,11 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
     @Override
     public FluentArgument<?> valueOf() {
         return null;
+    }
+
+    protected FluentArgs getArguments(FluentBundle bundle, FluentArgs arguments) {
+        this.arguments.sanitize(bundle, arguments);
+        return this.arguments;
     }
 
     @Override

@@ -1,11 +1,9 @@
 package net.quickwrite.fluent4j.util.args;
 
 import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FluentArgs {
     private final Map<String, FluentArgument<?>> namedArguments;
@@ -22,6 +20,24 @@ public class FluentArgs {
 
     public FluentArgument<?> getNamed(final String key) {
         return this.namedArguments.get(key);
+    }
+
+    public void sanitize(final FluentBundle bundle, final FluentArgs arguments) {
+        for (String key : namedArguments.keySet()) {
+            final FluentArgument<?> argument = namedArguments.get(key);
+
+            if (argument instanceof FluentArgumentResult) {
+                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
+            }
+        }
+
+        for (int i = 0; i < positionalArguments.size(); i++) {
+            final FluentArgument<?> argument = positionalArguments.get(i);
+
+            if (argument instanceof FluentArgumentResult) {
+                positionalArguments.set(i, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
+            }
+        }
     }
 
     public FluentArgument<?> getPositional(final int index) {
