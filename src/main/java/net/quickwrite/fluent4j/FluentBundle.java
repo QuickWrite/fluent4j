@@ -110,7 +110,13 @@ public class FluentBundle {
     }
 
     public String getMessage(final String key, final FluentArgs arguments) {
-        return this.getMessage(key).getResult(this, arguments);
+        final FluentMessage message = this.getMessage(key);
+
+        if (message == null) {
+            return "{" + key + "}";
+        }
+
+        return message.getResult(this, arguments);
     }
 
     public ULocale getLocale() {
