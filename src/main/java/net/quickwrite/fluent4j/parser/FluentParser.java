@@ -195,39 +195,44 @@ public class FluentParser {
         int openCurly = 1;
         boolean justWhitespace = true;
 
-        while (openCurly != 0 && !input.isBigger()) {
-            input.increment();
-
+        while (!input.isBigger()) {
             char character = input.getChar();
 
-            if (character == '"' && justWhitespace) {
-                character = input.getChar();
-                input.increment();
+            switch (character) {
+                case '"':
+                    if (!justWhitespace) break;
 
-                while (!(input.getChar() == '"' && character != '\\') && !input.isBigger()) {
                     character = input.getChar();
                     input.increment();
-                }
 
-                character = input.getChar();
+                    while (!(input.getChar() == '"' && character != '\\') && !input.isBigger()) {
+                        character = input.getChar();
+                        input.increment();
+                    }
+
+                    break;
+                case '{':
+                    openCurly++;
+
+                    justWhitespace = true;
+
+                    break;
+                case '}':
+                    openCurly--;
+
+                    if (openCurly == 0) {
+                        return;
+                    }
+
+                    break;
+                default:
+                    if (!Character.isWhitespace(character)) {
+                        justWhitespace = false;
+                    }
             }
 
-            if (!Character.isWhitespace(character)) {
-                justWhitespace = false;
-            }
-
-            if (character == '{') {
-                openCurly++;
-
-                justWhitespace = true;
-                continue;
-            }
-            if (character == '}') {
-                openCurly--;
-            }
+            input.increment();
         }
-
-        //input.increment();
     }
 
     public interface BreakChecker {
