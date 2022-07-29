@@ -193,14 +193,33 @@ public class FluentParser {
         input.increment();
 
         int openCurly = 1;
+        boolean justWhitespace = true;
 
         while (openCurly != 0 && !input.isBigger()) {
             input.increment();
 
             char character = input.getChar();
 
+            if (character == '"' && justWhitespace) {
+                character = input.getChar();
+                input.increment();
+
+                while (!(input.getChar() == '"' && character != '\\') && !input.isBigger()) {
+                    character = input.getChar();
+                    input.increment();
+                }
+
+                character = input.getChar();
+            }
+
+            if (!Character.isWhitespace(character)) {
+                justWhitespace = false;
+            }
+
             if (character == '{') {
                 openCurly++;
+
+                justWhitespace = true;
                 continue;
             }
             if (character == '}') {
