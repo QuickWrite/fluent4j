@@ -205,7 +205,7 @@ public class FluentParser {
                     character = input.getChar();
                     input.increment();
 
-                    while (!(input.getChar() == '"' && character != '\\') && !input.isBigger()) {
+                    while (!(input.getChar() == '"' && character != '\\') && input.getChar() != '\n' && !input.isBigger()) {
                         character = input.getChar();
                         input.increment();
                     }
