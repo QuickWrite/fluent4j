@@ -31,8 +31,8 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
 
     private static final LocalizedNumberFormatter numberFormatter = NumberFormatter.withLocale(ULocale.ENGLISH);
 
-    protected NumberLiteral(final Number number) {
-        this(number, number.toString());
+    public NumberLiteral(final Number number) {
+        this(convertToBigDecimal(number), number.toString());
     }
 
     protected NumberLiteral(final Number number, final String stringValue) {
@@ -57,6 +57,16 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return NumberFormat.getInstance(bundle.getLocale()).format(number);
+    }
+
+    private static BigDecimal convertToBigDecimal(final Number number) {
+        if (number instanceof Integer
+                || number instanceof Long
+                || number instanceof Short
+                || number instanceof Byte) {
+            return BigDecimal.valueOf(number.longValue());
+        }
+        return BigDecimal.valueOf(number.doubleValue());
     }
 
     @Override
