@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.*;
+import net.quickwrite.fluent4j.exception.UnknownElementException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
@@ -61,23 +62,25 @@ public class FluentBundle {
         for (FluentElement element : resource.getElements()) {
             if (element instanceof FluentTerm) {
                 FluentTerm term = (FluentTerm) element;
-                if (terms.put(term.getIdentifier(), term) != null) {
-                    // TODO: handle duplicate terms
-                }
+                terms.put(term.getIdentifier(), term);
 
                 continue;
             }
 
             if (element instanceof FluentMessage) {
                 FluentMessage message = (FluentMessage) element;
-                if (messages.put(message.getIdentifier(), message) != null) {
-                    // TODO: handle duplicate messages
-                }
+                messages.put(message.getIdentifier(), message);
 
                 continue;
             }
 
-            // TODO: handle unknown elements
+            throw new UnknownElementException(
+                    "Expected an object of type FluentTerm or FluentMessage but got an element of type: " +
+                    element.getClass().getTypeName() +
+                    "\n" +
+                    "Object: " +
+                    element
+            );
         }
     }
 
