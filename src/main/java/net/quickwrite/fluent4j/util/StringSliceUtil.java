@@ -124,7 +124,8 @@ public final class StringSliceUtil {
                 }
 
                 if (slice.getChar() != '"') {
-                    throw new FluentParseException("String expression terminator '\"'", slice.getChar(), slice.getPosition() + 1);
+                    slice.decrement(2);
+                    throw new FluentParseException("String expression terminator '\"'", slice.getCharUTF16(), slice.getPosition() + 1);
                 }
 
                 StringSlice string = slice.substring(start, slice.getPosition());
@@ -239,7 +240,7 @@ public final class StringSliceUtil {
         final int start = slice.getPosition();
 
         if (!Character.isAlphabetic(character)) {
-            throw new FluentParseException("character from range [a-zA-Z]", character, slice.getAbsolutePosition());
+            throw new FluentParseException("character from range [a-zA-Z]", slice.getCharUTF16(), slice.getAbsolutePosition());
         }
 
         while (character != '\0' &&

@@ -70,7 +70,7 @@ public class FluentParser {
                 if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
                     break;
                 }
-                exceptionList.add(new FluentParseException("Expected an entry start at " + input.getPosition()));
+                exceptionList.add(new FluentParseException("an entry start", input.getCharUTF16(), input.getPosition()));
 
                 while (input.getChar() != '\n' && !input.isBigger()) {
                     input.increment();
@@ -99,7 +99,7 @@ public class FluentParser {
         StringSliceUtil.skipWhitespace(input);
 
         if (input.getChar() != '=') {
-            throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
+            throw new FluentParseException('=', input.getCharUTF16(), input.getAbsolutePosition());
         }
 
         input.increment();
@@ -131,7 +131,7 @@ public class FluentParser {
             StringSliceUtil.skipWhitespace(input);
 
             if (input.getChar() != '=') {
-                throw new FluentParseException('=', input.getChar(), input.getAbsolutePosition());
+                throw new FluentParseException('=', input.getCharUTF16(), input.getAbsolutePosition());
             }
 
             input.increment();

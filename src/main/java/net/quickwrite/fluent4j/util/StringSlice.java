@@ -1,5 +1,7 @@
 package net.quickwrite.fluent4j.util;
 
+import com.ibm.icu.text.UTF16;
+
 /**
  * A wrapper class for a String that has added functionality.
  * <p>
@@ -57,6 +59,13 @@ public class StringSlice {
         return this.base.charAt(this.start + this.index);
     }
 
+    public String getCharUTF16() {
+        if (isBigger())
+            return "\0";
+
+        return UTF16.valueOf(this.base, this.start + this.index);
+    }
+
     /**
      * Checks if the current index is bigger than the
      * length of the StringSlice itself.
@@ -102,6 +111,12 @@ public class StringSlice {
 
     public void decrement() {
         this.index--;
+    }
+
+    public void decrement(int times) {
+        for (int i = 0; i < times; i++) {
+            decrement();
+        }
     }
 
     public char peek(int index) {

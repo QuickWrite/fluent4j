@@ -117,7 +117,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         if (canSelect && content.getChar() == '-') {
             content.increment();
             if (content.getChar() != '>') {
-                throw new FluentParseException("->", "-" + content.getChar(), content.getAbsolutePosition());
+                throw new FluentParseException("->", "-" + content.getCharUTF16(), content.getAbsolutePosition());
             }
 
             content.increment();
@@ -153,7 +153,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         StringSliceUtil.skipWhitespaceAndNL(content);
 
         if (content.getChar() != '}') {
-            throw new FluentParseException('}', content.getChar(), content.getAbsolutePosition());
+            throw new FluentParseException('}', content.getCharUTF16(), content.getAbsolutePosition());
         }
 
         content.increment();
@@ -176,7 +176,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         }
 
         if (content.getChar() != '[') {
-            throw new FluentParseException('[', content.getChar(), content.getAbsolutePosition());
+            throw new FluentParseException('[', content.getCharUTF16(), content.getAbsolutePosition());
         }
 
         content.increment();
