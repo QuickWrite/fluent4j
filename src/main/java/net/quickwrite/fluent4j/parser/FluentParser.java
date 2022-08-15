@@ -8,6 +8,7 @@ import net.quickwrite.fluent4j.util.StringSliceUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class FluentParser {
                 }
             } catch (FluentParseException exception) {
                 exceptionList.add(exception);
+                continue;
             }
 
             int startSkip = input.getPosition();

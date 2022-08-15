@@ -9,6 +9,12 @@ public class FluentArgs {
     private final Map<String, FluentArgument<?>> namedArguments;
     private final List<FluentArgument<?>> positionalArguments;
 
+    public static final FluentArgs EMPTY_ARGS;
+
+    static {
+        EMPTY_ARGS = new FluentArgs();
+    }
+
     public FluentArgs() {
         this(new HashMap<>(), new ArrayList<>());
     }

@@ -23,22 +23,20 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
 
         this.content = content;
 
-        this.arguments = new FluentArgs();
-
-        if (content != null) {
-            getArguments();
-        }
+        this.arguments = (content == null) ? FluentArgs.EMPTY_ARGS : this.getArguments();
     }
 
-    private void getArguments() {
+    private FluentArgs getArguments() {
+        FluentArgs arguments = new FluentArgs();
+
         while (!content.isBigger()) {
             StringSliceUtil.skipWhitespaceAndNL(content);
 
             Pair<StringSlice, FluentArgument<?>> argument = getArgument();
             if (argument.getLeft() != null) {
-                this.arguments.setNamed(argument.getLeft().toString(), argument.getRight());
+                arguments.setNamed(argument.getLeft().toString(), argument.getRight());
             } else {
-                this.arguments.addPositional(argument.getRight());
+                arguments.addPositional(argument.getRight());
             }
 
             StringSliceUtil.skipWhitespaceAndNL(content);
@@ -51,6 +49,8 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
             }
             content.increment();
         }
+
+        return arguments;
     }
 
     private Pair<StringSlice, FluentArgument<?>> getArgument() {
