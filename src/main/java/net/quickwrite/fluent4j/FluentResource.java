@@ -17,7 +17,13 @@ public class FluentResource {
     private final List<FluentElement> elements;
     private final List<FluentParseException> exceptionList;
 
-    public FluentResource(List<FluentElement> elementList, List<FluentParseException> exceptionList) {
+    /**
+     * A FluentResource is a structure storing parsed localization entries.
+     *
+     * @param elementList   The list of {@link FluentElement}s.
+     * @param exceptionList The list of {@link FluentParseException}s that result from the parsing.
+     */
+    public FluentResource(final List<FluentElement> elementList, final List<FluentParseException> exceptionList) {
         this.elements = elementList;
         this.exceptionList = exceptionList;
     }
@@ -28,6 +34,10 @@ public class FluentResource {
 
     public boolean hasExceptions() {
         return !exceptionList.isEmpty();
+    }
+
+    public List<FluentParseException> getExceptions() {
+        return exceptionList;
     }
 
     @Override
