@@ -166,14 +166,14 @@ public class FluentBundle {
      * @param arguments The arguments that should be passed on
      * @return The generated string
      */
-    public CharSequence getMessage(final String key, final FluentArgs arguments) {
+    public String getMessage(final String key, final FluentArgs arguments) {
         final FluentMessage message = this.getMessage(key);
 
         if (message == null) {
             return "{" + key + "}";
         }
 
-        return message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS);
+        return message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS).toString();
     }
 
     public ULocale getLocale() {
