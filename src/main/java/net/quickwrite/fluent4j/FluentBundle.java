@@ -22,23 +22,19 @@ public class FluentBundle {
      * one specific locale (the first) but it can have other locales
      * that act as a fallback when a function is not supported.
      */
-    private final List<ULocale> locales;
+    private final ULocale locale;
 
     private final Map<String, FluentTerm> terms;
     private final Map<String, FluentMessage> messages;
 
     private final Map<String, AbstractFunction> functions = BuiltinFunctions.getBuiltinFunctions();
 
-    public FluentBundle(final List<ULocale> locales, final FluentResource resource) {
-        this.locales = locales;
+    public FluentBundle(ULocale locale, final FluentResource resource) {
+        this.locale = locale;
         this.messages = new HashMap<>();
         this.terms = new HashMap<>();
 
         this.addResource(resource);
-    }
-
-    public FluentBundle(final ULocale locale, final FluentResource resource) {
-        this(List.of(locale), resource);
     }
 
     /**
@@ -123,6 +119,6 @@ public class FluentBundle {
     }
 
     public ULocale getLocale() {
-        return this.locales.get(0);
+        return this.locale;
     }
 }
