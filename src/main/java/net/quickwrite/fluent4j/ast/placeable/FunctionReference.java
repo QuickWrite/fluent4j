@@ -16,13 +16,13 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
 public class FunctionReference extends FluentFunction implements FluentSelectable {
     private final String functionNameString;
 
-    public FunctionReference(StringSlice functionName, StringSlice content) {
+    public FunctionReference(final String functionName, final StringSlice content) {
         super(functionName, content);
 
-        this.functionNameString = functionName.toString();
+        this.functionNameString = functionName;
     }
 
-    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle
                 .getFunction(this.functionNameString)
                 .getResult(bundle, this.getArguments(bundle, arguments));
@@ -41,7 +41,6 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     public String toString() {
         return "FluentFunctionReference: {\n" +
                 "\t\t\tfunctionName: \"" + this.functionName + "\"\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\targuments: " + this.arguments + "\n" +
                 "\t\t}";
     }

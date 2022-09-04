@@ -22,27 +22,17 @@ import java.util.List;
  * -term-test = { -term.attribute }
  * </pre>
  */
-public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, FluentArgumentResult {
-    protected final FluentPlaceable<?> reference;
+public class AttributeReference implements FluentPlaceable, FluentArgumentResult {
+    protected final FluentPlaceable reference;
     protected final String attributeIdentifier;
 
-    public AttributeReference(FluentPlaceable<?> reference, StringSlice attributeIdentifier) {
+    public AttributeReference(FluentPlaceable reference, StringSlice attributeIdentifier) {
         this.reference = reference;
         this.attributeIdentifier = attributeIdentifier.toString();
     }
 
     @Override
-    public StringSlice getContent() {
-        return null;
-    }
-
-    @Override
-    public FluentPlaceable<?> valueOf() {
-        return this.reference;
-    }
-
-    @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return false;
     }
 
@@ -53,7 +43,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        final FluentMessage fluentMessage = this.getMessage(bundle, reference.getContent().toString());
+        final FluentMessage fluentMessage = this.getMessage(bundle, reference.stringValue());
         if (fluentMessage == null) {
             return getErrorString();
         }
@@ -68,8 +58,8 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
     }
 
     @Override
-    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
-        final FluentAttribute attribute = this.getMessage(bundle, reference.getContent().toString())
+    public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
+        final FluentAttribute attribute = this.getMessage(bundle, reference.stringValue())
                 .getAttribute(this.attributeIdentifier);
         if (attribute == null) {
             return this;
@@ -82,7 +72,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
         }
 
         // No recursion (unfortunately :d)
-        return (FluentArgument<?>)elementList.get(0);
+        return (FluentArgument)elementList.get(0);
     }
 
     protected FluentMessage getMessage(final FluentBundle bundle, final String key) {
@@ -90,7 +80,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
     }
 
     protected String getErrorString() {
-        return "{" + reference.getContent() + "." + attributeIdentifier + "}";
+        return "{" + reference.stringValue() + "." + attributeIdentifier + "}";
     }
 
     @Override
@@ -102,7 +92,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
     }
 
     public static class TermAttributeReference extends AttributeReference implements FluentSelectable {
-        public TermAttributeReference(FluentPlaceable<?> reference, StringSlice content) {
+        public TermAttributeReference(FluentPlaceable reference, StringSlice content) {
             super(reference, content);
         }
 
@@ -113,7 +103,7 @@ public class AttributeReference implements FluentPlaceable<FluentPlaceable<?>>, 
 
         @Override
         protected String getErrorString() {
-            return "{-" + reference.getContent() + "." + attributeIdentifier + "}";
+            return "{-" + reference.stringValue() + "." + attributeIdentifier + "}";
         }
     }
 }

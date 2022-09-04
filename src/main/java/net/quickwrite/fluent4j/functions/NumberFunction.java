@@ -1,9 +1,11 @@
 package net.quickwrite.fluent4j.functions;
 
 import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.CustomNumberLiteral;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.text.ParseException;
 
@@ -13,15 +15,15 @@ public class NumberFunction extends AbstractFunction {
     }
 
     @Override
-    public FluentPlaceable<?> getResult(FluentBundle bundle, FluentArgs arguments) {
-        Object number = arguments.getPositional(0).valueOf();
+    public FluentPlaceable getResult(FluentBundle bundle, FluentArgs arguments) {
+        FluentArgument number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;
-        if (number instanceof Number) {
-            numberLiteral = new CustomNumberLiteral((Number) number);
+        if (number instanceof NumberLiteral) {
+            numberLiteral = new CustomNumberLiteral(((NumberLiteral) number).valueOf());
         } else {
             try {
-                numberLiteral = new CustomNumberLiteral(number.toString());
+                numberLiteral = new CustomNumberLiteral(number.stringValue());
             } catch (ParseException exception) {
                 throw new NumberFormatException();
             }
@@ -38,16 +40,26 @@ public class NumberFunction extends AbstractFunction {
     }
 
     private int getIntValue(final String key, final int defaultValue, final FluentArgs arguments) {
-        return arguments
-                .getOrDefault(key, defaultValue, Number.class)
-                .valueOf()
-                .intValue();
+        FluentArgument argument = arguments.get(key);
+
+        if (!(argument instanceof NumberLiteral)) {
+            try {
+                return Integer.parseInt(argument.stringValue());
+            } catch (Exception ignored) {
+                return defaultValue;
+            }
+        }
+
+        return ((NumberLiteral)argument).valueOf().intValue();
     }
 
     private boolean getBooleanValue(final String key, final boolean defaultValue, final FluentArgs arguments) {
-        return !arguments
-                .getOrDefault(key, String.valueOf(defaultValue), String.class)
-                .valueOf()
-                .equals("false");
+        final FluentArgument argument = arguments.get(key);
+
+        try {
+            return Boolean.parseBoolean(argument.stringValue());
+        } catch (Exception ignored) {
+            return defaultValue;
+        }
     }
 }

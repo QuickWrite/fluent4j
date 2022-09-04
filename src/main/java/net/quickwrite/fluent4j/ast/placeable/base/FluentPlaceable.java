@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
@@ -41,12 +40,5 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  *     </pre>
  * </p>
  */
-public interface FluentPlaceable<T> extends FluentElement, FluentArgument<T> {
-
-    /**
-     * Returns the content the placeable uses inside.
-     *
-     * @return content
-     */
-    StringSlice getContent();
+public interface FluentPlaceable extends FluentElement, FluentArgument {
 }

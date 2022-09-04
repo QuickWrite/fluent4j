@@ -2,10 +2,8 @@ package net.quickwrite.fluent4j.util.args;
 
 import net.quickwrite.fluent4j.FluentBundle;
 
-public interface FluentArgument<T> {
-    T valueOf();
-
-    boolean matches(final FluentBundle bundle, final FluentArgument<?> selector);
+public interface FluentArgument {
+    boolean matches(final FluentBundle bundle, final FluentArgument selector);
 
     String stringValue();
 

@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class FluentBase implements FluentElement, FluentArgument<StringSlice> {
+public abstract class FluentBase implements FluentElement, FluentArgument {
     protected final String identifier;
     protected final int whitespace;
 
     protected final List<FluentElement> fluentElements;
-    protected StringSlice content;
 
     /**
      * Creates a new FluentAttribute with the identifier and the content.
@@ -40,23 +39,22 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
                       final StringSlice content,
                       final int whitespace) {
         this.identifier = identifier.toString();
-        this.content = content;
         this.whitespace = whitespace;
 
-        this.fluentElements = parse();
+        this.fluentElements = parse(content);
     }
 
-    private List<FluentElement> parse() {
-        List<FluentElement> elements = new LinkedList<>();
+    private List<FluentElement> parse(final StringSlice content) {
+        final List<FluentElement> elements = new LinkedList<>();
 
         StringSliceUtil.skipWhitespace(content);
         boolean firstLine = true;
 
         while (!content.isBigger()) {
             if (content.getChar() == '{') {
-                elements.add(getPlaceable());
+                elements.add(getPlaceable(content));
             } else {
-                FluentTextElement text = getText(firstLine);
+                FluentTextElement text = getText(content, firstLine);
 
                 if (text != null) {
                     elements.add(text);
@@ -69,7 +67,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         return elements;
     }
 
-    private FluentTextElement getText(final boolean firstLine) {
+    private FluentTextElement getText(final StringSlice content, final boolean firstLine) {
         if (firstLine && StringSliceUtil.skipWhitespaceAndNL(content)) {
             while (content.getChar() != '\n') {
                 content.decrement();
@@ -91,11 +89,11 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         return new FluentTextElement(content.substring(start, content.getPosition()), whitespace);
     }
 
-    private FluentPlaceable<?> getPlaceable() {
+    private FluentPlaceable getPlaceable(final StringSlice content) {
         content.increment();
         StringSliceUtil.skipWhitespaceAndNL(content);
 
-        FluentPlaceable<?> placeable = StringSliceUtil.getExpression(content);
+        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
 
         boolean canSelect = placeable instanceof FluentSelectable;
 
@@ -128,7 +126,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
             FluentVariant defaultVariant = null;
 
             while (content.getChar() != '}') {
-                Pair<FluentVariant, Boolean> variant = getVariant();
+                Pair<FluentVariant, Boolean> variant = getVariant(content);
 
                 fluentVariants.add(variant.getLeft());
 
@@ -165,7 +163,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         return this.identifier;
     }
 
-    private Pair<FluentVariant, Boolean> getVariant() {
+    private Pair<FluentVariant, Boolean> getVariant(final StringSlice content) {
         StringSliceUtil.skipWhitespaceAndNL(content);
 
         boolean isDefault = false;
@@ -188,7 +186,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
         StringSliceUtil.skipWhitespace(content);
 
         if (content.getChar() != ']') {
-            throw getVariantException(identifier.toString(), "]");
+            throw getVariantException(content, identifier.toString(), "]");
         }
 
         content.increment();
@@ -226,9 +224,9 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
 
         for (FluentElement element : this.fluentElements) {
             if (element instanceof FluentTextElement) {
-                builder.append(((FluentTextElement) element).valueOf());
+                builder.append(((FluentTextElement) element).stringValue());
             } else {
-                builder.append(((FluentPlaceable<?>) element).getResult(bundle, arguments));
+                builder.append(((FluentPlaceable) element).getResult(bundle, arguments));
             }
         }
 
@@ -236,25 +234,20 @@ public abstract class FluentBase implements FluentElement, FluentArgument<String
     }
 
     @Override
-    public StringSlice valueOf() {
-        return this.content;
-    }
-
-    @Override
-    public boolean matches(FluentBundle bundle, FluentArgument<?> selector) {
+    public boolean matches(FluentBundle bundle, FluentArgument selector) {
         return false;
     }
 
     @Override
     public String stringValue() {
-        return this.content.toString();
+        return this.identifier;
     }
 
     public List<FluentElement> getElements() {
         return this.fluentElements;
     }
 
-    private FluentParseException getVariantException(final String prev, final String expected) {
+    private FluentParseException getVariantException(final StringSlice content, final String prev, final String expected) {
         int start = content.getPosition();
 
         while (content.getChar() != ']' && !content.isBigger()) {

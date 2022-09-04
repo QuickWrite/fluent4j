@@ -109,8 +109,8 @@ public final class StringSliceUtil {
      *
      * @return The expression
      */
-    public static FluentPlaceable<?> getExpression(StringSlice slice) {
-        FluentPlaceable<?> expression;
+    public static FluentPlaceable getExpression(StringSlice slice) {
+        FluentPlaceable expression;
 
         switch (slice.getChar()) {
             case '"' -> {
@@ -143,7 +143,7 @@ public final class StringSliceUtil {
         return expression;
     }
 
-    private static FluentPlaceable<?> expressionGetDefault(StringSlice slice) {
+    private static FluentPlaceable expressionGetDefault(StringSlice slice) {
         boolean isTerm = false;
 
         if (slice.getChar() == '-') {
@@ -159,14 +159,9 @@ public final class StringSliceUtil {
             return NumberLiteral.getNumberLiteral(getNumber(slice));
         }
 
-        StringSlice msgIdentifier = getIdentifier(slice);
+        final StringSlice msgIdentifier = getIdentifier(slice);
 
-        FluentPlaceable<?> expression;
-        if (isTerm) {
-            expression = new TermReference(msgIdentifier);
-        } else {
-            expression = new MessageReference(msgIdentifier);
-        }
+        FluentPlaceable expression = (isTerm) ? new TermReference(msgIdentifier) : new MessageReference(msgIdentifier);
 
         skipWhitespace(slice);
 
@@ -195,12 +190,12 @@ public final class StringSliceUtil {
 
             if (!isTerm) {
                 expression = new FunctionReference(
-                        expression.getContent(),
+                        expression.stringValue(),
                         slice.substring(start, slice.getPosition())
                 );
             } else {
                 expression = new TermReference(
-                        expression.getContent(),
+                        expression.stringValue(),
                         slice.substring(start, slice.getPosition())
                 );
             }

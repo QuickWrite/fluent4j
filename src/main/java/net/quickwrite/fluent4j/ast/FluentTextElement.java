@@ -9,30 +9,14 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * The TextElement is just storing a text that does
  * nothing at all.
  */
-public class FluentTextElement implements FluentElement, FluentArgument<String> {
-    private final StringSlice content;
+public class FluentTextElement implements FluentElement, FluentArgument {
     private final String text;
 
     public FluentTextElement(final StringSlice content, final int whitespace) {
-        this.content = content;
-        this.text = getText(whitespace);
+        this.text = getText(content, whitespace);
     }
 
-    public boolean isEmpty() {
-        while (!content.isBigger()) {
-            if(!(content.getChar() == '\n' || content.getChar() == ' ')) {
-                return false;
-            }
-
-            content.increment();
-        }
-
-        content.setIndex(0);
-
-        return true;
-    }
-
-    private String getLine(int whitespace) {
+    private String getLine(StringSlice content, int whitespace) {
         if (content.getChar() == '\n') {
             return "\n";
         }
@@ -66,12 +50,12 @@ public class FluentTextElement implements FluentElement, FluentArgument<String> 
         return content.substring(start, content.getPosition() + (peek == '{' || peek == '\0' ? 0 : 1)).toString();
     }
 
-    private String getText(int whitespace) {
+    private String getText(final StringSlice content, final int whitespace) {
         StringBuilder text = new StringBuilder();
         boolean first = true;
 
         while (!content.isBigger()) {
-            text.append(getLine(first ? 0 : whitespace));
+            text.append(getLine(content, first ? 0 : whitespace));
 
             first = false;
             content.increment();
@@ -85,12 +69,7 @@ public class FluentTextElement implements FluentElement, FluentArgument<String> 
     }
 
     @Override
-    public String valueOf() {
-        return this.text;
-    }
-
-    @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return selector.stringValue().equals(this.text);
     }
 
@@ -107,7 +86,6 @@ public class FluentTextElement implements FluentElement, FluentArgument<String> 
     @Override
     public String toString() {
         return "FluentTextElement: {\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\ttext: \"" + this.text + "\"\n" +
                 "\t\t}";
     }

@@ -17,42 +17,32 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * Referencing other messages generally helps to keep certain translations
  * consistent across the interface and makes maintenance easier.
  */
-public class MessageReference implements FluentPlaceable<StringSlice> {
-    private final StringSlice content;
+public class MessageReference implements FluentPlaceable {
+    private final String reference;
 
-    public MessageReference(StringSlice content) {
-        this.content = content;
+    public MessageReference(final StringSlice reference) {
+        this.reference = reference.toString();
     }
 
     @Override
-    public StringSlice getContent() {
-        return this.content;
-    }
-
-    @Override
-    public StringSlice valueOf() {
-        return this.content;
-    }
-
-    @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
-        return selector.valueOf().toString().equals(this.content.toString());
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
+        return selector.stringValue().equals(this.reference);
     }
 
     @Override
     public String stringValue() {
-        return this.content.toString();
+        return this.reference;
     }
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        return bundle.getMessage(this.content.toString(), arguments);
+        return bundle.getMessage(this.stringValue(), arguments);
     }
 
     @Override
     public String toString() {
         return "FluentMessageReference: {\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
+                "\t\t\treference: \"" + this.reference + "\"\n" +
                 "\t\t}";
     }
 }

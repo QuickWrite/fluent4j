@@ -29,9 +29,9 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  *     Jane has 5 unread emails.
  * </pre>
  */
-public class VariableReference implements FluentPlaceable<String>, FluentSelectable, FluentArgumentResult {
+public class VariableReference implements FluentPlaceable, FluentSelectable, FluentArgumentResult {
     private final String content;
-    private FluentArgument<?> cache = null;
+    private FluentArgument cache = null;
 
     public VariableReference(StringSlice content) {
         this.content = content.toString();
@@ -42,13 +42,8 @@ public class VariableReference implements FluentPlaceable<String>, FluentSelecta
     }
 
     @Override
-    public String valueOf() {
-        return this.content;
-    }
-
-    @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
-        return selector.valueOf().toString().equals(content);
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
+        return selector.stringValue().equals(content);
     }
 
     @Override
@@ -57,8 +52,8 @@ public class VariableReference implements FluentPlaceable<String>, FluentSelecta
     }
 
     @Override
-    public FluentArgument<?> getArgumentResult(FluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument<?> argument = arguments.getNamed(content);
+    public FluentArgument getArgumentResult(FluentBundle bundle, final FluentArgs arguments) {
+        final FluentArgument argument = arguments.getNamed(content);
 
         if (argument == null) {
             return new StringLiteral("{$" + content + "}");
@@ -69,7 +64,7 @@ public class VariableReference implements FluentPlaceable<String>, FluentSelecta
 
     @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument<?> argument = arguments.getNamed(content);
+        final FluentArgument argument = arguments.getNamed(content);
 
         if (argument == null) {
             return "{$" + content + "}";

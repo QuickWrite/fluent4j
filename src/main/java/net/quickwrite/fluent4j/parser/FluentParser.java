@@ -23,19 +23,7 @@ import java.util.List;
  * be queried faster.
  * </p>
  */
-public class FluentParser {
-    private final StringSlice input;
-
-    /**
-     * Initializes the Parser with the input String as the
-     * Ressource.
-     *
-     * @param input The Fluent Ressource
-     */
-    public FluentParser(String input) {
-        this.input = new StringSlice(input.replace("\r", ""));
-    }
-
+public abstract class FluentParser {
     /**
      * Parses the Fluent Resource that is stored inside of the
      * Object as an attribute and returns the generated AST inside
@@ -43,18 +31,20 @@ public class FluentParser {
      *
      * @return FluentResource
      */
-    public FluentResource parse() {
+    public static FluentResource parse(final String content) {
+        final StringSlice input = convertString(content);
+
         List<FluentElement> elementList = new ArrayList<>();
         List<FluentParseException> exceptionList = new LinkedList<>();
 
         while (input.length() >= input.length()) {
             if (input.getChar() == '#') {
-                handleComment();
+                handleComment(input);
                 continue;
             }
 
             try {
-                FluentBase fluentBase = getBase();
+                FluentBase fluentBase = getBase(input);
 
                 if (fluentBase != null) {
                     elementList.add(fluentBase);
@@ -85,7 +75,7 @@ public class FluentParser {
         return new FluentResource(elementList, exceptionList);
     }
 
-    private FluentBase getBase() {
+    private static FluentBase getBase(final StringSlice input) {
         boolean isIdentifier = false;
 
         if (input.getChar() == '-') {
@@ -106,7 +96,7 @@ public class FluentParser {
 
         input.increment();
 
-        final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent();
+        final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent(input);
 
         if (!isIdentifier) {
             // must be a Message
@@ -117,15 +107,15 @@ public class FluentParser {
         }
     }
 
-    private void handleComment() {
+    private static void handleComment(final StringSlice input) {
         while (input.getChar() != '\n' && input.getChar() != '\0') {
             input.increment();
         }
     }
 
-    private Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> getContent() {
+    private static Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> getContent(final StringSlice input) {
         List<FluentAttribute> attributes = new ArrayList<>();
-        Pair<StringSlice, Integer> content = getMessageContent();
+        Pair<StringSlice, Integer> content = getMessageContent(input);
 
         while (input.getChar() == '.') {
             input.increment();
@@ -139,7 +129,7 @@ public class FluentParser {
             input.increment();
             StringSliceUtil.skipWhitespace(input);
 
-            Pair<StringSlice, Integer> messageContent = getMessageContent();
+            Pair<StringSlice, Integer> messageContent = getMessageContent(input);
 
             attributes.add(new FluentAttribute(identifier, messageContent.getLeft(), messageContent.getRight()));
         }
@@ -147,7 +137,7 @@ public class FluentParser {
         return new ImmutablePair<>(content, attributes);
     }
 
-    private Pair<StringSlice, Integer> getMessageContent() {
+    private static Pair<StringSlice, Integer> getMessageContent(final StringSlice input) {
         return getMessageContent(input, character -> character == '.');
     }
 
@@ -235,6 +225,10 @@ public class FluentParser {
 
             input.increment();
         }
+    }
+
+    private static StringSlice convertString(final String input) {
+        return new StringSlice(input.replace("\r", ""));
     }
 
     public interface BreakChecker {

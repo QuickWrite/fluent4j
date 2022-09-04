@@ -10,7 +10,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
         super(new FluentArgs());
     }
 
-    public FluentArgsBuilder setNamed(final String key, final FluentArgument<?> argument) {
+    public FluentArgsBuilder setNamed(final String key, final FluentArgument argument) {
         this.element.setNamed(key, argument);
 
         return this;
@@ -24,7 +24,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
         return this.setNamed(key, new NumberLiteral(argument));
     }
 
-    public FluentArgsBuilder addPositional(final FluentArgument<?> argument) {
+    public FluentArgsBuilder addPositional(final FluentArgument argument) {
         this.element.addPositional(argument);
 
         return this;

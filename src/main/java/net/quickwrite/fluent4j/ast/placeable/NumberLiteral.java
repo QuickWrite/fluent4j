@@ -24,7 +24,7 @@ import java.math.BigDecimal;
  * Numbers can be integers or rational numbers
  * </p>
  */
-public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable {
+public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     protected final Number number;
     protected final String stringValue;
     protected final FormattedNumber formattedNumber;
@@ -50,11 +50,6 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
     }
 
     @Override
-    public StringSlice getContent() {
-        return new StringSlice(this.stringValue);
-    }
-
-    @Override
     public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return NumberFormat.getInstance(bundle.getLocale()).format(number);
     }
@@ -69,15 +64,14 @@ public class NumberLiteral implements FluentPlaceable<Number>, FluentSelectable 
         return BigDecimal.valueOf(number.doubleValue());
     }
 
-    @Override
     public Number valueOf() {
         return this.number;
     }
 
     @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         if (selector instanceof NumberLiteral) {
-            return matches((Number)selector.valueOf());
+            return matches(((NumberLiteral)selector).valueOf());
         }
 
         if (PluralRules.forLocale(bundle.getLocale()).select(this.formattedNumber).equals(selector.stringValue())) {

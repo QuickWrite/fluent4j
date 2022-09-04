@@ -34,7 +34,7 @@ import java.util.Map;
  *     </pre>
  * </p>
  */
-public class StringLiteral implements FluentPlaceable<String>, FluentSelectable {
+public class StringLiteral implements FluentPlaceable, FluentSelectable {
 
     public static final CharSequenceTranslator UNESCAPE_FLUENT;
 
@@ -45,21 +45,14 @@ public class StringLiteral implements FluentPlaceable<String>, FluentSelectable 
         );
     }
 
-    private final StringSlice content;
     private final String literal;
 
     public StringLiteral(StringSlice content) {
-        this.content = content;
-        this.literal = getLiteral();
+        this(content.toString());
     }
 
     public StringLiteral(String content) {
-        this.content = new StringSlice(content);
-        this.literal = content;
-    }
-
-    public StringSlice getContent() {
-        return this.content;
+        this.literal = getLiteral(content);
     }
 
     @Override
@@ -67,17 +60,12 @@ public class StringLiteral implements FluentPlaceable<String>, FluentSelectable 
         return this.literal;
     }
 
-    private String getLiteral() {
-        return UNESCAPE_FLUENT.translate(content.toString());
+    private String getLiteral(final String content) {
+        return UNESCAPE_FLUENT.translate(content);
     }
 
     @Override
-    public String valueOf() {
-        return this.literal;
-    }
-
-    @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return this.literal.equals(selector.stringValue());
     }
 
@@ -89,7 +77,6 @@ public class StringLiteral implements FluentPlaceable<String>, FluentSelectable 
     @Override
     public String toString() {
         return "FluentStringLiteral: {\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\tliteral: \"" + this.literal + "\"\n" +
                 "\t\t}";
     }

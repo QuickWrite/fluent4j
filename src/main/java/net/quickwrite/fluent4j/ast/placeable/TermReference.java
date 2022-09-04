@@ -28,12 +28,12 @@ public class TermReference extends FluentFunction {
         super(name, null);
     }
 
-    public TermReference(final StringSlice name, final StringSlice content) {
+    public TermReference(final String name, final StringSlice content) {
         super(name, content);
     }
 
     @Override
-    protected boolean check(final StringSlice string) {
+    protected boolean check(final String string) {
         return true;
     }
 
@@ -42,7 +42,7 @@ public class TermReference extends FluentFunction {
         return this.getArgumentResult(bundle, arguments).getResult(bundle, this.getArguments(bundle, arguments));
     }
 
-    public FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle.getTerm(this.functionName.toString());
     }
 
@@ -50,7 +50,6 @@ public class TermReference extends FluentFunction {
     public String toString() {
         return "FluentTermReference: {\n" +
                 "\t\t\ttermName: \"" + this.functionName + "\"\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
                 "\t\t\targuments: " + this.arguments + "\n" +
                 "\t\t}";
     }

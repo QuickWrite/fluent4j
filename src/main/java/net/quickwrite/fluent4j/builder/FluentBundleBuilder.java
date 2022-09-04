@@ -13,7 +13,7 @@ public class FluentBundleBuilder extends AbstractBuilder<FluentBundle> {
     }
 
     public FluentBundleBuilder(final ULocale locale, final String fileContent) {
-        super(new FluentBundle(locale, new FluentParser(fileContent).parse()));
+        super(new FluentBundle(locale, FluentParser.parse(fileContent)));
     }
 
     public FluentBundleBuilder addResource(final File file) {
@@ -21,8 +21,7 @@ public class FluentBundleBuilder extends AbstractBuilder<FluentBundle> {
     }
 
     public FluentBundleBuilder addResource(final String fileContent) {
-        final FluentParser fluentParser = new FluentParser(fileContent);
-        this.element.addResource(fluentParser.parse());
+        this.element.addResource(FluentParser.parse(fileContent));
 
         return this;
     }

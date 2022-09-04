@@ -9,32 +9,33 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?>>, FluentArgumentResult {
-    protected final StringSlice functionName;
-    protected final StringSlice content;
+public abstract class FluentFunction implements FluentPlaceable, FluentArgumentResult {
+    protected final String functionName;
     protected final FluentArgs arguments;
 
-    public FluentFunction(StringSlice functionName, StringSlice content) {
+    public FluentFunction(final StringSlice functionName, final StringSlice content) {
+        this(functionName.toString(), content);
+    }
+
+    public FluentFunction(final String functionName, final StringSlice content) {
         this.functionName = functionName;
         if (!check(functionName)) {
             // TODO: Better Error handling
             throw new FluentParseException("The callee has to be an upper-case identifier or a term");
         }
 
-        this.content = content;
-
-        this.arguments = (content == null) ? FluentArgs.EMPTY_ARGS : this.getArguments();
+        this.arguments = (content == null) ? FluentArgs.EMPTY_ARGS : this.getArguments(content);
     }
 
-    private FluentArgs getArguments() {
+    private FluentArgs getArguments(final StringSlice content) {
         FluentArgs arguments = new FluentArgs();
 
         while (!content.isBigger()) {
             StringSliceUtil.skipWhitespaceAndNL(content);
 
-            Pair<StringSlice, FluentArgument<?>> argument = getArgument();
+            Pair<String, FluentArgument> argument = getArgument(content);
             if (argument.getLeft() != null) {
-                arguments.setNamed(argument.getLeft().toString(), argument.getRight());
+                arguments.setNamed(argument.getLeft(), argument.getRight());
             } else {
                 arguments.addPositional(argument.getRight());
             }
@@ -53,9 +54,9 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
         return arguments;
     }
 
-    private Pair<StringSlice, FluentArgument<?>> getArgument() {
-        FluentPlaceable<?> placeable = StringSliceUtil.getExpression(content);
-        StringSlice identifier = null;
+    private Pair<String, FluentArgument> getArgument(final StringSlice content) {
+        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
+        String identifier = null;
 
         StringSliceUtil.skipWhitespace(content);
 
@@ -63,21 +64,12 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
             content.increment();
             StringSliceUtil.skipWhitespace(content);
 
-            identifier = placeable.getContent();
+            identifier = placeable.stringValue();
 
             placeable = StringSliceUtil.getExpression(content);
         }
 
         return new ImmutablePair<>(identifier, placeable);
-    }
-
-    public StringSlice getContent() {
-        return this.functionName;
-    }
-
-    @Override
-    public FluentArgument<?> valueOf() {
-        return null;
     }
 
     protected FluentArgs getArguments(FluentBundle bundle, FluentArgs arguments) {
@@ -86,34 +78,26 @@ public abstract class FluentFunction implements FluentPlaceable<FluentArgument<?
     }
 
     @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument<?> selector) {
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return this.equals(selector);
     }
 
     @Override
     public String stringValue() {
-        return this.functionName.toString();
+        return this.functionName;
     }
 
-    protected boolean check(StringSlice string) {
-        char character;
+    protected boolean check(final String string) {
+        for(int i = 0; i < string.length(); i++) {
+            final char character = string.charAt(i);
 
-        while (!string.isBigger()) {
-            character = string.getChar();
-
-            if (
-                    !Character.isUpperCase(character)
+            if (!Character.isUpperCase(character)
                     && !Character.isDigit(character)
                     && character != '-'
-                    && character != '_'
-            ) {
+                    && character != '_') {
                 return false;
             }
-
-            string.increment();
         }
-
-        string.setIndex(0);
 
         return true;
     }

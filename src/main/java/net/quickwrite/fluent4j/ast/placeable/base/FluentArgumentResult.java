@@ -5,5 +5,5 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 public interface FluentArgumentResult {
-    FluentArgument<?> getArgumentResult(final FluentBundle bundle, final FluentArgs arguments);
+    FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments);
 }

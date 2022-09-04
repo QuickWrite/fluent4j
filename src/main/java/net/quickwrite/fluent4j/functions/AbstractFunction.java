@@ -32,5 +32,5 @@ public abstract class AbstractFunction {
         return this.identifier;
     }
 
-    public abstract FluentPlaceable<?> getResult(final FluentBundle bundle, final FluentArgs arguments);
+    public abstract FluentPlaceable getResult(final FluentBundle bundle, final FluentArgs arguments);
 }
