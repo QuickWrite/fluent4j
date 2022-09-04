@@ -219,18 +219,15 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
         return content.substring(start, content.getPosition());
     }
 
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
-        StringBuilder builder = new StringBuilder();
+    @Override
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
+        final StringBuilder builder = new StringBuilder();
 
-        for (FluentElement element : this.fluentElements) {
-            if (element instanceof FluentTextElement) {
-                builder.append(((FluentTextElement) element).stringValue());
-            } else {
-                builder.append(((FluentPlaceable) element).getResult(bundle, arguments));
-            }
+        for (final FluentElement element : this.fluentElements) {
+            builder.append(((FluentArgument) element).getResult(bundle, arguments));
         }
 
-        return builder.toString();
+        return builder;
     }
 
     @Override

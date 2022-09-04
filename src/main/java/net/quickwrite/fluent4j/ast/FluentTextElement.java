@@ -79,7 +79,7 @@ public class FluentTextElement implements FluentElement, FluentArgument {
     }
 
     @Override
-    public String getResult(FluentBundle bundle, FluentArgs arguments) {
+    public CharSequence getResult(FluentBundle bundle, FluentArgs arguments) {
         return this.text;
     }
 

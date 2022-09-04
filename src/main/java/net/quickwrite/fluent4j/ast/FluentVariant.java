@@ -40,7 +40,7 @@ public class FluentVariant implements FluentElement {
         return this.identifier;
     }
 
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return this.content.getResult(bundle, arguments);
     }
 

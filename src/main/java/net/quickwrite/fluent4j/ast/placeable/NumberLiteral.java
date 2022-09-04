@@ -50,7 +50,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         return NumberFormat.getInstance(bundle.getLocale()).format(number);
     }
 

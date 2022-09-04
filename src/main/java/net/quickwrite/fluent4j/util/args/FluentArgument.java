@@ -7,5 +7,5 @@ public interface FluentArgument {
 
     String stringValue();
 
-    String getResult(final FluentBundle bundle, final FluentArgs arguments);
+    CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments);
 }

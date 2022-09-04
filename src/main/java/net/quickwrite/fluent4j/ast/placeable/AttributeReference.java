@@ -42,7 +42,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         final FluentMessage fluentMessage = this.getMessage(bundle, reference.stringValue());
         if (fluentMessage == null) {
             return getErrorString();

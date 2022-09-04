@@ -166,7 +166,7 @@ public class FluentBundle {
      * @param arguments The arguments that should be passed on
      * @return The generated string
      */
-    public String getMessage(final String key, final FluentArgs arguments) {
+    public CharSequence getMessage(final String key, final FluentArgs arguments) {
         final FluentMessage message = this.getMessage(key);
 
         if (message == null) {

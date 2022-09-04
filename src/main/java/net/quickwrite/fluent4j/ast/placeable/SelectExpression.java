@@ -51,7 +51,7 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         final FluentArgument argument = (identifier instanceof FluentArgumentResult) ?
                 ((FluentArgumentResult)identifier).getArgumentResult(bundle, arguments) : identifier;
 

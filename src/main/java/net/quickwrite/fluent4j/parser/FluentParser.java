@@ -141,7 +141,7 @@ public abstract class FluentParser {
         return getMessageContent(input, character -> character == '.');
     }
 
-    public static Pair<StringSlice, Integer> getMessageContent(StringSlice input, BreakChecker breaker) {
+    public static Pair<StringSlice, Integer> getMessageContent(final StringSlice input, final BreakChecker breaker) {
         StringSliceUtil.skipWhitespace(input);
         final int start = input.getPosition();
         int lastWhitespace = start;

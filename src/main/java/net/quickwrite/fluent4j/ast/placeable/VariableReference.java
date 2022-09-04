@@ -63,7 +63,7 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         final FluentArgument argument = arguments.getNamed(content);
 
         if (argument == null) {

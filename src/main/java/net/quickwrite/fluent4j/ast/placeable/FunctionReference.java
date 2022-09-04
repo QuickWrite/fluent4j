@@ -29,7 +29,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public String getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         try {
             return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
         } catch (Exception exception) {
