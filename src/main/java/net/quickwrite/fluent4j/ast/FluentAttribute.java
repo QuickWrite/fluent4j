@@ -16,7 +16,7 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * </pre>
  * <p>
  * In this example the {@code login-input} has three different attributes:
- * A{@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
+ * A {@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
  * </p>
  */
 public class FluentAttribute extends FluentBase {
