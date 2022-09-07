@@ -15,33 +15,33 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      *
      * <p>
      * FluentArgs are used so that different scopes can use different
-     * values and so that messages can have variety.
+     * es and so that messages can have variety.
      * <p>
-     * There are two different types of arguments:
-     *     <ol>
-     *         <li>
-     *             Positional <br>
-     *             Arguments without a keyword that are normally used in
-     *             functions as a first parameter that is always used.
-     *             <hr>
-     *             For example the {@link NumberFunction} needs a single
-     *             positional parameter so that it can do something with
-     *             that number.
-     *         </li>
-     *         <li>
-     *             Named <br>
-     *             Arguments with a keyword that are normally used as
-     *             variables or custom parameters for functions.
-     *             <hr>
-     *             For example the {@link NumberFunction} allows different
-     *             named parameters like {@code maximumFractionDigits} that
-     *             allows the number to be formatted in a custom way.
-     *             (In this case the number would only have {@code x} fraction
-     *             digits) <br>
-     *             It also is used as different parameters in things like
-     *             terms or messages, which can be accessed using variables.
-     *         </li>
-     *     </ol>
+     * e are two different types of arguments:
+     * <ol>
+     *     <li>
+     *         Positional <br>
+     *         Arguments without a keyword that are normally used in
+     *         functions as a first parameter that is always used.
+     *         <hr>
+     *         For example the {@link NumberFunction} needs a single
+     *         positional parameter so that it can do something with
+     *         that number.
+     *     </li>
+     *     <li>
+     *         Named <br>
+     *         Arguments with a keyword that are normally used as
+     *         variables or custom parameters for functions.
+     *         <hr>
+     *         For example the {@link NumberFunction} allows different
+     *         named parameters like {@code maximumFractionDigits} that
+     *         allows the number to be formatted in a custom way.
+     *         (In this case the number would only have {@code x} fraction
+     *         digits) <br>
+     *         It also is used as different parameters in things like
+     *         terms or messages, which can be accessed using variables.
+     *     </li>
+     * </ol>
      */
     public FluentArgsBuilder() {
         super(new FluentArgs());

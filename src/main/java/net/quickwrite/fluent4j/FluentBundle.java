@@ -160,7 +160,7 @@ public class FluentBundle {
      * <pre>
      *     test = Hello World!
      * </pre>
-     *
+     * <p>
      * it would return the {@link FluentMessage} for the key
      * {@code test} but {@code null} for anything else.
      *

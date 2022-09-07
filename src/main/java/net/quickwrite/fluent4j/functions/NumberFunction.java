@@ -96,7 +96,7 @@ public class NumberFunction extends AbstractFunction {
     }
 
     private int getIntValue(final String key, final int defaultValue, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.get(key);
+        final FluentArgument argument = arguments.getNamed(key);
 
         if (!(argument instanceof NumberLiteral)) {
             try {
@@ -110,7 +110,7 @@ public class NumberFunction extends AbstractFunction {
     }
 
     private boolean getBooleanValue(final String key, final boolean defaultValue, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.get(key);
+        final FluentArgument argument = arguments.getNamed(key);
 
         try {
             return Boolean.parseBoolean(argument.stringValue());

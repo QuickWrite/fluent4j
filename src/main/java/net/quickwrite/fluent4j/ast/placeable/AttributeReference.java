@@ -72,7 +72,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
         }
 
         // No recursion (unfortunately :d)
-        return (FluentArgument)elementList.get(0);
+        return (FluentArgument) elementList.get(0);
     }
 
     protected FluentMessage getMessage(final FluentBundle bundle, final String key) {

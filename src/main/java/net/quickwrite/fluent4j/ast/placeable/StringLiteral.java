@@ -46,11 +46,11 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
 
     private final String literal;
 
-    public StringLiteral(StringSlice content) {
+    public StringLiteral(final StringSlice content) {
         this(content.toString());
     }
 
-    public StringLiteral(String content) {
+    public StringLiteral(final String content) {
         this.literal = getLiteral(content);
     }
 

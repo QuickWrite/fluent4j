@@ -9,7 +9,7 @@ package net.quickwrite.fluent4j.builder;
 public abstract class AbstractBuilder<T> {
     protected final T element;
 
-    public AbstractBuilder(T element) {
+    public AbstractBuilder(final T element) {
         this.element = element;
     }
 

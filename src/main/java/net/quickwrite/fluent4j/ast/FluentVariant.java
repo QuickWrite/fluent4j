@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * A variant stores a single variant of a
@@ -36,6 +37,16 @@ public class FluentVariant implements FluentElement {
 
     public FluentPlaceable getIdentifier() {
         return this.identifier;
+    }
+
+    @Override
+    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
+        return false;
+    }
+
+    @Override
+    public String stringValue() {
+        return identifier.stringValue();
     }
 
     public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {

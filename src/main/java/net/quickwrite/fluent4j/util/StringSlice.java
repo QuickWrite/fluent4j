@@ -43,9 +43,9 @@ public class StringSlice {
      * new Strings created.
      * </p>
      *
-     * @param base The base string
+     * @param base  The base string
      * @param start The start of the StringSlice
-     * @param end The end of the StringSlice
+     * @param end   The end of the StringSlice
      */
     protected StringSlice(final String base, final int start, final int end) {
         this.base = base;

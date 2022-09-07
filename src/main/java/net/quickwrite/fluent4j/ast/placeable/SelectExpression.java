@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;

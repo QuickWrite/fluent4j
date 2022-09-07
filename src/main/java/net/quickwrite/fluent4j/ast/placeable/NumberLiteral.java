@@ -71,7 +71,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     @Override
     public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         if (selector instanceof NumberLiteral) {
-            return matches(((NumberLiteral)selector).valueOf());
+            return matches(((NumberLiteral) selector).valueOf());
         }
 
         if (PluralRules.forLocale(bundle.getLocale()).select(this.formattedNumber).equals(selector.stringValue())) {

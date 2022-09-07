@@ -88,7 +88,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     }
 
     protected boolean check(final String string) {
-        for(int i = 0; i < string.length(); i++) {
+        for (int i = 0; i < string.length(); i++) {
             final char character = string.charAt(i);
 
             if (!Character.isUpperCase(character)

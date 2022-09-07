@@ -40,7 +40,7 @@ public class FluentArgs {
      * @param namedArguments The named arguments
      * @param positionalArguments The positional arguments
      */
-    public FluentArgs(Map<String, FluentArgument> namedArguments, List<FluentArgument> positionalArguments) {
+    public FluentArgs(final Map<String, FluentArgument> namedArguments, final List<FluentArgument> positionalArguments) {
         this.namedArguments = namedArguments;
         this.positionalArguments = positionalArguments;
     }
@@ -67,7 +67,7 @@ public class FluentArgs {
      * @param arguments The old arguments
      */
     public void sanitize(final FluentBundle bundle, final FluentArgs arguments) {
-        for (String key : namedArguments.keySet()) {
+        for (final String key : namedArguments.keySet()) {
             final FluentArgument argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
@@ -115,16 +115,6 @@ public class FluentArgs {
      */
     public void addPositional(final FluentArgument argument) {
         this.positionalArguments.add(argument);
-    }
-
-    /**
-     * Returns a named argument with the {@code key}.
-     *
-     * @param key The name of the argument
-     * @return The value of the named argument
-     */
-    public FluentArgument get(String key) {
-        return namedArguments.get(key);
     }
 
     @Override

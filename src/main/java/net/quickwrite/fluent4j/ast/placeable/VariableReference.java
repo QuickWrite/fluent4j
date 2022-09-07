@@ -31,7 +31,6 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  */
 public class VariableReference implements FluentPlaceable, FluentSelectable, FluentArgumentResult {
     private final String content;
-    private FluentArgument cache = null;
 
     public VariableReference(StringSlice content) {
         this.content = content.toString();
