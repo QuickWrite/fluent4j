@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Bundles are single-language stores of translations.  They are
+ * Bundles are single-language stores of translations. They are
  * aggregate parsed Fluent resources in the Fluent syntax and can
  * format translation units (entities) to strings.
  */
@@ -37,7 +37,6 @@ public class FluentBundle {
      * <p>
      * The bundle itself does need at least one {@link FluentResource}
      * to be instantiated.
-     * </p>
      *
      * @param locale   The locale that the bundle should act on
      * @param resource The ressource that the bundle should start with
@@ -60,12 +59,10 @@ public class FluentBundle {
      * If a term or a message key exists multiple times
      * the old key is getting discarded and the new
      * overrides it.
-     * </p>
      * <p>
      * This manual addition of different resources can be
      * used for different files so that they don't need
      * to be concatenated before they are getting parsed.
-     * </p>
      *
      * @param resource The resource that is being added.
      */
@@ -100,10 +97,8 @@ public class FluentBundle {
     }
 
     /**
-     * <p>
      * Adds a function to the list of functions that can be accessed
      * by the entire FluentBundle.
-     * </p>
      *
      * @param function The function itself that should be called.
      */
@@ -111,28 +106,75 @@ public class FluentBundle {
         this.functions.put(function.getIdentifier(), function);
     }
 
+    /**
+     * Returns a function that has the name {@code key}.
+     *
+     * <p>
+     * FluentFunctions are <strong>always</strong> being
+     * written in uppercase. So a key like {@code tEST} will
+     * <strong>always</strong> return {@code false}.
+     *
+     * @param key the key that the function is stored in
+     * @return The function
+     */
     public AbstractFunction getFunction(final String key) {
         return this.functions.get(key);
     }
 
+    /**
+     * Checks if a message with the {@code key}
+     * exists.
+     *
+     * @param key The key the message should be stored in
+     * @return If the message is available
+     */
     public boolean hasMessage(final String key) {
         return this.messages.containsKey(key);
     }
 
+    /**
+     * Returns the {@link FluentTerm} that is being stored
+     * for the {@code key}.
+     *
+     * <p>
+     * So when the {@code .ftl}-files contain:
+     * <pre>
+     *     -test = Hello World!
+     * </pre>
+     * it would return the {@link FluentTerm} for the key
+     * {@code test} but {@code null} for anything else.
+     *
+     * @param key The key that the {@link FluentTerm} is stored in.
+     * @return The term itself
+     */
     public FluentTerm getTerm(final String key) {
         return this.terms.get(key);
     }
 
+    /**
+     * Returns the {@link FluentMessage} that is being stored
+     * for the {@code key}.
+     *
+     * <p>
+     * So when the {@code .ftl}-files contain:
+     * <pre>
+     *     test = Hello World!
+     * </pre>
+     *
+     * it would return the {@link FluentMessage} for the key
+     * {@code test} but {@code null} for anything else.
+     *
+     * @param key The key that the {@link FluentMessage} is stored in.
+     * @return The message itself
+     */
     public FluentMessage getMessage(final String key) {
         return this.messages.get(key);
     }
 
     /**
-     * <p>
      * Returns the result of a Message with a specific
      * key. Parameters are optional and can be (if not needed)
      * called with a {@code null} value.
-     * </p>
      *
      * <p>
      * When the key is {@code hello-world} and there was
@@ -141,7 +183,6 @@ public class FluentBundle {
      *     hello-world = Hi! How are you?
      * </pre>
      * it will return the String {@code Hi! How are you?}.
-     * </p>
      * <p>
      * In the case of needed parameters (if variables are
      * in the Message) then the {@link FluentArgs} with the variable
@@ -154,13 +195,11 @@ public class FluentBundle {
      * </pre>
      * with the arguments having the variable {@code $name = "Max"} it would
      * return {@code Hi! How are you Max?}.
-     * </p>
      *
      * <p>
      * If the message does not exist it returns a string with the format of
      * <code>{ + key + }</code> which means that when the key is {@code test}
      * the return value would be <code>{test}</code>.
-     * </p>
      *
      * @param key       The key of the message
      * @param arguments The arguments that should be passed on
@@ -176,14 +215,36 @@ public class FluentBundle {
         return message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS).toString();
     }
 
+    /**
+     * Returns the locale the bundle has.
+     *
+     * @return The locale
+     */
     public ULocale getLocale() {
         return this.locale;
     }
 
+    /**
+     * Checks if the bundle itself contains
+     * exceptions that have been thrown at
+     * the processing of the {@code .ftl}-files.
+     *
+     * @return If there are any exceptions
+     */
     public boolean hasExceptions() {
         return !this.exceptionList.isEmpty();
     }
 
+    /**
+     * Returns all exceptions that have been thrown
+     * at the processing of the {@code .ftl}-files.
+     *
+     * <p>
+     * The exceptions are all combined when the
+     * {@link FluentResource}s are getting added.
+     *
+     * @return All of the exceptions as a list.
+     */
     public List<FluentParseException> getExceptionList() {
         return this.exceptionList;
     }

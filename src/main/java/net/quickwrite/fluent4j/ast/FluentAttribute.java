@@ -7,7 +7,6 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * A FluentAttribute defines a subpart of a FluentMessage that holds more
  * context data.<br>
  *
- * <p>
  * <pre>
  * login-input = Predefined value
  *     .placeholder = email@example.com
@@ -17,7 +16,6 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * <p>
  * In this example the {@code login-input} has three different attributes:
  * A {@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
- * </p>
  */
 public class FluentAttribute extends FluentBase {
     /**

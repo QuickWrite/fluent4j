@@ -16,18 +16,16 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * They may also dynamically change as the user uses the
  * localized product.
  * <pre>
- *         # $title (String) - The title of the bookmark to remove.
- *         remove-bookmark = Really remove { $title }?
- *     </pre>
- * </p>
+ *     # $title (String) - The title of the bookmark to remove.
+ *     remove-bookmark = Really remove { $title }?
+ * </pre>
  * <p>
  * It's also possible to interpolate other messages and terms
  * inside of text values.
  * <pre>
- *         -brand-name = Firefox
- *         installing = Installing { -brand-name }.
- *     </pre>
- * </p>
+ *     -brand-name = Firefox
+ *     installing = Installing { -brand-name }.
+ * </pre>
  * <p>
  * Lastly, placeables can be used to insert special characters
  * into text values. For instance, due to placeables using <code>{</code>
@@ -35,10 +33,9 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * brace into the translation requires special care. Quoted
  * text can be effectively used for the purpose:
  * <pre>
- *         opening-brace = This message features an opening curly brace: {"{"}.
- *         closing-brace = This message features a closing curly brace: {"}"}.
- *     </pre>
- * </p>
+ *     opening-brace = This message features an opening curly brace: {"{"}.
+ *     closing-brace = This message features a closing curly brace: {"}"}.
+ * </pre>
  */
 public interface FluentPlaceable extends FluentElement, FluentArgument {
 }

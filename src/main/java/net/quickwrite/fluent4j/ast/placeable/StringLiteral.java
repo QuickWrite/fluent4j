@@ -23,16 +23,15 @@ import java.util.Map;
  * in a message there can a StringLiteral be used at the front:
  *
  * <pre>
- *         blank-is-preserved = {"    "}This message starts with 4 spaces.
- *     </pre>
+ *     blank-is-preserved = {"    "}This message starts with 4 spaces.
+ * </pre>
  * <p>
  * This wouldn't be the case without the StringLiteral as the
  * parser directly removes these:
  *
  * <pre>
- *         blank-is-removed =     This message starts with no blanks.
- *     </pre>
- * </p>
+ *     blank-is-removed =     This message starts with no blanks.
+ * </pre>
  */
 public class StringLiteral implements FluentPlaceable, FluentSelectable {
 

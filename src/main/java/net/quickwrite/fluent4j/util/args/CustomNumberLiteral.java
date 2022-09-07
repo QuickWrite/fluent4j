@@ -7,6 +7,10 @@ import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
+/**
+ * The custom number literal stores numbers with different
+ * parameters.
+ */
 public class CustomNumberLiteral extends NumberLiteral {
     private int minimumFractionDigits = 0;
     private int maximumFractionDigits = Integer.MAX_VALUE;

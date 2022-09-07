@@ -4,6 +4,10 @@ import net.quickwrite.fluent4j.ast.placeable.*;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 
+/**
+ * A collection of different utility methods
+ * for the {@link StringSlice}.
+ */
 public final class StringSliceUtil {
     private StringSliceUtil() {
     }
@@ -224,7 +228,7 @@ public final class StringSliceUtil {
 
     /**
      * Returns an identifier.
-     * An Identifer only starts with a character from the range
+     * An identifier only starts with a character from the range
      * {@code [a-zA-Z]} and can have any character from the range
      * {@code [a-ZA-Z0-9-_]}.
      *

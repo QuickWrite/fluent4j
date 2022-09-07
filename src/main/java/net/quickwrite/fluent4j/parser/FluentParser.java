@@ -231,6 +231,11 @@ public abstract class FluentParser {
         return new StringSlice(input.replace("\r", ""));
     }
 
+    /**
+     * A single interface so that the {@link #getMessageContent}
+     * method has the ability to adapt the break checker to the
+     * circumstances and anonymous functions can be easily used.
+     */
     public interface BreakChecker {
         boolean isEndCharacter(char character);
     }

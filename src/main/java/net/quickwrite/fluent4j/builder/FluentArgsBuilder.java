@@ -11,13 +11,11 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  */
 public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     /**
-     * <p>
      * Creates a new FluentArgsBuilder for the {@link FluentArgs} class.
-     * </p>
+     *
      * <p>
      * FluentArgs are used so that different scopes can use different
      * values and so that messages can have variety.
-     * </p>
      * <p>
      * There are two different types of arguments:
      *     <ol>
@@ -44,16 +42,13 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      *             terms or messages, which can be accessed using variables.
      *         </li>
      *     </ol>
-     * </p>
      */
     public FluentArgsBuilder() {
         super(new FluentArgs());
     }
 
     /**
-     * <p>
      * Adds a named {@link FluentArgument} to the {@link FluentArgs} that can be accessed.
-     * </p>
      *
      * @param key      The key that is used to access this argument
      * @param argument The argument itself with all of it's data
@@ -66,9 +61,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * <p>
      * Adds a named {@link String} to the {@link FluentArgs} that can be accessed.
-     * </p>
      *
      * @param key      The key that is used to access this argument
      * @param argument The argument itself with all of it's data
@@ -79,9 +72,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * <p>
      * Adds a named {@link Number} to the {@link FluentArgs} that can be accessed.
-     * </p>
      *
      * @param key      The key that is used to access this argument
      * @param argument The argument itself with all of it's data
@@ -92,12 +83,10 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * <p>
      * Adds a positional argument to the argument list.
-     * </p>
+     *
      * <p>
      * The argument will always be added at the end and cannot be rearranged.
-     * </p>
      *
      * @param argument The argument itself with all of it's data
      * @return The FluentArgsBuilder object itself
@@ -109,12 +98,10 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * <p>
      * Adds a positional {@link String} argument to the argument list.
-     * </p>
+     *
      * <p>
      * The argument will always be added at the end and cannot be rearranged.
-     * </p>
      *
      * @param argument The argument itself with all of it's data
      * @return The FluentArgsBuilder object itself
@@ -124,12 +111,10 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * <p>
      * Adds a positional {@link Number} argument to the argument list.
-     * </p>
+     *
      * <p>
      * The argument will always be added at the end and cannot be rearranged.
-     * </p>
      *
      * @param argument The argument itself with all of it's data
      * @return The FluentArgsBuilder object itself

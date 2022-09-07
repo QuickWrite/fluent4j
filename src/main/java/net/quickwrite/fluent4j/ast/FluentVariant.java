@@ -1,9 +1,9 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 /**
@@ -11,13 +11,11 @@ import net.quickwrite.fluent4j.util.args.FluentArgs;
  * Fluent Select Expression.
  *
  * <p>
- *     The variants are denoted as
- *     {@code [&lt;condition&gt;] &lt;The text&gt;}
- *     and when they should be the default case they
- *     have a star in front
- *     {@code *[&lt;condition&gt;] &lt;The text&gt;}
- * </p>
- *
+ * The variants are denoted as
+ * {@code [&lt;condition&gt;] &lt;The text&gt;}
+ * and when they should be the default case they
+ * have a star in front
+ * {@code *[&lt;condition&gt;] &lt;The text&gt;}
  */
 public class FluentVariant implements FluentElement {
     private final FluentPlaceable identifier;

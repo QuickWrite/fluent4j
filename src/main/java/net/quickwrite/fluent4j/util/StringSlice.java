@@ -30,11 +30,24 @@ public class StringSlice {
      *
      * @param base The String that the StringSlice is using
      */
-    public StringSlice(String base) {
+    public StringSlice(final String base) {
         this(base, 0, base.length());
     }
 
-    protected StringSlice(String base, int start, int end) {
+    /**
+     * Creates a StringSlice from an already given
+     * {@link String} with boundaries.
+     *
+     * <p>
+     * This is mainly used so that there don't need to be
+     * new Strings created.
+     * </p>
+     *
+     * @param base The base string
+     * @param start The start of the StringSlice
+     * @param end The end of the StringSlice
+     */
+    protected StringSlice(final String base, final int start, final int end) {
         this.base = base;
         this.start = start;
 
@@ -59,6 +72,12 @@ public class StringSlice {
         return this.base.charAt(this.start + this.index);
     }
 
+    /**
+     * Returns the UTF16 value of the current char as
+     * a {@link String}
+     *
+     * @return The UTF16-Value
+     */
     public String getCharUTF16() {
         if (isBigger())
             return "\0";
@@ -109,16 +128,35 @@ public class StringSlice {
         this.index++;
     }
 
+    /**
+     * Decrements the index by one.
+     */
     public void decrement() {
         this.index--;
     }
 
+    /**
+     * Decrements the index by the amount
+     * given in the parameter.
+     *
+     * @param times The amount the StringSlice should decrement
+     */
     public void decrement(int times) {
         for (int i = 0; i < times; i++) {
             decrement();
         }
     }
 
+    /**
+     * Gets the char at the {@code current position + index}
+     * position.
+     * <br>
+     * When the index is bigger than the length of the
+     * StringSlice the output will be {@code '\0'}.
+     *
+     * @param index The amount of characters the method should jump over
+     * @return The character
+     */
     public char peek(int index) {
         if (getPosition() + start + index > end) {
             return '\0';

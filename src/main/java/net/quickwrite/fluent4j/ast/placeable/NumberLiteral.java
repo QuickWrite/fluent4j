@@ -16,13 +16,13 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
 import java.math.BigDecimal;
 
 /**
- * The number literal stores numbers. These numbers
- * are stored in two different containers depending
- * on their type.
+ * The number literal stores numbers as a {@link Number}
+ * and per default as a {@link BigDecimal}.
  *
  * <p>
- * Numbers can be integers or rational numbers
- * </p>
+ * Numbers can be anything that is a numerical value.
+ * <br>
+ * So they can be an integer, a float or something else.
  */
 public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     protected final Number number;

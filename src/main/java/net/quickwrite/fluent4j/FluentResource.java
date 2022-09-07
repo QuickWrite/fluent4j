@@ -11,7 +11,6 @@ import java.util.List;
  *
  * <p>
  * All of the entries that exist are stored inside of a list.
- * </p>
  */
 public class FluentResource {
     private final List<FluentElement> elements;
