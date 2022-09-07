@@ -15,7 +15,7 @@ public class NumberFunction extends AbstractFunction {
     }
 
     @Override
-    public FluentPlaceable getResult(FluentBundle bundle, FluentArgs arguments) {
+    public FluentPlaceable getResult(final FluentBundle bundle, final FluentArgs arguments) {
         FluentArgument number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;
@@ -34,13 +34,11 @@ public class NumberFunction extends AbstractFunction {
         numberLiteral.setMinimumIntegerDigits(getIntValue("minimumIntegerDigits", 0, arguments));
         numberLiteral.setUseGrouping(getBooleanValue("useGrouping", true, arguments));
 
-        // TODO: Add "currencyDisplay"
-
         return numberLiteral;
     }
 
     private int getIntValue(final String key, final int defaultValue, final FluentArgs arguments) {
-        FluentArgument argument = arguments.get(key);
+        final FluentArgument argument = arguments.get(key);
 
         if (!(argument instanceof NumberLiteral)) {
             try {
