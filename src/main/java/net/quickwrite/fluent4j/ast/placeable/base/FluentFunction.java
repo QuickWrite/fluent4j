@@ -9,6 +9,11 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * Implements the basis for a value that gets
+ * parameters and calls another element of data so
+ * that it can operate.
+ */
 public abstract class FluentFunction implements FluentPlaceable, FluentArgumentResult {
     protected final String functionName;
     protected final FluentArgs arguments;
@@ -72,7 +77,15 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
         return new ImmutablePair<>(identifier, placeable);
     }
 
-    protected FluentArgs getArguments(FluentBundle bundle, FluentArgs arguments) {
+    /**
+     * Returns the arguments that the function
+     * has itself in a sanitized form.
+     *
+     * @param bundle The bundle that this is being called from
+     * @param arguments The arguments in this scope
+     * @return The sanitized arguments of the function
+     */
+    protected FluentArgs getArguments(final FluentBundle bundle, final FluentArgs arguments) {
         this.arguments.sanitize(bundle, arguments);
         return this.arguments;
     }
@@ -86,28 +99,34 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      */
     public abstract FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments);
 
+    /**
+     * Checks if this FluentFunction and the selector are the same.
+     *
+     * @param bundle The base bundle
+     * @param selector The other element
+     * @return If they are the same object
+     */
     @Override
     public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return this.equals(selector);
     }
 
+    /**
+     * Returns the function name that is being
+     * used.
+     *
+     * @return The {@code functionName}
+     */
     @Override
     public String stringValue() {
         return this.functionName;
     }
 
-    protected boolean check(final String string) {
-        for (int i = 0; i < string.length(); i++) {
-            final char character = string.charAt(i);
-
-            if (!Character.isUpperCase(character)
-                    && !Character.isDigit(character)
-                    && character != '-'
-                    && character != '_') {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    /**
+     * Checks if the name is a correct function name.
+     *
+     * @param string The function name
+     * @return If it is a correct function name
+     */
+    protected abstract boolean check(final String string);
 }

@@ -27,6 +27,32 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     /**
+     * Checks if the function name is correct.
+     *
+     * <p>
+     * The function name <strong>needs</strong> to be in the format of
+     * {@code [A-Z0-9-_]+}.
+     *
+     * @param string The function name
+     * @return If the function name is correct
+     */
+    @Override
+    protected boolean check(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            final char character = string.charAt(i);
+
+            if (!(Character.isUpperCase(character)
+                    || Character.isDigit(character)
+                    || character == '-'
+                    || character == '_')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Executes the function that this object references and returns
      * it as a {@link CharSequence}.
      *
