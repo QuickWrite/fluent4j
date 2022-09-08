@@ -42,6 +42,13 @@ public class TermReference extends FluentFunction {
         return this.getArgumentResult(bundle, arguments).getResult(bundle, this.getArguments(bundle, arguments));
     }
 
+    /**
+     *
+     * @param bundle The bundle that this is being called from
+     * @param arguments The arguments that are passed into this function
+     * @return
+     */
+    @Override
     public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle.getTerm(this.functionName);
     }

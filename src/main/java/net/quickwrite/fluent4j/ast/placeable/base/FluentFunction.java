@@ -77,6 +77,15 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
         return this.arguments;
     }
 
+    /**
+     * Returns the {@link FluentArgument} that the function is returning.
+     *
+     * @param bundle The bundle that this is being called from
+     * @param arguments The arguments that are passed into this function
+     * @return The resulting {@link FluentArgument} that has been created
+     */
+    public abstract FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments);
+
     @Override
     public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
         return this.equals(selector);

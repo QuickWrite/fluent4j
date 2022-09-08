@@ -14,26 +14,39 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  * platform, or time of the day) to fine tune the translation.
  */
 public class FunctionReference extends FluentFunction implements FluentSelectable {
-    private final String functionNameString;
 
     public FunctionReference(final String functionName, final StringSlice content) {
         super(functionName, content);
-
-        this.functionNameString = functionName;
     }
 
+    @Override
     public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
         return bundle
-                .getFunction(this.functionNameString)
+                .getFunction(this.functionName)
                 .getResult(bundle, this.getArguments(bundle, arguments));
     }
 
+    /**
+     * Executes the function that this object references and returns
+     * it as a {@link CharSequence}.
+     *
+     * <p>
+     * If the function throws an exception it returns a String with
+     * the format: <code>{ + functionName + ()}</code>.
+     * <br>
+     * This means that the {@code NUMBER}-function gets no arguments
+     * this function will return <code>{NUMBER()}</code>.
+     *
+     * @param bundle The base bundle
+     * @param arguments The arguments that are being passed on the scope
+     * @return The result of the function with the specific parameters
+     */
     @Override
     public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
         try {
             return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
         } catch (Exception exception) {
-            return "{" + functionNameString + "()}";
+            return "{" + functionName + "()}";
         }
     }
 

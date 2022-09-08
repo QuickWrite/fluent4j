@@ -21,13 +21,12 @@ import java.util.List;
  * reported. <br>
  * This has the added benefit that the generated AST is smaller in Memory and can
  * be queried faster.
- * </p>
  */
 public abstract class FluentParser {
     /**
-     * Parses the Fluent Resource that is stored inside of the
+     * Parses the Fluent Resource that is stored inside the
      * Object as an attribute and returns the generated AST inside
-     * of a FluentResource.
+     * a FluentResource.
      *
      * @return FluentResource
      */
