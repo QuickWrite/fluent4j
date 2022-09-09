@@ -2,6 +2,8 @@ package net.quickwrite.fluent4j;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.builder.FluentBundleBuilder;
+import net.quickwrite.fluent4j.util.bundle.FluentBundle;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 
 import java.io.File;
 import java.io.IOException;

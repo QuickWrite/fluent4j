@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.functions.NumberFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
@@ -44,7 +45,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      * </ol>
      */
     public FluentArgsBuilder() {
-        super(new FluentArgs());
+        super(new ResourceFluentArguments());
     }
 
     /**

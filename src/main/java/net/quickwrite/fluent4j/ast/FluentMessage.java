@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.util.List;
 
@@ -15,11 +14,9 @@ import java.util.List;
  * </pre>
  *
  * <p>
- *     Each message has an identifier that allows the developer to bind
- *     it to the place in the software where it will be used.
- *     The above message is called {@code hello}.
- * </p>
- *
+ * Each message has an identifier that allows the developer to bind
+ * it to the place in the software where it will be used.
+ * The above message is called {@code hello}.
  */
 public class FluentMessage extends FluentBase {
     protected List<FluentAttribute> attributes;
@@ -32,7 +29,7 @@ public class FluentMessage extends FluentBase {
      * that can be queried later.
      *
      * @param identifier The information that uniquely represents the Attribute.
-     * @param content The content that needs to be parsed.
+     * @param content    The content that needs to be parsed.
      * @param attributes All of the attributes
      */
     public FluentMessage(final StringSlice identifier,
@@ -45,7 +42,7 @@ public class FluentMessage extends FluentBase {
     }
 
     public FluentAttribute getAttribute(final String identifier) {
-        for(final FluentAttribute attribute : this.attributes) {
+        for (final FluentAttribute attribute : this.attributes) {
             if (attribute.getIdentifier().equals(identifier)) {
                 return attribute;
             }

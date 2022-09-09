@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
-import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -20,7 +20,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         return bundle
                 .getFunction(this.functionName)
                 .getResult(bundle, this.getArguments(bundle, arguments));
@@ -63,12 +63,12 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
      * This means that the {@code NUMBER}-function gets no arguments
      * this function will return <code>{NUMBER()}</code>.
      *
-     * @param bundle The base bundle
+     * @param bundle    The base bundle
      * @param arguments The arguments that are being passed on the scope
      * @return The result of the function with the specific parameters
      */
     @Override
-    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         try {
             return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
         } catch (Exception exception) {

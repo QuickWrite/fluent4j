@@ -1,10 +1,10 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
-import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 
 /**
  * Terms are similar to regular messages but they can
@@ -38,18 +38,17 @@ public class TermReference extends FluentFunction {
     }
 
     @Override
-    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         return this.getArgumentResult(bundle, arguments).getResult(bundle, this.getArguments(bundle, arguments));
     }
 
     /**
-     *
-     * @param bundle The bundle that this is being called from
+     * @param bundle    The bundle that this is being called from
      * @param arguments The arguments that are passed into this function
      * @return
      */
     @Override
-    public FluentArgument getArgumentResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         return bundle.getTerm(this.functionName);
     }
 

@@ -1,10 +1,10 @@
 package net.quickwrite.fluent4j.functions;
 
-import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.CustomNumberLiteral;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.text.ParseException;
@@ -73,7 +73,7 @@ public class NumberFunction extends AbstractFunction {
      * @return The number as a {@link CustomNumberLiteral} with the parameters
      */
     @Override
-    public FluentPlaceable getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public FluentPlaceable getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         final FluentArgument number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;

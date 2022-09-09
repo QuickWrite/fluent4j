@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.util;
 
-import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.functions.NumberFunction;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * A helper class that stores all of the functions that
- * are added to every single {@link FluentBundle}.
+ * are added to every single {@link ResourceFluentBundle}.
  */
 public class BuiltinFunctions {
     private static final Map<String, AbstractFunction> BUILTIN_FUNCTIONS;

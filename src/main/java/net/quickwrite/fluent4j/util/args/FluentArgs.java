@@ -1,59 +1,14 @@
 package net.quickwrite.fluent4j.util.args;
 
-import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 
-import java.util.*;
-
-/**
- * A storage for the different arguments that
- * are used as the parameters when a message, term or a function
- * is getting accessed.
- */
-public class FluentArgs {
-    private final Map<String, FluentArgument> namedArguments;
-    private final List<FluentArgument> positionalArguments;
-
+public interface FluentArgs {
     /**
      * An initialized object that has no values
      * so that it does not need to be created multiple
      * times and can be easily accessed.
      */
-    public static final FluentArgs EMPTY_ARGS;
-
-    static {
-        EMPTY_ARGS = new FluentArgs();
-    }
-
-    /**
-     * Creates a new empty argument
-     * container.
-     */
-    public FluentArgs() {
-        this(new HashMap<>(), new ArrayList<>());
-    }
-
-    /**
-     * Creates a new argument container with the given
-     * arguments.
-     *
-     * @param namedArguments The named arguments
-     * @param positionalArguments The positional arguments
-     */
-    public FluentArgs(final Map<String, FluentArgument> namedArguments, final List<FluentArgument> positionalArguments) {
-        this.namedArguments = namedArguments;
-        this.positionalArguments = positionalArguments;
-    }
-
-    /**
-     * Returns a named argument with the {@code key}.
-     *
-     * @param key The name of the argument
-     * @return The value of the named argument
-     */
-    public FluentArgument getNamed(final String key) {
-        return this.namedArguments.get(key);
-    }
+    FluentArgs EMPTY_ARGS = new ResourceFluentArguments();
 
     /**
      * Changes the way some values point so that there are no
@@ -66,23 +21,7 @@ public class FluentArgs {
      * @param bundle The main bundle
      * @param arguments The old arguments
      */
-    public void sanitize(final FluentBundle bundle, final FluentArgs arguments) {
-        for (final String key : namedArguments.keySet()) {
-            final FluentArgument argument = namedArguments.get(key);
-
-            if (argument instanceof FluentArgumentResult) {
-                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
-            }
-        }
-
-        for (int i = 0; i < positionalArguments.size(); i++) {
-            final FluentArgument argument = positionalArguments.get(i);
-
-            if (argument instanceof FluentArgumentResult) {
-                positionalArguments.set(i, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
-            }
-        }
-    }
+    void sanitize(final ResourceFluentBundle bundle, final FluentArgs arguments);
 
     /**
      * Returns the {@link FluentArgument} with the given
@@ -91,9 +30,7 @@ public class FluentArgs {
      * @param index The position the argument has
      * @return The argument itself
      */
-    public FluentArgument getPositional(final int index) {
-        return this.positionalArguments.get(index);
-    }
+    FluentArgument getPositional(final int index);
 
     /**
      * Adds a new named argument to the named arguments.
@@ -104,24 +41,20 @@ public class FluentArgs {
      * @param key The name of the named argument
      * @param argument The argument value
      */
-    public void setNamed(final String key, final FluentArgument argument) {
-        this.namedArguments.put(key, argument);
-    }
+    void setNamed(final String key, final FluentArgument argument);
+
+    /**
+     * Returns a named argument with the {@code key}.
+     *
+     * @param key The name of the argument
+     * @return The value of the named argument
+     */
+    FluentArgument getNamed(final String key);
 
     /**
      * Adds a new positional argument at the end.
      *
      * @param argument The argument itself
      */
-    public void addPositional(final FluentArgument argument) {
-        this.positionalArguments.add(argument);
-    }
-
-    @Override
-    public String toString() {
-        return "FluentArgumentList: {\n" +
-                "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
-                "\t\t\tpositionalArguments: \"" + this.positionalArguments + "\"\n" +
-                "\t\t}";
-    }
+    void addPositional(final FluentArgument argument);
 }

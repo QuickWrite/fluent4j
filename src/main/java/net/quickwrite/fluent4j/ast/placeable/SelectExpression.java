@@ -1,13 +1,11 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
-import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
         return false;
     }
 
@@ -52,9 +50,9 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         final FluentArgument argument = (identifier instanceof FluentArgumentResult) ?
-                ((FluentArgumentResult)identifier).getArgumentResult(bundle, arguments) : identifier;
+                ((FluentArgumentResult) identifier).getArgumentResult(bundle, arguments) : identifier;
 
         for (final FluentVariant variant : variants) {
             if (argument.matches(bundle, variant.getIdentifier())) {

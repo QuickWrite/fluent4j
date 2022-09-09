@@ -1,6 +1,5 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.FluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.AttributeReference;
 import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
 import net.quickwrite.fluent4j.ast.placeable.TermReference;
@@ -13,6 +12,7 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -207,7 +207,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
         char character = content.getChar();
         final int start = content.getPosition();
 
-        while(  character != ' '
+        while (character != ' '
                 && character != '\n'
                 && character != ']'
                 && character != '\0'
@@ -220,18 +220,18 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
     }
 
     @Override
-    public CharSequence getResult(final FluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
         final StringBuilder builder = new StringBuilder();
 
         for (final FluentElement element : this.fluentElements) {
-            builder.append(((FluentArgument) element).getResult(bundle, arguments));
+            builder.append(element.getResult(bundle, arguments));
         }
 
         return builder;
     }
 
     @Override
-    public boolean matches(FluentBundle bundle, FluentArgument selector) {
+    public boolean matches(ResourceFluentBundle bundle, FluentArgument selector) {
         return false;
     }
 

@@ -1,7 +1,8 @@
 package net.quickwrite.fluent4j.builder;
 
 import com.ibm.icu.util.ULocale;
-import net.quickwrite.fluent4j.FluentBundle;
+import net.quickwrite.fluent4j.util.bundle.FluentBundle;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.parser.FluentParser;
 
@@ -122,7 +123,7 @@ public class FluentBundleBuilder extends AbstractBuilder<FluentBundle> {
      * @param fileContent The file itself that should be parsed
      */
     public FluentBundleBuilder(final ULocale locale, final String fileContent) {
-        super(new FluentBundle(locale, FluentParser.parse(fileContent)));
+        super(new ResourceFluentBundle(locale, FluentParser.parse(fileContent)));
     }
 
     /**

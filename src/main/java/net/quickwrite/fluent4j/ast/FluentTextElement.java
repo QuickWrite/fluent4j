@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.FluentBundle;
-import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
@@ -69,7 +69,7 @@ public class FluentTextElement implements FluentElement, FluentArgument {
     }
 
     @Override
-    public boolean matches(final FluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
         return selector.stringValue().equals(this.text);
     }
 
@@ -79,7 +79,7 @@ public class FluentTextElement implements FluentElement, FluentArgument {
     }
 
     @Override
-    public CharSequence getResult(FluentBundle bundle, FluentArgs arguments) {
+    public CharSequence getResult(ResourceFluentBundle bundle, FluentArgs arguments) {
         return this.text;
     }
 
