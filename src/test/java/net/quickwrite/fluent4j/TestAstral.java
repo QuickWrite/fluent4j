@@ -53,7 +53,5 @@ public class TestAstral {
     @Test
     public void testEmojiInString() {
         Assertions.assertEquals("A face \uD83D\uDE02 with tears of joy.", bundle.getMessage("emoji-in-string", null));
-
-        bundle.getMessage("hi", null);
     }
 }
