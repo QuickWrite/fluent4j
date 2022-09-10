@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentUnicodeTranslator;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
@@ -64,7 +64,7 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return this.literal.equals(selector.stringValue());
     }
 

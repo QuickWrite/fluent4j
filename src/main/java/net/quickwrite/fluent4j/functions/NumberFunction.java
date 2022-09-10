@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.functions;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.CustomNumberLiteral;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 import java.text.ParseException;
 
@@ -74,7 +74,7 @@ public class NumberFunction extends AbstractFunction {
      */
     @Override
     public FluentPlaceable getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument number = arguments.getPositional(0);
+        final FluentElement number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;
         if (number instanceof NumberLiteral) {
@@ -96,7 +96,7 @@ public class NumberFunction extends AbstractFunction {
     }
 
     private int getIntValue(final String key, final int defaultValue, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.getNamed(key);
+        final FluentElement argument = arguments.getNamed(key);
 
         if (!(argument instanceof NumberLiteral)) {
             try {
@@ -110,7 +110,7 @@ public class NumberFunction extends AbstractFunction {
     }
 
     private boolean getBooleanValue(final String key, final boolean defaultValue, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.getNamed(key);
+        final FluentElement argument = arguments.getNamed(key);
 
         try {
             return Boolean.parseBoolean(argument.stringValue());

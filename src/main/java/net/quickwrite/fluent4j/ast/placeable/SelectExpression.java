@@ -1,10 +1,10 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return false;
     }
 
@@ -51,7 +51,7 @@ public class SelectExpression implements FluentPlaceable {
 
     @Override
     public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument argument = (identifier instanceof FluentArgumentResult) ?
+        final FluentElement argument = (identifier instanceof FluentArgumentResult) ?
                 ((FluentArgumentResult) identifier).getArgumentResult(bundle, arguments) : identifier;
 
         for (final FluentVariant variant : variants) {

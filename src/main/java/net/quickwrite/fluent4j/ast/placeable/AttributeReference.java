@@ -8,7 +8,6 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return false;
     }
 
@@ -58,7 +57,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public FluentArgument getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         final FluentAttribute attribute = this.getMessage(bundle, reference.stringValue())
                 .getAttribute(this.attributeIdentifier);
         if (attribute == null) {
@@ -72,7 +71,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
         }
 
         // No recursion (unfortunately :d)
-        return (FluentArgument) elementList.get(0);
+        return (FluentElement) elementList.get(0);
     }
 
     protected FluentMessage getMessage(final DirectFluentBundle bundle, final String key) {

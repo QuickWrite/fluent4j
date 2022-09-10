@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
+
 
 /**
  * Text in Fluent may use special syntax to incorporate
@@ -37,5 +37,5 @@ import net.quickwrite.fluent4j.util.args.FluentArgument;
  *     closing-brace = This message features a closing curly brace: {"}"}.
  * </pre>
  */
-public interface FluentPlaceable extends FluentElement, FluentArgument {
+public interface FluentPlaceable extends FluentElement {
 }

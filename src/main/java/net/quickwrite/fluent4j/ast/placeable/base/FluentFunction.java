@@ -1,12 +1,12 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
-import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -39,7 +39,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
         while (!content.isBigger()) {
             StringSliceUtil.skipWhitespaceAndNL(content);
 
-            Pair<String, FluentArgument> argument = getArgument(content);
+            Pair<String, FluentElement> argument = getArgument(content);
             if (argument.getLeft() != null) {
                 arguments.setNamed(argument.getLeft(), argument.getRight());
             } else {
@@ -60,7 +60,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
         return arguments;
     }
 
-    private Pair<String, FluentArgument> getArgument(final StringSlice content) {
+    private Pair<String, FluentElement> getArgument(final StringSlice content) {
         FluentPlaceable placeable = StringSliceUtil.getExpression(content);
         String identifier = null;
 
@@ -82,7 +82,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * Returns the arguments that the function
      * has itself in a sanitized form.
      *
-     * @param bundle The bundle that this is being called from
+     * @param bundle    The bundle that this is being called from
      * @param arguments The arguments in this scope
      * @return The sanitized arguments of the function
      */
@@ -92,23 +92,23 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     }
 
     /**
-     * Returns the {@link FluentArgument} that the function is returning.
+     * Returns the {@link FluentElement} that the function is returning.
      *
-     * @param bundle The bundle that this is being called from
+     * @param bundle    The bundle that this is being called from
      * @param arguments The arguments that are passed into this function
-     * @return The resulting {@link FluentArgument} that has been created
+     * @return The resulting {@link FluentElement} that has been created
      */
-    public abstract FluentArgument getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments);
+    public abstract FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments);
 
     /**
      * Checks if this FluentFunction and the selector are the same.
      *
-     * @param bundle The base bundle
+     * @param bundle   The base bundle
      * @param selector The other element
      * @return If they are the same object
      */
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return this.equals(selector);
     }
 

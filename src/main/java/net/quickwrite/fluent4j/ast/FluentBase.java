@@ -11,7 +11,6 @@ import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class FluentBase implements FluentElement, FluentArgument {
+public abstract class FluentBase implements FluentElement {
     protected final String identifier;
     protected final int whitespace;
 
@@ -231,7 +230,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
     }
 
     @Override
-    public boolean matches(DirectFluentBundle bundle, FluentArgument selector) {
+    public boolean matches(DirectFluentBundle bundle, FluentElement selector) {
         return false;
     }
 

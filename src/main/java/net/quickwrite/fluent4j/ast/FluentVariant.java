@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * A variant stores a single variant of a
@@ -40,7 +39,7 @@ public class FluentVariant implements FluentElement {
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return false;
     }
 

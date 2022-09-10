@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.builder;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.functions.NumberFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 
 /**
  * The builder class for the {@link FluentArgs} class.
@@ -49,13 +49,13 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
     }
 
     /**
-     * Adds a named {@link FluentArgument} to the {@link FluentArgs} that can be accessed.
+     * Adds a named {@link FluentElement} to the {@link FluentArgs} that can be accessed.
      *
      * @param key      The key that is used to access this argument
      * @param argument The argument itself with all of it's data
      * @return The FluentArgsBuilder object itself
      */
-    public FluentArgsBuilder setNamed(final String key, final FluentArgument argument) {
+    public FluentArgsBuilder setNamed(final String key, final FluentElement argument) {
         this.element.setNamed(key, argument);
 
         return this;
@@ -92,7 +92,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      * @param argument The argument itself with all of it's data
      * @return The FluentArgsBuilder object itself
      */
-    public FluentArgsBuilder addPositional(final FluentArgument argument) {
+    public FluentArgsBuilder addPositional(final FluentElement argument) {
         this.element.addPositional(argument);
 
         return this;

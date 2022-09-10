@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.util.args;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 
@@ -11,8 +12,8 @@ import java.util.*;
  * is getting accessed.
  */
 public class ResourceFluentArguments implements FluentArgs {
-    private final Map<String, FluentArgument> namedArguments;
-    private final List<FluentArgument> positionalArguments;
+    private final Map<String, FluentElement> namedArguments;
+    private final List<FluentElement> positionalArguments;
 
     /**
      * Creates a new empty argument
@@ -29,7 +30,7 @@ public class ResourceFluentArguments implements FluentArgs {
      * @param namedArguments The named arguments
      * @param positionalArguments The positional arguments
      */
-    public ResourceFluentArguments(final Map<String, FluentArgument> namedArguments, final List<FluentArgument> positionalArguments) {
+    public ResourceFluentArguments(final Map<String, FluentElement> namedArguments, final List<FluentElement> positionalArguments) {
         this.namedArguments = namedArguments;
         this.positionalArguments = positionalArguments;
     }
@@ -37,7 +38,7 @@ public class ResourceFluentArguments implements FluentArgs {
     @Override
     public void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments) {
         for (final String key : namedArguments.keySet()) {
-            final FluentArgument argument = namedArguments.get(key);
+            final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
                 namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
@@ -45,7 +46,7 @@ public class ResourceFluentArguments implements FluentArgs {
         }
 
         for (int i = 0; i < positionalArguments.size(); i++) {
-            final FluentArgument argument = positionalArguments.get(i);
+            final FluentElement argument = positionalArguments.get(i);
 
             if (argument instanceof FluentArgumentResult) {
                 positionalArguments.set(i, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
@@ -54,28 +55,28 @@ public class ResourceFluentArguments implements FluentArgs {
     }
 
     @Override
-    public FluentArgument getPositional(final int index) {
+    public FluentElement getPositional(final int index) {
         return this.positionalArguments.get(index);
     }
 
     @Override
-    public void setNamed(final String key, final FluentArgument argument) {
+    public void setNamed(final String key, final FluentElement argument) {
         this.namedArguments.put(key, argument);
     }
 
     @Override
-    public FluentArgument getNamed(final String key) {
+    public FluentElement getNamed(final String key) {
         return this.namedArguments.get(key);
     }
 
     @Override
-    public void addPositional(final FluentArgument argument) {
+    public void addPositional(final FluentElement argument) {
         this.positionalArguments.add(argument);
     }
 
     @Override
     public String toString() {
-        return "FluentArgumentList: {\n" +
+        return "FluentElementList: {\n" +
                 "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
                 "\t\t\tpositionalArguments: \"" + this.positionalArguments + "\"\n" +
                 "\t\t}";

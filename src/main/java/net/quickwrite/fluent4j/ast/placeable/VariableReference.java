@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
@@ -41,7 +41,7 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return selector.stringValue().equals(content);
     }
 
@@ -51,8 +51,8 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public FluentArgument getArgumentResult(DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.getNamed(content);
+    public FluentElement getArgumentResult(DirectFluentBundle bundle, final FluentArgs arguments) {
+        final FluentElement argument = arguments.getNamed(content);
 
         if (argument == null) {
             return new StringLiteral("{$" + content + "}");
@@ -63,7 +63,7 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
 
     @Override
     public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentArgument argument = arguments.getNamed(content);
+        final FluentElement argument = arguments.getNamed(content);
 
         if (argument == null) {
             return "{$" + content + "}";

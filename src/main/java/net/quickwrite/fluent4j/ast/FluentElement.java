@@ -3,7 +3,6 @@ package net.quickwrite.fluent4j.ast;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
@@ -27,7 +26,7 @@ public interface FluentElement {
      * @param selector The other element
      * @return If both are matching
      */
-    boolean matches(final DirectFluentBundle bundle, final FluentArgument selector);
+    boolean matches(final DirectFluentBundle bundle, final FluentElement selector);
 
     /**
      * Returns the String value of the object

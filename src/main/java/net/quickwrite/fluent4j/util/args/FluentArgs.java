@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.util.args;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 public interface FluentArgs {
@@ -24,13 +25,13 @@ public interface FluentArgs {
     void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments);
 
     /**
-     * Returns the {@link FluentArgument} with the given
+     * Returns the {@link FluentElement} with the given
      * position in the positional arguments.
      *
      * @param index The position the argument has
      * @return The argument itself
      */
-    FluentArgument getPositional(final int index);
+    FluentElement getPositional(final int index);
 
     /**
      * Adds a new named argument to the named arguments.
@@ -41,7 +42,7 @@ public interface FluentArgs {
      * @param key The name of the named argument
      * @param argument The argument value
      */
-    void setNamed(final String key, final FluentArgument argument);
+    void setNamed(final String key, final FluentElement argument);
 
     /**
      * Returns a named argument with the {@code key}.
@@ -49,12 +50,12 @@ public interface FluentArgs {
      * @param key The name of the argument
      * @return The value of the named argument
      */
-    FluentArgument getNamed(final String key);
+    FluentElement getNamed(final String key);
 
     /**
      * Adds a new positional argument at the end.
      *
      * @param argument The argument itself
      */
-    void addPositional(final FluentArgument argument);
+    void addPositional(final FluentElement argument);
 }

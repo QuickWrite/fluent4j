@@ -6,11 +6,12 @@ import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.util.ULocale;
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArgument;
+
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 import java.math.BigDecimal;
@@ -69,7 +70,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         if (selector instanceof NumberLiteral) {
             return matches(((NumberLiteral) selector).valueOf());
         }
