@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
@@ -40,7 +40,7 @@ public class FluentVariant implements FluentElement {
     }
 
     @Override
-    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
         return false;
     }
 
@@ -49,7 +49,7 @@ public class FluentVariant implements FluentElement {
         return identifier.stringValue();
     }
 
-    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         return this.content.getResult(bundle, arguments);
     }
 

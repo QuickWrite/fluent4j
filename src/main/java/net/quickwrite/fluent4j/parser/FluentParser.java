@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.parser;
 
-import net.quickwrite.fluent4j.FluentResource;
+import net.quickwrite.fluent4j.util.bundle.FluentResource;
+import net.quickwrite.fluent4j.util.bundle.SimpleFluentResource;
 import net.quickwrite.fluent4j.ast.*;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
@@ -8,7 +9,6 @@ import net.quickwrite.fluent4j.util.StringSliceUtil;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +71,7 @@ public abstract class FluentParser {
 
         input.setIndex(0);
 
-        return new FluentResource(elementList, exceptionList);
+        return new SimpleFluentResource(elementList, exceptionList);
     }
 
     private static FluentBase getBase(final StringSlice input) {

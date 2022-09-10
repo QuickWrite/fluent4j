@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -20,7 +20,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public FluentArgument getArgumentResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         return bundle
                 .getFunction(this.functionName)
                 .getResult(bundle, this.getArguments(bundle, arguments));
@@ -68,7 +68,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
      * @return The result of the function with the specific parameters
      */
     @Override
-    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         try {
             return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
         } catch (Exception exception) {

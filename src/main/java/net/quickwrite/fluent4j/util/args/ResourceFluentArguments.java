@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.util.args;
 
-import net.quickwrite.fluent4j.util.bundle.FluentBundle;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 
 import java.util.*;
@@ -36,7 +35,7 @@ public class ResourceFluentArguments implements FluentArgs {
     }
 
     @Override
-    public void sanitize(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments) {
         for (final String key : namedArguments.keySet()) {
             final FluentArgument argument = namedArguments.get(key);
 

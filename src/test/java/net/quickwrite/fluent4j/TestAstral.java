@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j;
 
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;

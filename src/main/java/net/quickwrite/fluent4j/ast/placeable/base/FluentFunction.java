@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.ast.placeable.base;
 
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
@@ -86,7 +86,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @param arguments The arguments in this scope
      * @return The sanitized arguments of the function
      */
-    protected FluentArgs getArguments(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    protected FluentArgs getArguments(final DirectFluentBundle bundle, final FluentArgs arguments) {
         this.arguments.sanitize(bundle, arguments);
         return this.arguments;
     }
@@ -98,7 +98,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @param arguments The arguments that are passed into this function
      * @return The resulting {@link FluentArgument} that has been created
      */
-    public abstract FluentArgument getArgumentResult(final ResourceFluentBundle bundle, final FluentArgs arguments);
+    public abstract FluentArgument getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments);
 
     /**
      * Checks if this FluentFunction and the selector are the same.
@@ -108,7 +108,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @return If they are the same object
      */
     @Override
-    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
         return this.equals(selector);
     }
 

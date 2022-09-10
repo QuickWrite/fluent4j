@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * A use-case for placeables is referencing one message in another one.
@@ -25,7 +25,7 @@ public class MessageReference implements FluentPlaceable {
     }
 
     @Override
-    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
         return selector.stringValue().equals(this.reference);
     }
 
@@ -35,7 +35,7 @@ public class MessageReference implements FluentPlaceable {
     }
 
     @Override
-    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         return bundle.getMessage(this.stringValue(), arguments);
     }
 

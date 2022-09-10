@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.util.bundle;
 
 import com.ibm.icu.util.ULocale;
-import net.quickwrite.fluent4j.FluentResource;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;

@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.util.bundle;
 
 import com.ibm.icu.util.ULocale;
-import net.quickwrite.fluent4j.FluentResource;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.FluentTerm;
@@ -21,7 +20,7 @@ import java.util.Map;
  * aggregate parsed Fluent resources in the Fluent syntax and can
  * format translation units (entities) to strings.
  */
-public class ResourceFluentBundle implements FluentBundle {
+public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     private final ULocale locale;
 
     private final Map<String, FluentTerm> terms;
@@ -40,7 +39,7 @@ public class ResourceFluentBundle implements FluentBundle {
      * to be instantiated.
      *
      * @param locale   The locale that the bundle should act on
-     * @param resource The ressource that the bundle should start with
+     * @param resource The resource that the bundle should start with
      */
     public ResourceFluentBundle(final ULocale locale, final FluentResource resource) {
         this.locale = locale;
@@ -51,41 +50,12 @@ public class ResourceFluentBundle implements FluentBundle {
         this.addResource(resource);
     }
 
-    /**
-     * Returns the {@link FluentTerm} that is being stored
-     * for the {@code key}.
-     *
-     * <p>
-     * So when the {@code .ftl}-files contain:
-     * <pre>
-     *     -test = Hello World!
-     * </pre>
-     * it would return the {@link FluentTerm} for the key
-     * {@code test} but {@code null} for anything else.
-     *
-     * @param key The key that the {@link FluentTerm} is stored in.
-     * @return The term itself
-     */
+    @Override
     public FluentTerm getTerm(final String key) {
         return this.terms.get(key);
     }
 
-    /**
-     * Returns the {@link FluentMessage} that is being stored
-     * for the {@code key}.
-     *
-     * <p>
-     * So when the {@code .ftl}-files contain:
-     * <pre>
-     *     test = Hello World!
-     * </pre>
-     * <p>
-     * it would return the {@link FluentMessage} for the key
-     * {@code test} but {@code null} for anything else.
-     *
-     * @param key The key that the {@link FluentMessage} is stored in.
-     * @return The message itself
-     */
+    @Override
     public FluentMessage getMessage(final String key) {
         return this.messages.get(key);
     }

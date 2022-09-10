@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * The base interface for the AST.
@@ -27,7 +27,7 @@ public interface FluentElement {
      * @param selector The other element
      * @return If both are matching
      */
-    boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector);
+    boolean matches(final DirectFluentBundle bundle, final FluentArgument selector);
 
     /**
      * Returns the String value of the object
@@ -46,5 +46,5 @@ public interface FluentElement {
      * @param arguments The arguments that are being passed on the scope
      * @return The {@link CharSequence} value of the argument with the parameters
      */
-    CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments);
+    CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments);
 }

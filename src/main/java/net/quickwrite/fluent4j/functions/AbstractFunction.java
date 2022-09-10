@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.functions;
 
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 
@@ -69,5 +69,5 @@ public abstract class AbstractFunction {
      * @param arguments The arguments the function gets
      * @return The result
      */
-    public abstract FluentPlaceable getResult(final ResourceFluentBundle bundle, final FluentArgs arguments);
+    public abstract FluentPlaceable getResult(final DirectFluentBundle bundle, final FluentArgs arguments);
 }

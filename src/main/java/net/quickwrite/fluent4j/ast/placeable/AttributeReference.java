@@ -9,8 +9,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
-import net.quickwrite.fluent4j.util.bundle.FluentBundle;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public boolean matches(final ResourceFluentBundle bundle, final FluentArgument selector) {
+    public boolean matches(final DirectFluentBundle bundle, final FluentArgument selector) {
         return false;
     }
 
@@ -43,7 +42,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         final FluentMessage fluentMessage = this.getMessage(bundle, reference.stringValue());
         if (fluentMessage == null) {
             return getErrorString();
@@ -59,7 +58,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
     }
 
     @Override
-    public FluentArgument getArgumentResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgument getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         final FluentAttribute attribute = this.getMessage(bundle, reference.stringValue())
                 .getAttribute(this.attributeIdentifier);
         if (attribute == null) {
@@ -76,7 +75,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
         return (FluentArgument) elementList.get(0);
     }
 
-    protected FluentMessage getMessage(final ResourceFluentBundle bundle, final String key) {
+    protected FluentMessage getMessage(final DirectFluentBundle bundle, final String key) {
         return bundle.getMessage(key);
     }
 
@@ -98,7 +97,7 @@ public class AttributeReference implements FluentPlaceable, FluentArgumentResult
         }
 
         @Override
-        protected FluentMessage getMessage(final ResourceFluentBundle bundle, final String key) {
+        protected FluentMessage getMessage(final DirectFluentBundle bundle, final String key) {
             return bundle.getTerm(key);
         }
 

@@ -1,4 +1,4 @@
-package net.quickwrite.fluent4j;
+package net.quickwrite.fluent4j.util.bundle;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
@@ -12,17 +12,17 @@ import java.util.List;
  * <p>
  * All of the entries that exist are stored inside of a list.
  */
-public class FluentResource {
+public class SimpleFluentResource implements FluentResource {
     private final List<FluentElement> elements;
     private final List<FluentParseException> exceptionList;
 
     /**
-     * A FluentResource is a structure storing parsed localization entries.
+     * A SimpleFluentResource is a structure storing parsed localization entries.
      *
      * @param elementList   The list of {@link FluentElement}s.
      * @param exceptionList The list of {@link FluentParseException}s that result from the parsing.
      */
-    public FluentResource(final List<FluentElement> elementList, final List<FluentParseException> exceptionList) {
+    public SimpleFluentResource(final List<FluentElement> elementList, final List<FluentParseException> exceptionList) {
         this.elements = elementList;
         this.exceptionList = exceptionList;
     }

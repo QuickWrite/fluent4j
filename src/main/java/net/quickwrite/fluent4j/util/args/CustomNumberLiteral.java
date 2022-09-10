@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.util.args;
 
 import com.ibm.icu.text.NumberFormat;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ public class CustomNumberLiteral extends NumberLiteral {
     }
 
     @Override
-    public String getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public String getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         NumberFormat numberFormat = NumberFormat.getInstance(bundle.getLocale());
         numberFormat.setGroupingUsed(useGrouping);
         numberFormat.setMaximumFractionDigits(maximumFractionDigits);

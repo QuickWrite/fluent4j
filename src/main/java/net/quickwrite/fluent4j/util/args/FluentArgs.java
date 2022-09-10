@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.util.args;
 
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 public interface FluentArgs {
     /**
@@ -21,7 +21,7 @@ public interface FluentArgs {
      * @param bundle The main bundle
      * @param arguments The old arguments
      */
-    void sanitize(final ResourceFluentBundle bundle, final FluentArgs arguments);
+    void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments);
 
     /**
      * Returns the {@link FluentArgument} with the given

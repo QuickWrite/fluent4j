@@ -12,7 +12,7 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FluentArgument;
-import net.quickwrite.fluent4j.util.bundle.ResourceFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -220,7 +220,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
     }
 
     @Override
-    public CharSequence getResult(final ResourceFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
         final StringBuilder builder = new StringBuilder();
 
         for (final FluentElement element : this.fluentElements) {
@@ -231,7 +231,7 @@ public abstract class FluentBase implements FluentElement, FluentArgument {
     }
 
     @Override
-    public boolean matches(ResourceFluentBundle bundle, FluentArgument selector) {
+    public boolean matches(DirectFluentBundle bundle, FluentArgument selector) {
         return false;
     }
 
