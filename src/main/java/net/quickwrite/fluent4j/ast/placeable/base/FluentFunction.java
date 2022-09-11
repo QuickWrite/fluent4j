@@ -34,11 +34,14 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     }
 
     private FluentArgs getArguments(final StringSlice content) {
-        FluentArgs arguments = new ResourceFluentArguments();
+        StringSliceUtil.skipWhitespaceAndNL(content);
+        if (content.isBigger()) {
+            return FluentArgs.EMPTY_ARGS;
+        }
+
+        final FluentArgs arguments = new ResourceFluentArguments();
 
         while (!content.isBigger()) {
-            StringSliceUtil.skipWhitespaceAndNL(content);
-
             Pair<String, FluentElement> argument = getArgument(content);
             if (argument.getLeft() != null) {
                 arguments.setNamed(argument.getLeft(), argument.getRight());
@@ -55,6 +58,8 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
                 break;
             }
             content.increment();
+
+            StringSliceUtil.skipWhitespaceAndNL(content);
         }
 
         return arguments;
