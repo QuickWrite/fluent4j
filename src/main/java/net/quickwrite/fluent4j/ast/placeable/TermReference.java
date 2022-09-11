@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
+import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
@@ -49,7 +50,13 @@ public class TermReference extends FluentFunction {
      */
     @Override
     public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        return bundle.getTerm(this.functionName);
+        final FluentTerm term = bundle.getTerm(this.functionName);
+
+        if (term == null) {
+            return new StringLiteral("{-" + this.functionName + "}");
+        }
+
+        return term;
     }
 
     @Override
