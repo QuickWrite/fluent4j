@@ -21,9 +21,13 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
 
     @Override
     public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        return bundle
-                .getFunction(this.functionName)
-                .getResult(bundle, this.getArguments(bundle, arguments));
+        try {
+            return bundle
+                    .getFunction(this.functionName)
+                    .getResult(bundle, this.getArguments(bundle, arguments));
+        } catch (final Exception exception) {
+            return new StringLiteral("{" + functionName + "()}");
+        }
     }
 
     /**
@@ -69,11 +73,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
      */
     @Override
     public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        try {
             return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
-        } catch (Exception exception) {
-            return "{" + functionName + "()}";
-        }
     }
 
     @Override
