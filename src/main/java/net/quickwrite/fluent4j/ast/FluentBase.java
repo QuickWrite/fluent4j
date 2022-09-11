@@ -236,7 +236,12 @@ public abstract class FluentBase implements FluentElement {
 
     @Override
     public String stringValue() {
-        return this.identifier;
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (final FluentElement element : getElements()) {
+            stringBuilder.append(element.stringValue());
+        }
+
+        return stringBuilder.toString();
     }
 
     public List<FluentElement> getElements() {
