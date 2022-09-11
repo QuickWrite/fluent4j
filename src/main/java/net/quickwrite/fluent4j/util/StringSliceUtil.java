@@ -23,7 +23,7 @@ public final class StringSliceUtil {
      *
      * @return If whitespace could be skipped.
      */
-    public static int skipWhitespace(StringSlice slice) {
+    public static int skipWhitespace(final StringSlice slice) {
         if (slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
             return 0;
         }
@@ -49,7 +49,7 @@ public final class StringSliceUtil {
      *
      * @return If a Newline was skipped.
      */
-    public static boolean skipWhitespaceAndNL(StringSlice slice) {
+    public static boolean skipWhitespaceAndNL(final StringSlice slice) {
         if (!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
             return false;
         }
@@ -113,7 +113,7 @@ public final class StringSliceUtil {
      *
      * @return The expression
      */
-    public static FluentPlaceable getExpression(StringSlice slice) {
+    public static FluentPlaceable getExpression(final StringSlice slice) {
         FluentPlaceable expression;
 
         switch (slice.getChar()) {
@@ -147,7 +147,7 @@ public final class StringSliceUtil {
         return expression;
     }
 
-    private static FluentPlaceable expressionGetDefault(StringSlice slice) {
+    private static FluentPlaceable expressionGetDefault(final StringSlice slice) {
         boolean isTerm = false;
 
         if (slice.getChar() == '-') {
@@ -210,7 +210,7 @@ public final class StringSliceUtil {
         return expression;
     }
 
-    private static StringSlice getNumber(StringSlice slice) {
+    private static StringSlice getNumber(final StringSlice slice) {
         char character = slice.getChar();
         final int start = slice.getPosition();
 
@@ -234,7 +234,7 @@ public final class StringSliceUtil {
      *
      * @return The identifier as a StringSlice
      */
-    public static StringSlice getIdentifier(StringSlice slice) {
+    public static StringSlice getIdentifier(final StringSlice slice) {
         char character = slice.getChar();
         final int start = slice.getPosition();
 

@@ -11,10 +11,8 @@ import com.ibm.icu.text.UTF16;
  * This allows the creation of more StringSlices faster with
  * less Memory as it does not need to copy a part of a String
  * and does not need to store that String.
- * </p>
  * <p>
  * It has also an index and functions like a stream.
- * </p>
  */
 public class StringSlice {
     private final String base;
@@ -107,6 +105,24 @@ public class StringSlice {
     }
 
     /**
+     * Sets the index to the given integer
+     *
+     * @param index The integer the index should be set to.
+     */
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    /**
+     * Gets the length of the StringSlice.
+     *
+     * @return length as an integer
+     */
+    public int length() {
+        return this.end - this.start + 1;
+    }
+
+    /**
      * Gets the current position in the whole
      * String.
      *
@@ -130,21 +146,31 @@ public class StringSlice {
 
     /**
      * Decrements the index by one.
+     *
+     * <p>
+     * If the index is smaller than {@code 0} it will
+     * be set to {@code 0}.
      */
     public void decrement() {
-        this.index--;
+        decrement(1);
     }
 
     /**
      * Decrements the index by the amount
      * given in the parameter.
      *
-     * @param times The amount the StringSlice should decrement
+     * <p>
+     * If the index is smaller than {@code 0} it will
+     * be set to {@code 0}.
+     *
+     * @param times The amount the {@link StringSlice} should decrement
      */
-    public void decrement(int times) {
-        for (int i = 0; i < times; i++) {
-            decrement();
+    public void decrement(final int times) {
+        if (getPosition() - times < 0) {
+            setIndex(0);
         }
+
+        setIndex(getPosition() - times);
     }
 
     /**
@@ -176,24 +202,6 @@ public class StringSlice {
      */
     public StringSlice substring(int start, int end) {
         return new StringSlice(this.base, start + this.start, this.start + end);
-    }
-
-    /**
-     * Gets the length of the StringSlice.
-     *
-     * @return length as an integer
-     */
-    public int length() {
-        return this.end - this.start + 1;
-    }
-
-    /**
-     * Sets the index to the given integer
-     *
-     * @param index The integer the index should be set to.
-     */
-    public void setIndex(int index) {
-        this.index = index;
     }
 
     /**
