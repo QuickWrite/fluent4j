@@ -56,7 +56,16 @@ public class ResourceFluentArguments implements FluentArgs {
 
     @Override
     public FluentElement getPositional(final int index) {
+        if (this.positionalArguments.size() - 1 < index) {
+            return null;
+        }
+
         return this.positionalArguments.get(index);
+    }
+
+    @Override
+    public int getPositionalSize() {
+        return this.positionalArguments.size();
     }
 
     @Override
@@ -70,8 +79,18 @@ public class ResourceFluentArguments implements FluentArgs {
     }
 
     @Override
+    public Set<String> getNamedKeys() {
+        return this.namedArguments.keySet();
+    }
+
+    @Override
     public void addPositional(final FluentElement argument) {
         this.positionalArguments.add(argument);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.positionalArguments.isEmpty() && this.namedArguments.isEmpty();
     }
 
     @Override

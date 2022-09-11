@@ -3,6 +3,8 @@ package net.quickwrite.fluent4j.util.args;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
+import java.util.Set;
+
 public interface FluentArgs {
     /**
      * An initialized object that has no values
@@ -34,6 +36,14 @@ public interface FluentArgs {
     FluentElement getPositional(final int index);
 
     /**
+     * Returns the amount of positional
+     * parameters the object has.
+     *
+     * @return The amount of positional parameters
+     */
+    int getPositionalSize();
+
+    /**
      * Adds a new named argument to the named arguments.
      *
      * <p>
@@ -51,6 +61,21 @@ public interface FluentArgs {
      * @return The value of the named argument
      */
     FluentElement getNamed(final String key);
+
+    /**
+     * Returns the keys that the named parameters have.
+     *
+     * @return The keys that the named parameters have
+     */
+    Set<String> getNamedKeys();
+
+    /**
+     * Checks if there are no arguments inside of the
+     * object itself.
+     *
+     * @return if no argument exist
+     */
+    boolean isEmpty();
 
     /**
      * Adds a new positional argument at the end.
