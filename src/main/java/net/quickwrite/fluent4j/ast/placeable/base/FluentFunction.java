@@ -69,11 +69,11 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
         FluentPlaceable placeable = StringSliceUtil.getExpression(content);
         String identifier = null;
 
-        StringSliceUtil.skipWhitespace(content);
+        StringSliceUtil.skipWhitespaceAndNL(content);
 
         if (content.getChar() == ':') {
             content.increment();
-            StringSliceUtil.skipWhitespace(content);
+            StringSliceUtil.skipWhitespaceAndNL(content);
 
             identifier = placeable.stringValue();
 
