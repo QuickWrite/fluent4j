@@ -167,7 +167,7 @@ public final class StringSliceUtil {
 
         FluentPlaceable expression = (isTerm) ? new TermReference(msgIdentifier) : new MessageReference(msgIdentifier);
 
-        skipWhitespace(slice);
+        skipWhitespaceAndNL(slice);
 
         if (slice.getChar() == '(') {
             slice.increment();
