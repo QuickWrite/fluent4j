@@ -95,7 +95,7 @@ public class ResourceFluentArguments implements FluentArgs {
 
     @Override
     public String toString() {
-        return "FluentElementList: {\n" +
+        return "ResourceFluentArguments: {\n" +
                 "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
                 "\t\t\tpositionalArguments: \"" + this.positionalArguments + "\"\n" +
                 "\t\t}";

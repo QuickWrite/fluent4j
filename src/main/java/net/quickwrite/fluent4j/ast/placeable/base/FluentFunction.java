@@ -39,7 +39,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
             return FluentArgs.EMPTY_ARGS;
         }
 
-        final FluentArgs arguments = new ResourceFluentArguments();
+        final FluentArgs arguments = this.getFluentArgumentInstance();
 
         while (!content.isBigger()) {
             Pair<String, FluentElement> argument = getArgument(content);
@@ -94,6 +94,10 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     protected FluentArgs getArguments(final DirectFluentBundle bundle, final FluentArgs arguments) {
         this.arguments.sanitize(bundle, arguments);
         return this.arguments;
+    }
+
+    protected FluentArgs getFluentArgumentInstance() {
+        return new ResourceFluentArguments();
     }
 
     /**
