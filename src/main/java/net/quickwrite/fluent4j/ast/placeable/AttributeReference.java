@@ -21,7 +21,7 @@ import java.util.List;
  * -term-test = { -term.attribute }
  * </pre>
  */
-public class AttributeReference implements FluentPlaceable, FluentArgumentResult {
+public class AttributeReference implements FluentPlaceable, FluentSelectable, FluentArgumentResult {
     protected final FluentPlaceable reference;
     protected final String attributeIdentifier;
 

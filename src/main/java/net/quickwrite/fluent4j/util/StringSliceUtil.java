@@ -169,42 +169,60 @@ public final class StringSliceUtil {
 
         skipWhitespaceAndNL(slice);
 
-        if (slice.getChar() == '(') {
-            slice.increment();
+        return switch (slice.getChar()) {
+            case '(' -> expressionGetFunction(slice, expression, isTerm);
+            case '.' -> expressionGetAttribute(slice, expression, isTerm);
+            default -> expression;
+        };
 
-            int start = slice.getPosition();
+    }
 
-            int open = 0;
+    private static FluentPlaceable expressionGetFunction(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
+        slice.increment();
 
-            while (!(slice.getChar() == ')' && open == 0)) {
-                if (slice.isBigger()) {
-                    throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
-                }
+        int start = slice.getPosition();
 
-                if (slice.getChar() == '(') {
-                    open++;
-                }
+        int open = 0;
 
-                if (slice.getChar() == ')') {
-                    open--;
-                }
-
-                slice.increment();
+        while (!(slice.getChar() == ')' && open == 0)) {
+            if (slice.isBigger()) {
+                throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
             }
 
-            if (!isTerm) {
-                expression = new FunctionReference(
-                        expression.stringValue(),
-                        slice.substring(start, slice.getPosition())
-                );
-            } else {
-                expression = new TermReference(
-                        expression.stringValue(),
-                        slice.substring(start, slice.getPosition())
-                );
+            if (slice.getChar() == '(') {
+                open++;
+            }
+
+            if (slice.getChar() == ')') {
+                open--;
             }
 
             slice.increment();
+        }
+
+        expression = (!isTerm) ?
+                new FunctionReference(
+                        expression.stringValue(),
+                        slice.substring(start, slice.getPosition())
+                ) :
+                new TermReference(
+                        expression.stringValue(),
+                        slice.substring(start, slice.getPosition())
+                );
+
+        slice.increment();
+
+        return expression;
+    }
+
+    private static FluentPlaceable expressionGetAttribute(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
+        slice.increment();
+        final StringSlice identifier = StringSliceUtil.getIdentifier(slice);
+
+        if (isTerm) {
+            expression = new AttributeReference.TermAttributeReference(expression, identifier);
+        } else {
+            expression = new AttributeReference(expression, identifier);
         }
 
         return expression;

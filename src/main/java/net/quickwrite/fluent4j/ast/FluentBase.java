@@ -96,19 +96,6 @@ public abstract class FluentBase implements FluentElement {
 
         boolean canSelect = placeable instanceof FluentSelectable;
 
-        if (!canSelect && content.getChar() == '.') {
-            content.increment();
-            StringSlice slice = StringSliceUtil.getIdentifier(content);
-
-            if (placeable instanceof TermReference) {
-                placeable = new AttributeReference.TermAttributeReference(placeable, slice);
-            } else {
-                placeable = new AttributeReference(placeable, slice);
-            }
-
-            canSelect = true;
-        }
-
         StringSliceUtil.skipWhitespaceAndNL(content);
 
         if (canSelect && content.getChar() == '-') {
