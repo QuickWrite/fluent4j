@@ -1,6 +1,48 @@
 # fluent4j
- A Java library that implements [Mozillas Fluent project](https://www.projectfluent.org/).
- 
+A Java library that implements [Mozillas Fluent project](https://www.projectfluent.org/).
+
+## Installation
+### Maven
+```xml
+<repositories>
+    ...
+    <repository>
+        <id>quickwrite-net-fluent4j</id>
+        <url>https://dl.cloudsmith.io/public/quickwrite-net/fluent4j/maven/</url>
+    </repository>
+    ...
+</repositories>
+```
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>quickwrite-net</groupId>
+        <artifactId>fluent4j</artifactId>
+        <version>{{package-version}}</version>
+    </dependency>
+    ...
+</dependencies>
+```
+
+### Gradle
+```groovy
+repositories {
+    ...
+    maven {
+        url "https://dl.cloudsmith.io/public/quickwrite-net/fluent4j/maven/"
+    }
+    ...
+}
+```
+```groovy
+dependencies {
+    ...
+    implementation 'net.quickwrite:fluent4j:{{package-version}}'
+    ...
+}
+```
+
 ## Usage
 
 You could either use the library directly without all of the abstraction and create all of the
