@@ -1,4 +1,4 @@
-name: Publish package to the Maven Central Repository
+name: Publish package to the Package Repository
 on:
   workflow_dispatch:
   release:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Maven Central Repository
+      - name: Set up the Package Repository
         uses: actions/setup-java@v3
         with:
           java-version: '16'
