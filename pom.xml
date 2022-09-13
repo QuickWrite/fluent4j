@@ -72,4 +72,29 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>quickwrite-net-fluent4j</id>
+            <url>https://dl.cloudsmith.io/public/quickwrite-net/fluent4j/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>cloudsmith</id>
+            <url>https://maven.cloudsmith.io/quickwrite-net/fluent4j/</url>
+        </snapshotRepository>
+        <repository>
+            <id>cloudsmith</id>
+            <url>https://maven.cloudsmith.io/quickwrite-net/fluent4j/</url>
+        </repository>
+    </distributionManagement>
 </project>
