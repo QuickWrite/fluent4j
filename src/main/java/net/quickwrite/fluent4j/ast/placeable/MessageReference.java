@@ -1,7 +1,10 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * A use-case for placeables is referencing one message in another one.
@@ -15,21 +18,31 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * consistent across the interface and makes maintenance easier.
  */
 public class MessageReference implements FluentPlaceable {
-    private final StringSlice content;
+    private final String reference;
 
-    public MessageReference(StringSlice content) {
-        this.content = content;
+    public MessageReference(final StringSlice reference) {
+        this.reference = reference.toString();
     }
 
     @Override
-    public StringSlice getContent() {
-        return content;
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
+        return selector.stringValue().equals(this.reference);
+    }
+
+    @Override
+    public String stringValue() {
+        return this.reference;
+    }
+
+    @Override
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        return bundle.getMessage(this.stringValue(), arguments);
     }
 
     @Override
     public String toString() {
         return "FluentMessageReference: {\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
+                "\t\t\treference: \"" + this.reference + "\"\n" +
                 "\t\t}";
     }
 }

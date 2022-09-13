@@ -1,7 +1,12 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
+import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.ResourceNamedFluentArguments;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * Terms are similar to regular messages but they can
@@ -21,26 +26,50 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * </pre>
  */
 public class TermReference extends FluentFunction {
-    public TermReference(StringSlice name) {
+    public TermReference(final StringSlice name) {
         super(name, null);
     }
 
-    public TermReference(StringSlice name, StringSlice content) {
+    public TermReference(final String name, final StringSlice content) {
         super(name, content);
     }
 
     @Override
-    protected boolean check(StringSlice string) {
+    protected boolean check(final String string) {
         return true;
+    }
+
+    @Override
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        return this.getArgumentResult(bundle, arguments).getResult(bundle, this.getArguments(bundle, arguments));
+    }
+
+    /**
+     * @param bundle    The bundle that this is being called from
+     * @param arguments The arguments that are passed into this function
+     * @return
+     */
+    @Override
+    public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        final FluentTerm term = bundle.getTerm(this.functionName);
+
+        if (term == null) {
+            return new StringLiteral("{-" + this.functionName + "}");
+        }
+
+        return term;
+    }
+
+    @Override
+    protected FluentArgs getFluentArgumentInstance() {
+        return new ResourceNamedFluentArguments();
     }
 
     @Override
     public String toString() {
         return "FluentTermReference: {\n" +
                 "\t\t\ttermName: \"" + this.functionName + "\"\n" +
-                "\t\t\tcontent: \"" + this.content + "\"\n" +
-                "\t\t\tpositionalArguments: \"" + this.positionalArgumentList + "\"\n" +
-                "\t\t\tnamedArguments: \"" + this.namedArgumentList + "\"\n" +
+                "\t\t\targuments: " + this.arguments + "\n" +
                 "\t\t}";
     }
 }

@@ -1,5 +1,7 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.StringSlice;
 
 /**
@@ -7,47 +9,13 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * nothing at all.
  */
 public class FluentTextElement implements FluentElement {
-    private final StringSlice content;
     private final String text;
 
     public FluentTextElement(final StringSlice content, final int whitespace) {
-        this.content = content;
-        this.text = getText(whitespace);
+        this.text = getText(content, whitespace);
     }
 
-    public boolean isEmpty() {
-        while (!content.isBigger()) {
-            if(!(content.getChar() == '\n' || content.getChar() == ' ')) {
-                return false;
-            }
-
-            content.increment();
-        }
-
-        content.setIndex(0);
-
-        return true;
-    }
-
-    private String getText(int whitespace) {
-        StringBuilder text = new StringBuilder();
-        boolean first = true;
-
-        while (!content.isBigger()) {
-            text.append(getLine(first ? 0 : whitespace));
-
-            first = false;
-            content.increment();
-        }
-
-        if(text.charAt(text.length() - 1) == '\n') {
-            text.deleteCharAt(text.length() - 1);
-        }
-
-        return text.toString();
-    }
-
-    private String getLine(int whitespace) {
+    private String getLine(StringSlice content, int whitespace) {
         if (content.getChar() == '\n') {
             return "\n";
         }
@@ -66,7 +34,7 @@ public class FluentTextElement implements FluentElement {
 
         start = content.getPosition();
         while(content.getChar() != '\n' && !content.isBigger()) {
-            if(content.getChar() != ' ') {
+            if(content.getChar() != ' ' || whitespace == 0) {
                 onlyWhitespace = false;
             }
             content.increment();
@@ -81,14 +49,43 @@ public class FluentTextElement implements FluentElement {
         return content.substring(start, content.getPosition() + (peek == '{' || peek == '\0' ? 0 : 1)).toString();
     }
 
-    public StringSlice getContent() {
-        return this.content;
+    private String getText(final StringSlice content, final int whitespace) {
+        StringBuilder text = new StringBuilder();
+        boolean first = true;
+
+        while (!content.isBigger()) {
+            text.append(getLine(content, first ? 0 : whitespace));
+
+            first = false;
+            content.increment();
+        }
+
+        if(text.charAt(text.length() - 1) == '\n') {
+            text.deleteCharAt(text.length() - 1);
+        }
+
+        return text.toString();
+    }
+
+    @Override
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
+        return selector.stringValue().equals(this.text);
+    }
+
+    @Override
+    public String stringValue() {
+        return this.text;
+    }
+
+    @Override
+    public CharSequence getResult(DirectFluentBundle bundle, FluentArgs arguments) {
+        return this.text;
     }
 
     @Override
     public String toString() {
         return "FluentTextElement: {\n" +
-                "\t\t\tcontent: \"" + this.text + "\"\n" +
+                "\t\t\ttext: \"" + this.text + "\"\n" +
                 "\t\t}";
     }
 }

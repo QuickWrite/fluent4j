@@ -7,17 +7,15 @@ import net.quickwrite.fluent4j.util.StringSlice;
  * A FluentAttribute defines a subpart of a FluentMessage that holds more
  * context data.<br>
  *
- * <p>
  * <pre>
  * login-input = Predefined value
  *     .placeholder = email@example.com
  *     .aria-label = Login input value
  *     .title = Type your login email
  * </pre>
- *
+ * <p>
  * In this example the {@code login-input} has three different attributes:
- * A{@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
- * </p>
+ * A {@code placeholder} attribute, {@code aria-label} attribute, and a {@code title} attribute.
  */
 public class FluentAttribute extends FluentBase {
     /**
@@ -29,7 +27,7 @@ public class FluentAttribute extends FluentBase {
      * @param identifier The information that uniquely represents the Attribute.
      * @param content    The content that needs to be parsed.
      */
-    public FluentAttribute(StringSlice identifier, StringSlice content, int whitespace) {
+    public FluentAttribute(final StringSlice identifier, final StringSlice content, final int whitespace) {
         super(identifier, content, whitespace);
     }
 

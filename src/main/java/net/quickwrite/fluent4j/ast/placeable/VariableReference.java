@@ -1,8 +1,12 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
  * Variables are pieces of data received from the app.
@@ -25,15 +29,47 @@ import net.quickwrite.fluent4j.util.StringSlice;
  *     Jane has 5 unread emails.
  * </pre>
  */
-public class VariableReference implements FluentPlaceable, FluentSelectable {
-    private final StringSlice content;
+public class VariableReference implements FluentPlaceable, FluentSelectable, FluentArgumentResult {
+    private final String content;
 
     public VariableReference(StringSlice content) {
-        this.content = content;
+        this.content = content.toString();
     }
 
     public StringSlice getContent() {
-        return this.content;
+        return new StringSlice(this.content);
+    }
+
+    @Override
+    public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
+        return selector.stringValue().equals(content);
+    }
+
+    @Override
+    public String stringValue() {
+        return content;
+    }
+
+    @Override
+    public FluentElement getArgumentResult(DirectFluentBundle bundle, final FluentArgs arguments) {
+        final FluentElement argument = arguments.getNamed(content);
+
+        if (argument == null) {
+            return new StringLiteral("{$" + content + "}");
+        }
+
+        return arguments.getNamed(content);
+    }
+
+    @Override
+    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        final FluentElement argument = arguments.getNamed(content);
+
+        if (argument == null) {
+            return "{$" + content + "}";
+        }
+
+        return argument.getResult(bundle, arguments);
     }
 
     @Override

@@ -4,22 +4,27 @@ import net.quickwrite.fluent4j.ast.placeable.*;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 
+/**
+ * A collection of different utility methods
+ * for the {@link StringSlice}.
+ */
 public final class StringSliceUtil {
-    private StringSliceUtil() {}
+    private StringSliceUtil() {
+    }
 
     /**
      * Skips whitespace in the StringSlice. <br>
-     *
+     * <p>
      * (Only includes spaces and does not consider TAB) <br>
-     *
+     * <p>
      * It is incrementing the index until there is a part of
      * the StringSlice that does have something else than
      * Whitespace.
      *
      * @return If whitespace could be skipped.
      */
-    public static int skipWhitespace(StringSlice slice) {
-        if(slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
+    public static int skipWhitespace(final StringSlice slice) {
+        if (slice.getChar() != ' ' && !(slice.getPosition() >= slice.length())) {
             return 0;
         }
 
@@ -27,25 +32,25 @@ public final class StringSliceUtil {
 
         do {
             slice.increment();
-        } while(slice.getChar() == ' ' && !(slice.getPosition() >= slice.length()));
+        } while (slice.getChar() == ' ' && !(slice.getPosition() >= slice.length()));
 
         return slice.getPosition() - start;
     }
 
     /**
      * Skips whitespace and newlines in the StringSlice.
-     *
+     * <p>
      * (Only includes spaces and newlines and does not
      * consider TAB) <br>
-     *
+     * <p>
      * It is incrementing the index until there is a part of
      * the StringSlice that does have something else than
      * Whitespace or newline.
      *
      * @return If a Newline was skipped.
      */
-    public static boolean skipWhitespaceAndNL(StringSlice slice) {
-        if(!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
+    public static boolean skipWhitespaceAndNL(final StringSlice slice) {
+        if (!(slice.getChar() == ' ' || slice.getChar() == '\n') || slice.isBigger()) {
             return false;
         }
 
@@ -56,7 +61,7 @@ public final class StringSliceUtil {
             }
 
             slice.increment();
-        } while(slice.getChar() == ' ' || slice.getChar() == '\n' && !slice.isBigger());
+        } while (slice.getChar() == ' ' || slice.getChar() == '\n' && !slice.isBigger());
 
         return andNL;
     }
@@ -108,7 +113,7 @@ public final class StringSliceUtil {
      *
      * @return The expression
      */
-    public static FluentPlaceable getExpression(StringSlice slice) {
+    public static FluentPlaceable getExpression(final StringSlice slice) {
         FluentPlaceable expression;
 
         switch (slice.getChar()) {
@@ -123,7 +128,8 @@ public final class StringSliceUtil {
                 }
 
                 if (slice.getChar() != '"') {
-                    throw new FluentParseException("String expression terminator '\"'", slice.getChar(), slice.getPosition() + 1);
+                    slice.decrement(2);
+                    throw new FluentParseException("String expression terminator '\"'", slice.getCharUTF16(), slice.getPosition() + 1);
                 }
 
                 StringSlice string = slice.substring(start, slice.getPosition());
@@ -141,7 +147,7 @@ public final class StringSliceUtil {
         return expression;
     }
 
-    private static FluentPlaceable expressionGetDefault(StringSlice slice) {
+    private static FluentPlaceable expressionGetDefault(final StringSlice slice) {
         boolean isTerm = false;
 
         if (slice.getChar() == '-') {
@@ -157,63 +163,76 @@ public final class StringSliceUtil {
             return NumberLiteral.getNumberLiteral(getNumber(slice));
         }
 
-        StringSlice msgIdentifier = getIdentifier(slice);
+        final StringSlice msgIdentifier = getIdentifier(slice);
 
-        FluentPlaceable expression;
-        if (isTerm) {
-            expression = new TermReference(msgIdentifier);
-        } else {
-            expression = new MessageReference(msgIdentifier);
+        FluentPlaceable expression = (isTerm) ? new TermReference(msgIdentifier) : new MessageReference(msgIdentifier);
+
+        skipWhitespaceAndNL(slice);
+
+        return switch (slice.getChar()) {
+            case '(' -> expressionGetFunction(slice, expression, isTerm);
+            case '.' -> expressionGetAttribute(slice, expression, isTerm);
+            default -> expression;
+        };
+
+    }
+
+    private static FluentPlaceable expressionGetFunction(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
+        slice.increment();
+
+        int start = slice.getPosition();
+
+        int open = 0;
+
+        while (!(slice.getChar() == ')' && open == 0)) {
+            if (slice.isBigger()) {
+                throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
+            }
+
+            if (slice.getChar() == '(') {
+                open++;
+            }
+
+            if (slice.getChar() == ')') {
+                open--;
+            }
+
+            slice.increment();
         }
 
-        skipWhitespace(slice);
-
-        if (slice.getChar() == '(') {
-            slice.increment();
-
-            int start = slice.getPosition();
-
-            int open = 0;
-
-            while (!(slice.getChar() == ')' && open == 0)) {
-                if (slice.isBigger()) {
-                    throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
-                }
-
-                if (slice.getChar() == '(') {
-                    open++;
-                }
-
-                if (slice.getChar() == ')') {
-                    open--;
-                }
-
-                slice.increment();
-            }
-
-            if (!isTerm) {
-                expression = new FunctionReference(
-                        expression.getContent(),
+        expression = (!isTerm) ?
+                new FunctionReference(
+                        expression.stringValue(),
+                        slice.substring(start, slice.getPosition())
+                ) :
+                new TermReference(
+                        expression.stringValue(),
                         slice.substring(start, slice.getPosition())
                 );
-            } else {
-                expression = new TermReference(
-                        expression.getContent(),
-                        slice.substring(start, slice.getPosition())
-                );
-            }
 
-            slice.increment();
+        slice.increment();
+
+        return expression;
+    }
+
+    private static FluentPlaceable expressionGetAttribute(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
+        slice.increment();
+        final StringSlice identifier = StringSliceUtil.getIdentifier(slice);
+
+        if (isTerm) {
+            expression = new AttributeReference.TermAttributeReference(expression, identifier);
+        } else {
+            expression = new AttributeReference(expression, identifier);
         }
 
         return expression;
     }
 
-    private static StringSlice getNumber(StringSlice slice) {
+    private static StringSlice getNumber(final StringSlice slice) {
         char character = slice.getChar();
         final int start = slice.getPosition();
 
-        while(character != '\0' &&
+        while (character != '\0' &&
                 Character.isDigit(character)
                 || character == '.'
                 || character == '-'
@@ -227,21 +246,21 @@ public final class StringSliceUtil {
 
     /**
      * Returns an identifier.
-     * An Identifer only starts with a character from the range
+     * An identifier only starts with a character from the range
      * {@code [a-zA-Z]} and can have any character from the range
      * {@code [a-ZA-Z0-9-_]}.
      *
      * @return The identifier as a StringSlice
      */
-    public static StringSlice getIdentifier(StringSlice slice) {
+    public static StringSlice getIdentifier(final StringSlice slice) {
         char character = slice.getChar();
         final int start = slice.getPosition();
 
         if (!Character.isAlphabetic(character)) {
-            throw new FluentParseException("character from range [a-zA-Z]", character, slice.getAbsolutePosition());
+            throw new FluentParseException("character from range [a-zA-Z]", slice.getCharUTF16(), slice.getAbsolutePosition());
         }
 
-        while(character != '\0' &&
+        while (character != '\0' &&
                 Character.isAlphabetic(character)
                 || Character.isDigit(character)
                 || character == '-'

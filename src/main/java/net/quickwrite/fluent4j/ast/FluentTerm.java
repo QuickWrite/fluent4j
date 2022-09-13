@@ -31,10 +31,13 @@ public class FluentTerm extends FluentMessage {
      * that can be queried later.
      *
      * @param identifier The information that uniquely represents the Attribute.
-     * @param content The content that needs to be parsed.
+     * @param content    The content that needs to be parsed.
      * @param attributes All of the attributes
      */
-    public FluentTerm(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes, int whitespace) {
+    public FluentTerm(final StringSlice identifier,
+                      final StringSlice content,
+                      final List<FluentAttribute> attributes,
+                      final int whitespace) {
         super(identifier, content, attributes, whitespace);
     }
 

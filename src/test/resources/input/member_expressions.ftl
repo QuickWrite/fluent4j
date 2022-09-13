@@ -12,8 +12,8 @@ term-attribute-expression-placeable = {-term.attr}
 # OK Term attributes may be used as selectors.
 term-attribute-expression-selector = {-term.attr ->
    *[key] Value
-}
+ }
 # ERROR Message attributes may not be used as selectors.
 message-attribute-expression-selector = {msg.attr ->
    *[key] Value
-}
+ }

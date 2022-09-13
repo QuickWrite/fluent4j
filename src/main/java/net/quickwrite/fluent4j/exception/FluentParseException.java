@@ -4,12 +4,20 @@ public class FluentParseException extends RuntimeException {
     public FluentParseException(String expected, String got, int index) {
         super(
                 "Expected " +
-                expected.replace("\n", "\\n") +
-                " but got " +
-                got.replace("\n", "\\n") +
-                " at " +
-                index
+                        replace(expected) +
+                        " but got " +
+                        replace(got) +
+                        " at " +
+                        index
         );
+    }
+
+    private static String replace(String input) {
+        if (input.equals(" ")) {
+            return "\" \"";
+        }
+
+        return input.replace("\n", "\\n");
     }
 
     public FluentParseException(char expected, char got, int index) {

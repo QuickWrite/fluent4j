@@ -14,11 +14,9 @@ import java.util.List;
  * </pre>
  *
  * <p>
- *     Each message has an identifier that allows the developer to bind
- *     it to the place in the software where it will be used.
- *     The above message is called {@code hello}.
- * </p>
- *
+ * Each message has an identifier that allows the developer to bind
+ * it to the place in the software where it will be used.
+ * The above message is called {@code hello}.
  */
 public class FluentMessage extends FluentBase {
     protected List<FluentAttribute> attributes;
@@ -31,13 +29,26 @@ public class FluentMessage extends FluentBase {
      * that can be queried later.
      *
      * @param identifier The information that uniquely represents the Attribute.
-     * @param content The content that needs to be parsed.
+     * @param content    The content that needs to be parsed.
      * @param attributes All of the attributes
      */
-    public FluentMessage(StringSlice identifier, StringSlice content, List<FluentAttribute> attributes, int whitespace) {
+    public FluentMessage(final StringSlice identifier,
+                         final StringSlice content,
+                         final List<FluentAttribute> attributes,
+                         final int whitespace) {
         super(identifier, content, whitespace);
 
         this.attributes = attributes;
+    }
+
+    public FluentAttribute getAttribute(final String identifier) {
+        for (final FluentAttribute attribute : this.attributes) {
+            if (attribute.getIdentifier().equals(identifier)) {
+                return attribute;
+            }
+        }
+
+        return null;
     }
 
     @Override
