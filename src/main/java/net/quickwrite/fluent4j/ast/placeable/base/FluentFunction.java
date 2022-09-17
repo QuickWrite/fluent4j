@@ -31,13 +31,13 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
             throw new FluentParseException("The callee has to be an upper-case identifier or a term");
         }
 
-        this.arguments = (content == null) ? FluentArgs.EMPTY_ARGS : this.getArguments(content);
+        this.arguments = (content == null) ? FunctionFluentArgs.EMPTY_ARGS : this.getArguments(content);
     }
 
     private FluentArgs getArguments(final StringSlice content) {
         StringSliceUtil.skipWhitespaceAndNL(content);
         if (content.isBigger()) {
-            return FluentArgs.EMPTY_ARGS;
+            return FunctionFluentArgs.EMPTY_ARGS;
         }
 
         final FunctionFluentArgs arguments = (FunctionFluentArgs) this.getFluentArgumentInstance();

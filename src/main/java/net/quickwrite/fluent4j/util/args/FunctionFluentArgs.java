@@ -4,6 +4,13 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 
 public interface FunctionFluentArgs extends FluentArgs {
     /**
+     * An initialized object that has no values
+     * so that it does not need to be created multiple
+     * times and can be easily accessed.
+     */
+    FunctionFluentArgs EMPTY_ARGS = new FunctionFluentArguments();
+
+    /**
      * Adds a new positional argument at the end.
      *
      * @param argument The argument itself
