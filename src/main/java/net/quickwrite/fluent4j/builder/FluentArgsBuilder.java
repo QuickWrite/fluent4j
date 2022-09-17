@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.functions.NumberFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
 
 /**
  * The builder class for the {@link FluentArgs} class.
@@ -45,7 +45,7 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      * </ol>
      */
     public FluentArgsBuilder() {
-        super(new ResourceFluentArguments());
+        super(new FunctionFluentArguments());
     }
 
     /**
@@ -81,46 +81,5 @@ public class FluentArgsBuilder extends AbstractBuilder<FluentArgs> {
      */
     public FluentArgsBuilder setNamed(final String key, final Number argument) {
         return this.setNamed(key, new NumberLiteral(argument));
-    }
-
-    /**
-     * Adds a positional argument to the argument list.
-     *
-     * <p>
-     * The argument will always be added at the end and cannot be rearranged.
-     *
-     * @param argument The argument itself with all of it's data
-     * @return The FluentArgsBuilder object itself
-     */
-    public FluentArgsBuilder addPositional(final FluentElement argument) {
-        this.element.addPositional(argument);
-
-        return this;
-    }
-
-    /**
-     * Adds a positional {@link String} argument to the argument list.
-     *
-     * <p>
-     * The argument will always be added at the end and cannot be rearranged.
-     *
-     * @param argument The argument itself with all of it's data
-     * @return The FluentArgsBuilder object itself
-     */
-    public FluentArgsBuilder addPositional(final String argument) {
-        return this.addPositional(new StringLiteral(argument));
-    }
-
-    /**
-     * Adds a positional {@link Number} argument to the argument list.
-     *
-     * <p>
-     * The argument will always be added at the end and cannot be rearranged.
-     *
-     * @param argument The argument itself with all of it's data
-     * @return The FluentArgsBuilder object itself
-     */
-    public FluentArgsBuilder addPositional(final Number argument) {
-        return this.addPositional(new NumberLiteral(argument));
     }
 }

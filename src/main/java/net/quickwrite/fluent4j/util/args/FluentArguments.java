@@ -12,14 +12,14 @@ import java.util.Set;
  * A storage for the named arguments without the
  * positional arguments.
  */
-public class ResourceNamedFluentArguments implements FluentArgs {
+public class FluentArguments implements FluentArgs {
     private final Map<String, FluentElement> namedArguments;
 
     /**
      * Creates a new argument container with the given
      * arguments.
      */
-    public ResourceNamedFluentArguments() {
+    public FluentArguments() {
         this(new HashMap<>());
     }
 
@@ -29,7 +29,7 @@ public class ResourceNamedFluentArguments implements FluentArgs {
      *
      * @param namedArguments The named arguments
      */
-    public ResourceNamedFluentArguments(final Map<String, FluentElement> namedArguments) {
+    public FluentArguments(final Map<String, FluentElement> namedArguments) {
         this.namedArguments = namedArguments;
     }
 
@@ -42,16 +42,6 @@ public class ResourceNamedFluentArguments implements FluentArgs {
                 namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
             }
         }
-    }
-
-    @Override
-    public FluentElement getPositional(final int index) {
-        return null;
-    }
-
-    @Override
-    public int getPositionalSize() {
-        return 0;
     }
 
     @Override
@@ -72,11 +62,6 @@ public class ResourceNamedFluentArguments implements FluentArgs {
     @Override
     public boolean isEmpty() {
         return this.namedArguments.isEmpty();
-    }
-
-    @Override
-    public void addPositional(final FluentElement argument) {
-
     }
 
     @Override

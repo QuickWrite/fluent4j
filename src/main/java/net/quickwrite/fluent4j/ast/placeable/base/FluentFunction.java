@@ -5,7 +5,8 @@ import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +40,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
             return FluentArgs.EMPTY_ARGS;
         }
 
-        final FluentArgs arguments = this.getFluentArgumentInstance();
+        final FunctionFluentArgs arguments = (FunctionFluentArgs) this.getFluentArgumentInstance();
 
         while (!content.isBigger()) {
             Pair<String, FluentElement> argument = getArgument(content);
@@ -97,7 +98,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     }
 
     protected FluentArgs getFluentArgumentInstance() {
-        return new ResourceFluentArguments();
+        return new FunctionFluentArguments();
     }
 
     /**

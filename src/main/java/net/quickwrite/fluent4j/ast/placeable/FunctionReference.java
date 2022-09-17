@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
@@ -24,7 +25,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
         try {
             return bundle
                     .getFunction(this.functionName)
-                    .getResult(bundle, this.getArguments(bundle, arguments));
+                    .getResult(bundle, (FunctionFluentArgs) this.getArguments(bundle, arguments));
         } catch (final Exception exception) {
             return new StringLiteral("{" + functionName + "()}");
         }
