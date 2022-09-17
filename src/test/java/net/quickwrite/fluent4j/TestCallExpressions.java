@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
 import org.junit.Before;
@@ -316,7 +317,7 @@ public class TestCallExpressions {
         }
 
         @Override
-        public FluentPlaceable getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        public FluentPlaceable getResult(final DirectFluentBundle bundle, final FunctionFluentArgs arguments) {
             if (arguments.isEmpty()) {
                 return new StringLiteral("{FUN(void)}");
             }
