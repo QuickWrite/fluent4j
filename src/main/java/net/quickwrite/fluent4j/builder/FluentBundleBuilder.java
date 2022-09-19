@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * The builder class for the {@link FluentBundle} class.
@@ -90,7 +91,7 @@ public class FluentBundleBuilder extends AbstractBuilder<FluentBundle> {
      *                     sequence is read
      */
     public FluentBundleBuilder(final ULocale locale, final Path path) throws IOException {
-        this(locale, Files.readString(path));
+        this(locale, new String(Objects.requireNonNull(Files.readAllBytes(path))));
     }
 
     /**

@@ -18,7 +18,7 @@ public class GetFileHelper {
     }
 
     public static FluentBundle getFluentBundle(final String filename, ULocale locale) throws IOException {
-        return new FluentBundleBuilder(locale, Files.readString(getFile(filename).toPath())).build();
+        return new FluentBundleBuilder(locale, getFile(filename).toPath()).build();
     }
 
     public static FluentBundle getFluentBundle(final String filename) throws IOException {

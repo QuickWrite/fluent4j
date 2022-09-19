@@ -11,6 +11,7 @@ import org.apache.commons.text.translate.AggregateTranslator;
 import org.apache.commons.text.translate.CharSequenceTranslator;
 import org.apache.commons.text.translate.LookupTranslator;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,9 +39,14 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
     public static final CharSequenceTranslator UNESCAPE_FLUENT;
 
     static {
+        final Map<CharSequence, CharSequence> lookupTranslator = new HashMap<>();
+
+        lookupTranslator.put("\\\\", "\\");
+        lookupTranslator.put("\\\"", "\"");
+
         UNESCAPE_FLUENT = new AggregateTranslator(
                 new FluentUnicodeTranslator(),
-                new LookupTranslator(Map.of("\\\\", "\\", "\\\"", "\""))
+                new LookupTranslator(lookupTranslator)
         );
     }
 

@@ -117,7 +117,7 @@ public final class StringSliceUtil {
         FluentPlaceable expression;
 
         switch (slice.getChar()) {
-            case '"' -> {
+            case '"':
                 slice.increment();
                 final int start = slice.getPosition();
                 while (!(slice.getChar() == '"' || slice.getChar() == '\n') && !slice.isBigger()) {
@@ -135,13 +135,16 @@ public final class StringSliceUtil {
                 StringSlice string = slice.substring(start, slice.getPosition());
                 slice.increment();
                 expression = new StringLiteral(string);
-            }
-            case '$' -> {
+
+                break;
+            case '$':
                 slice.increment();
                 final StringSlice varIdentifier = getIdentifier(slice);
                 expression = new VariableReference(varIdentifier);
-            }
-            default -> expression = expressionGetDefault(slice);
+
+                break;
+            default:
+                expression = expressionGetDefault(slice);
         }
 
         return expression;
@@ -165,16 +168,19 @@ public final class StringSliceUtil {
 
         final StringSlice msgIdentifier = getIdentifier(slice);
 
-        FluentPlaceable expression = (isTerm) ? new TermReference(msgIdentifier) : new MessageReference(msgIdentifier);
+        final FluentPlaceable expression =
+                (isTerm) ? new TermReference(msgIdentifier) : new MessageReference(msgIdentifier);
 
         skipWhitespaceAndNL(slice);
 
-        return switch (slice.getChar()) {
-            case '(' -> expressionGetFunction(slice, expression, isTerm);
-            case '.' -> expressionGetAttribute(slice, expression, isTerm);
-            default -> expression;
-        };
-
+        switch (slice.getChar()) {
+            case '(':
+                return expressionGetFunction(slice, expression, isTerm);
+            case '.':
+                return expressionGetAttribute(slice, expression, isTerm);
+            default:
+                return expression;
+        }
     }
 
     private static FluentPlaceable expressionGetFunction(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
