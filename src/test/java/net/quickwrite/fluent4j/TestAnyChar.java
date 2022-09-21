@@ -22,16 +22,16 @@ public class TestAnyChar {
 
     @Test
     public void testControl0() {
-        Assertions.assertEquals("abc\u0007def", bundle.getMessage("control0", null));
+        Assertions.assertEquals("abc\u0007def", GetFileHelper.getMessage(bundle, "control0"));
     }
 
     @Test
     public void testDelete() {
-        Assertions.assertEquals("abc\u007Fdef", bundle.getMessage("delete", null));
+        Assertions.assertEquals("abc\u007Fdef", GetFileHelper.getMessage(bundle, "delete"));
     }
 
     @Test
     public void testControl1() {
-        Assertions.assertEquals("abc\u0082def", bundle.getMessage("control1", null));
+        Assertions.assertEquals("abc\u0082def", GetFileHelper.getMessage(bundle, "control1"));
     }
 }

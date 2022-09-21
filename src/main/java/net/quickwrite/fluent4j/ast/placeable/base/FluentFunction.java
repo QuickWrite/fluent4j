@@ -5,7 +5,8 @@ import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.ResourceFluentArguments;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,16 +31,16 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
             throw new FluentParseException("The callee has to be an upper-case identifier or a term");
         }
 
-        this.arguments = (content == null) ? FluentArgs.EMPTY_ARGS : this.getArguments(content);
+        this.arguments = (content == null) ? FunctionFluentArgs.EMPTY_ARGS : this.getArguments(content);
     }
 
     private FluentArgs getArguments(final StringSlice content) {
         StringSliceUtil.skipWhitespaceAndNL(content);
         if (content.isBigger()) {
-            return FluentArgs.EMPTY_ARGS;
+            return FunctionFluentArgs.EMPTY_ARGS;
         }
 
-        final FluentArgs arguments = this.getFluentArgumentInstance();
+        final FunctionFluentArgs arguments = (FunctionFluentArgs) this.getFluentArgumentInstance();
 
         while (!content.isBigger()) {
             Pair<String, FluentElement> argument = getArgument(content);
@@ -97,7 +98,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     }
 
     protected FluentArgs getFluentArgumentInstance() {
-        return new ResourceFluentArguments();
+        return new FunctionFluentArguments();
     }
 
     /**

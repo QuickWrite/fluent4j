@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
 import org.junit.Before;
@@ -27,17 +28,17 @@ public class TestCallExpressions {
 
     @Test
     public void testValidFuncName01() {
-        Assertions.assertEquals("{FUN1()}", bundle.getMessage("valid-func-name-01", null));
+        Assertions.assertEquals("{FUN1()}", GetFileHelper.getMessage(bundle, "valid-func-name-01"));
     }
 
     @Test
     public void testValidFuncName02() {
-        Assertions.assertEquals("{FUN_FUN()}", bundle.getMessage("valid-func-name-02", null));
+        Assertions.assertEquals("{FUN_FUN()}", GetFileHelper.getMessage(bundle, "valid-func-name-02"));
     }
 
     @Test
     public void testValidFuncName03() {
-        Assertions.assertEquals("{FUN-FUN()}", bundle.getMessage("valid-func-name-03", null));
+        Assertions.assertEquals("{FUN-FUN()}", GetFileHelper.getMessage(bundle, "valid-func-name-03"));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,a,{msg},n:]",
-                bundle.getMessage("positional-args", null)
+                GetFileHelper.getMessage(bundle, "positional-args")
         );
     }
 
@@ -56,7 +57,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,y.Y,]",
-                bundle.getMessage("named-args", null)
+                GetFileHelper.getMessage(bundle, "named-args")
         );
     }
 
@@ -66,7 +67,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,y.Y,]",
-                bundle.getMessage("dense-named-args", null)
+                GetFileHelper.getMessage(bundle, "dense-named-args")
         );
     }
 
@@ -76,7 +77,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,a,{msg},n:x.1,y.Y,]",
-                bundle.getMessage("mixed-args", null)
+                GetFileHelper.getMessage(bundle, "mixed-args")
         );
     }
 
@@ -86,7 +87,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,a,{msg},n:x.1,y.Y,]",
-                bundle.getMessage("shuffled-args", null)
+                GetFileHelper.getMessage(bundle, "shuffled-args")
         );
     }
 
@@ -96,7 +97,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.X,]",
-                bundle.getMessage("duplicate-named-args", null)
+                GetFileHelper.getMessage(bundle, "duplicate-named-args")
         );
     }
 
@@ -106,7 +107,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:a,{msg},n:x.1,]",
-                bundle.getMessage("sparse-inline-call", null)
+                GetFileHelper.getMessage(bundle, "sparse-inline-call")
         );
     }
 
@@ -116,7 +117,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "{FUN(void)}",
-                bundle.getMessage("empty-inline-call", null)
+                GetFileHelper.getMessage(bundle, "empty-inline-call")
         );
     }
 
@@ -126,7 +127,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:a,{msg},n:x.1,]",
-                bundle.getMessage("multiline-call", null)
+                GetFileHelper.getMessage(bundle, "multiline-call")
         );
     }
 
@@ -136,7 +137,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:a,{msg},n:x.1,]",
-                bundle.getMessage("sparse-multiline-call", null)
+                GetFileHelper.getMessage(bundle, "sparse-multiline-call")
         );
     }
 
@@ -146,7 +147,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "{FUN(void)}",
-                bundle.getMessage("empty-multiline-call", null)
+                GetFileHelper.getMessage(bundle, "empty-multiline-call")
         );
     }
 
@@ -156,7 +157,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,n:]",
-                bundle.getMessage("unindented-arg-number", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-number")
         );
     }
 
@@ -166,7 +167,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:a,n:]",
-                bundle.getMessage("unindented-arg-string", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-string")
         );
     }
 
@@ -176,7 +177,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:{msg},n:]",
-                bundle.getMessage("unindented-arg-msg-ref", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-msg-ref")
         );
     }
 
@@ -186,7 +187,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:{-msg},n:]",
-                bundle.getMessage("unindented-arg-term-ref", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-term-ref")
         );
     }
 
@@ -196,7 +197,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:{$var},n:]",
-                bundle.getMessage("unindented-arg-var-ref", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-var-ref")
         );
     }
 
@@ -206,7 +207,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:{OTHER()},n:]",
-                bundle.getMessage("unindented-arg-call", null)
+                GetFileHelper.getMessage(bundle, "unindented-arg-call")
         );
     }
 
@@ -216,7 +217,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,]",
-                bundle.getMessage("unindented-named-arg", null)
+                GetFileHelper.getMessage(bundle, "unindented-named-arg")
         );
     }
 
@@ -226,7 +227,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:{x},n:]",
-                bundle.getMessage("unindented-closing-paren", null)
+                GetFileHelper.getMessage(bundle, "unindented-closing-paren")
         );
     }
 
@@ -236,7 +237,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,n:]",
-                bundle.getMessage("one-argument", null)
+                GetFileHelper.getMessage(bundle, "one-argument")
         );
     }
 
@@ -246,7 +247,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,2,3,n:]",
-                bundle.getMessage("many-arguments", null)
+                GetFileHelper.getMessage(bundle, "many-arguments")
         );
     }
 
@@ -256,7 +257,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,2,3,n:]",
-                bundle.getMessage("inline-sparse-args", null)
+                GetFileHelper.getMessage(bundle, "inline-sparse-args")
         );
     }
 
@@ -266,7 +267,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,2,n:]",
-                bundle.getMessage("mulitline-args", null)
+                GetFileHelper.getMessage(bundle, "mulitline-args")
         );
     }
 
@@ -276,7 +277,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:1,2,n:]",
-                bundle.getMessage("mulitline-sparse-args", null)
+                GetFileHelper.getMessage(bundle, "mulitline-sparse-args")
         );
     }
 
@@ -286,7 +287,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,y.2,z.3,]",
-                bundle.getMessage("sparse-named-arg", null)
+                GetFileHelper.getMessage(bundle, "sparse-named-arg")
         );
     }
 
@@ -296,7 +297,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,]",
-                bundle.getMessage("unindented-colon", null)
+                GetFileHelper.getMessage(bundle, "unindented-colon")
         );
     }
 
@@ -306,7 +307,7 @@ public class TestCallExpressions {
 
         Assertions.assertEquals(
                 "[p:n:x.1,]",
-                bundle.getMessage("unindented-value", null)
+                GetFileHelper.getMessage(bundle, "unindented-value")
         );
     }
 
@@ -316,7 +317,7 @@ public class TestCallExpressions {
         }
 
         @Override
-        public FluentPlaceable getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        public FluentPlaceable getResult(final DirectFluentBundle bundle, final FunctionFluentArgs arguments) {
             if (arguments.isEmpty()) {
                 return new StringLiteral("{FUN(void)}");
             }

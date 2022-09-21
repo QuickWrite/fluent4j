@@ -52,20 +52,21 @@ objects by yourself:
 FluentResource resource = FluentParser.parse("emails = You have { $unreadEmails } unread emails.");
 FluentBundle bundle = new ResourceFluentBundle(ULocale.ENGLISH, resource);
 
-FluentArgs arguments = new ResourceFluentArguments();
+FluentArgs arguments = new FluentArguments();
 arguments.setNamed("unreadEmails", new NumberLiteral(10));
 
-System.out.println(bundle.getMessage("emails", arguments));
+System.out.println(bundle.getMessage("emails", arguments).get());
 ```
 
 or you could use the builders that the library provides for this:
 
 ```java
 FluentBundle bundle = new FluentBundleBuilder(ULocale.ENGLISH, "emails = You have { $unreadEmails } unread emails.")
-                          .build();
-FluentArgs arguments = new FluentArgsBuilder().setNamed("unreadEmails", 10).build();
+        .build();
 
-System.out.println(bundle.getMessage("emails", arguments));
+FluentArgs arguments = new FluentArgsBuilder().set("unreadEmails", 10).build();
+
+System.out.println(bundle.getMessage("emails", arguments).get());
 ```
 
 In both cases they would print the message `You have 10 unread emails.`.

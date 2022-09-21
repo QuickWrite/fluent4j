@@ -10,10 +10,7 @@ import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Bundles are single-language stores of translations. They are
@@ -97,8 +94,8 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     }
 
     @Override
-    public AbstractFunction getFunction(final String key) {
-        return this.functions.get(key);
+    public Optional<AbstractFunction> getFunction(final String key) {
+        return Optional.ofNullable(this.functions.get(key));
     }
 
     @Override
@@ -107,14 +104,14 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     }
 
     @Override
-    public String getMessage(final String key, final FluentArgs arguments) {
+    public Optional<String> getMessage(final String key, final FluentArgs arguments) {
         final FluentMessage message = this.getMessage(key);
 
         if (message == null) {
-            return "{" + key + "}";
+            return Optional.empty();
         }
 
-        return message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS).toString();
+        return Optional.of(message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS).toString());
     }
 
     @Override

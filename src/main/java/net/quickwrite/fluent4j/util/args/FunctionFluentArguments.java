@@ -11,7 +11,7 @@ import java.util.*;
  * are used as the parameters when a message, term or a function
  * is getting accessed.
  */
-public class ResourceFluentArguments implements FluentArgs {
+public class FunctionFluentArguments implements FunctionFluentArgs {
     private final Map<String, FluentElement> namedArguments;
     private final List<FluentElement> positionalArguments;
 
@@ -19,7 +19,7 @@ public class ResourceFluentArguments implements FluentArgs {
      * Creates a new empty argument
      * container.
      */
-    public ResourceFluentArguments() {
+    public FunctionFluentArguments() {
         this(new HashMap<>(), new ArrayList<>());
     }
 
@@ -30,7 +30,7 @@ public class ResourceFluentArguments implements FluentArgs {
      * @param namedArguments The named arguments
      * @param positionalArguments The positional arguments
      */
-    public ResourceFluentArguments(final Map<String, FluentElement> namedArguments, final List<FluentElement> positionalArguments) {
+    public FunctionFluentArguments(final Map<String, FluentElement> namedArguments, final List<FluentElement> positionalArguments) {
         this.namedArguments = namedArguments;
         this.positionalArguments = positionalArguments;
     }

@@ -11,7 +11,7 @@ public interface FluentArgs {
      * so that it does not need to be created multiple
      * times and can be easily accessed.
      */
-    FluentArgs EMPTY_ARGS = new ResourceFluentArguments();
+    FluentArgs EMPTY_ARGS = new FluentArguments();
 
     /**
      * Changes the way some values point so that there are no
@@ -25,23 +25,6 @@ public interface FluentArgs {
      * @param arguments The old arguments
      */
     void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments);
-
-    /**
-     * Returns the {@link FluentElement} with the given
-     * position in the positional arguments.
-     *
-     * @param index The position the argument has
-     * @return The argument itself
-     */
-    FluentElement getPositional(final int index);
-
-    /**
-     * Returns the amount of positional
-     * parameters the object has.
-     *
-     * @return The amount of positional parameters
-     */
-    int getPositionalSize();
 
     /**
      * Adds a new named argument to the named arguments.
@@ -76,11 +59,4 @@ public interface FluentArgs {
      * @return if no argument exist
      */
     boolean isEmpty();
-
-    /**
-     * Adds a new positional argument at the end.
-     *
-     * @param argument The argument itself
-     */
-    void addPositional(final FluentElement argument);
 }

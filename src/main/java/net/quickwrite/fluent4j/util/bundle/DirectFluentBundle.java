@@ -6,7 +6,7 @@ import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
-public interface DirectFluentBundle {
+public interface DirectFluentBundle extends FluentBundle {
     /**
      * Returns the {@link FluentTerm} that is being stored
      * for the {@code key}.
@@ -41,10 +41,4 @@ public interface DirectFluentBundle {
      * @return The message itself
      */
     FluentMessage getMessage(final String key);
-
-    String getMessage(final String key, final FluentArgs arguments);
-
-    AbstractFunction getFunction(final String key);
-
-    ULocale getLocale();
 }
