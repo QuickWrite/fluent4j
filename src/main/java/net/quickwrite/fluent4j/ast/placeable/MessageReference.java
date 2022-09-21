@@ -6,7 +6,6 @@ import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
-import java.util.function.Supplier;
 
 /**
  * A use-case for placeables is referencing one message in another one.
