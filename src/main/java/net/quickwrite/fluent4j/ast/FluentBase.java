@@ -207,6 +207,10 @@ public abstract class FluentBase implements FluentElement {
 
     @Override
     public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+        if (this.fluentElements.size() == 1) {
+            return this.fluentElements.get(0).getResult(bundle, arguments);
+        }
+
         final StringBuilder builder = new StringBuilder();
 
         for (final FluentElement element : this.fluentElements) {
