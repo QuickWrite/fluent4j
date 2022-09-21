@@ -24,4 +24,8 @@ public class GetFileHelper {
     public static FluentBundle getFluentBundle(final String filename) throws IOException {
         return getFluentBundle(filename, ULocale.ENGLISH);
     }
+
+    public static String getMessage(final FluentBundle bundle, final String key) {
+        return bundle.getMessage(key, null).orElseThrow();
+    }
 }

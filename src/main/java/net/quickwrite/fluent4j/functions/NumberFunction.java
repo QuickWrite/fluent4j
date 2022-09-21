@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.functions;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
@@ -73,7 +74,7 @@ public class NumberFunction extends AbstractFunction {
      * @return The number as a {@link CustomNumberLiteral} with the parameters
      */
     @Override
-    public FluentPlaceable getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public FluentPlaceable getResult(final DirectFluentBundle bundle, final FunctionFluentArgs arguments) {
         final FluentElement number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;
