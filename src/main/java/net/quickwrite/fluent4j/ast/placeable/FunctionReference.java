@@ -25,6 +25,7 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
         try {
             return bundle
                     .getFunction(this.functionName)
+                    .orElseThrow()
                     .getResult(bundle, (FunctionFluentArgs) this.getArguments(bundle, arguments));
         } catch (final Exception exception) {
             return new StringLiteral("{" + functionName + "()}");

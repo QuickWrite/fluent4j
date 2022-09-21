@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FluentBundle {
     /**
@@ -45,7 +46,7 @@ public interface FluentBundle {
      * @param key the key that the function is stored in
      * @return The function
      */
-    AbstractFunction getFunction(final String key);
+    Optional<AbstractFunction> getFunction(final String key);
 
     /**
      * Checks if a message with the {@code key}
@@ -90,7 +91,7 @@ public interface FluentBundle {
      * @param arguments The arguments that should be passed on
      * @return The generated string
      */
-    String getMessage(final String key, final FluentArgs arguments);
+    Optional<String> getMessage(final String key, final FluentArgs arguments);
 
     /**
      * Returns the locale the bundle has.
