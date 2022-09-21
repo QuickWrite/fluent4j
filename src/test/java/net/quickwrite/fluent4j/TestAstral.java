@@ -22,36 +22,36 @@ public class TestAstral {
 
     @Test
     public void testFaceWithTearsOfJoy() {
-        Assertions.assertEquals("\uD83D\uDE02", bundle.getMessage("face-with-tears-of-joy", null));
+        Assertions.assertEquals("\uD83D\uDE02", GetFileHelper.getMessage(bundle, "face-with-tears-of-joy"));
     }
 
     @Test
     public void testTetragramForCentre() {
-        Assertions.assertEquals("\uD834\uDF06", bundle.getMessage("tetragram-for-centre", null));
+        Assertions.assertEquals("\uD834\uDF06", GetFileHelper.getMessage(bundle, "tetragram-for-centre"));
     }
 
     @Test
     public void testSurrogatesInText() {
-        Assertions.assertEquals("\\uD83D\\uDE02", bundle.getMessage("surrogates-in-text", null));
+        Assertions.assertEquals("\\uD83D\\uDE02", GetFileHelper.getMessage(bundle, "surrogates-in-text"));
     }
 
     @Test
     public void testSurrogatesInString() {
-        Assertions.assertEquals("\uD83D\uDE02", bundle.getMessage("surrogates-in-string", null));
+        Assertions.assertEquals("\uD83D\uDE02", GetFileHelper.getMessage(bundle, "surrogates-in-string"));
     }
 
     @Test
     public void testSurrogatesInAdjacentStrings() {
-        Assertions.assertEquals("\uD83D\uDE02", bundle.getMessage("surrogates-in-adjacent-strings", null));
+        Assertions.assertEquals("\uD83D\uDE02", GetFileHelper.getMessage(bundle, "surrogates-in-adjacent-strings"));
     }
 
     @Test
     public void testEmojiInText() {
-        Assertions.assertEquals("A face \uD83D\uDE02 with tears of joy.", bundle.getMessage("emoji-in-text", null));
+        Assertions.assertEquals("A face \uD83D\uDE02 with tears of joy.", GetFileHelper.getMessage(bundle, "emoji-in-text"));
     }
 
     @Test
     public void testEmojiInString() {
-        Assertions.assertEquals("A face \uD83D\uDE02 with tears of joy.", bundle.getMessage("emoji-in-string", null));
+        Assertions.assertEquals("A face \uD83D\uDE02 with tears of joy.", GetFileHelper.getMessage(bundle, "emoji-in-string"));
     }
 }
