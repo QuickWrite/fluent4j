@@ -6,7 +6,7 @@
 
     <groupId>net.quickwrite</groupId>
     <artifactId>fluent4j</artifactId>
-    <version>0.1.0-alpha</version>
+    <version>0.2.0-alpha</version>
     <build>
         <plugins>
             <plugin>
