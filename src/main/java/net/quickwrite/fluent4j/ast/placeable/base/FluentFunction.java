@@ -93,7 +93,9 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @return The sanitized arguments of the function
      */
     protected FluentArgs getArguments(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        this.arguments.sanitize(bundle, arguments);
+        if (this.arguments != null)
+            this.arguments.sanitize(bundle, arguments);
+
         return this.arguments;
     }
 
