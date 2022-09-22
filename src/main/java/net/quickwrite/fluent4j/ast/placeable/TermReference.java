@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FluentArguments;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 
 /**
@@ -30,8 +29,8 @@ public class TermReference extends FluentFunction {
         super(name, null);
     }
 
-    public TermReference(final String name, final StringSlice content) {
-        super(name, content);
+    public TermReference(final String name, final FluentArgs arguments) {
+        super(name, arguments);
     }
 
     @Override
@@ -58,11 +57,6 @@ public class TermReference extends FluentFunction {
         }
 
         return term;
-    }
-
-    @Override
-    protected FluentArgs getFluentArgumentInstance() {
-        return new FluentArguments();
     }
 
     @Override

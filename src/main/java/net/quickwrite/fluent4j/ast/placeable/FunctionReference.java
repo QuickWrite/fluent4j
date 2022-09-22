@@ -16,8 +16,8 @@ import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
  */
 public class FunctionReference extends FluentFunction implements FluentSelectable {
 
-    public FunctionReference(final String functionName, final StringSlice content) {
-        super(functionName, content);
+    public FunctionReference(final String functionName, final FluentArgs arguments) {
+        super(functionName, arguments);
     }
 
     @Override
