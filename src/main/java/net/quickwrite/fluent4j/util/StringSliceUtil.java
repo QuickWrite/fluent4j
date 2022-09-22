@@ -206,7 +206,15 @@ public final class StringSliceUtil {
         final StringSlice identifier = StringSliceUtil.getIdentifier(slice);
 
         if (isTerm) {
-            expression = new AttributeReference.TermAttributeReference(expression, identifier);
+            skipWhitespaceAndNL(slice);
+            FluentArgs arguments = null;
+
+            if (slice.getChar() == '(') {
+                slice.increment();
+                arguments = parseArguments(slice);
+                slice.increment();
+            }
+            expression = new AttributeReference.TermAttributeReference(expression, identifier, arguments);
         } else {
             expression = new AttributeReference(expression, identifier);
         }
