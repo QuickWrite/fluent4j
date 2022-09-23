@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Parses a String into a FluentResource so that it can be queried.
@@ -226,8 +227,14 @@ public abstract class FluentParser {
         }
     }
 
+    private final static Pattern stringConverter;
+
+    static {
+        stringConverter = Pattern.compile("(\\r\\n|\\r|\\f)+");
+    }
+
     private static StringSlice convertString(final String input) {
-        return new StringSlice(input.replace("\r", ""));
+        return new StringSlice(stringConverter.matcher(input).replaceAll("\n"));
     }
 
     /**
