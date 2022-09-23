@@ -1,8 +1,14 @@
 package net.quickwrite.fluent4j.util;
 
+import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.*;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
+import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
+import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * A collection of different utility methods
@@ -180,34 +186,14 @@ public final class StringSliceUtil {
     private static FluentPlaceable expressionGetFunction(final StringSlice slice, FluentPlaceable expression, final boolean isTerm) {
         slice.increment();
 
-        int start = slice.getPosition();
-
-        int open = 0;
-
-        while (!(slice.getChar() == ')' && open == 0)) {
-            if (slice.isBigger()) {
-                throw new FluentParseException(")", "EOF", slice.getAbsolutePosition());
-            }
-
-            if (slice.getChar() == '(') {
-                open++;
-            }
-
-            if (slice.getChar() == ')') {
-                open--;
-            }
-
-            slice.increment();
-        }
-
         expression = (!isTerm) ?
                 new FunctionReference(
                         expression.stringValue(),
-                        slice.substring(start, slice.getPosition())
+                        parseArguments(slice)
                 ) :
                 new TermReference(
                         expression.stringValue(),
-                        slice.substring(start, slice.getPosition())
+                        parseArguments(slice)
                 );
 
         slice.increment();
@@ -220,12 +206,72 @@ public final class StringSliceUtil {
         final StringSlice identifier = StringSliceUtil.getIdentifier(slice);
 
         if (isTerm) {
-            expression = new AttributeReference.TermAttributeReference(expression, identifier);
+            skipWhitespaceAndNL(slice);
+            FluentArgs arguments = null;
+
+            if (slice.getChar() == '(') {
+                slice.increment();
+                arguments = parseArguments(slice);
+                slice.increment();
+            }
+            expression = new AttributeReference.TermAttributeReference(expression, identifier, arguments);
         } else {
             expression = new AttributeReference(expression, identifier);
         }
 
         return expression;
+    }
+
+    private static FluentArgs parseArguments(final StringSlice content) {
+        if (content == null) {
+            return FluentArgs.EMPTY_ARGS;
+        }
+
+        StringSliceUtil.skipWhitespaceAndNL(content);
+        if (content.isBigger()) {
+            return FunctionFluentArgs.EMPTY_ARGS;
+        }
+
+        final FunctionFluentArgs arguments = new FunctionFluentArguments();
+
+        while (!content.isBigger() && content.getChar() != ')') {
+            Pair<String, FluentElement> argument = getArgument(content);
+
+            if (argument.getLeft() != null) {
+                arguments.setNamed(argument.getLeft(), argument.getRight());
+            } else {
+                arguments.addPositional(argument.getRight());
+            }
+
+            StringSliceUtil.skipWhitespaceAndNL(content);
+
+            if (content.getChar() != ',') {
+                break;
+            }
+            content.increment();
+
+            StringSliceUtil.skipWhitespaceAndNL(content);
+        }
+
+        return arguments;
+    }
+
+    private static Pair<String, FluentElement> getArgument(final StringSlice content) {
+        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
+        String identifier = null;
+
+        StringSliceUtil.skipWhitespaceAndNL(content);
+
+        if (content.getChar() == ':') {
+            content.increment();
+            StringSliceUtil.skipWhitespaceAndNL(content);
+
+            identifier = placeable.stringValue();
+
+            placeable = StringSliceUtil.getExpression(content);
+        }
+
+        return new ImmutablePair<>(identifier, placeable);
     }
 
     private static StringSlice getNumber(final StringSlice slice) {
