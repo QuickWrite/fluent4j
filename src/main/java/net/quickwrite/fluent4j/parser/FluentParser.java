@@ -1,5 +1,9 @@
 package net.quickwrite.fluent4j.parser;
 
+import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
+import net.quickwrite.fluent4j.exception.FluentSelectException;
 import net.quickwrite.fluent4j.util.bundle.FluentResource;
 import net.quickwrite.fluent4j.util.bundle.SimpleFluentResource;
 import net.quickwrite.fluent4j.ast.*;
@@ -31,20 +35,20 @@ public abstract class FluentParser {
      *
      * @return FluentResource
      */
-    public static FluentResource parse(final String content) {
-        final StringSlice input = convertString(content);
+    public static FluentResource parse(final String input) {
+        final StringSlice content = convertString(input);
 
         List<FluentElement> elementList = new ArrayList<>();
         List<FluentParseException> exceptionList = new LinkedList<>();
 
-        while (input.length() >= input.length()) {
-            if (input.getChar() == '#') {
-                handleComment(input);
+        while (content.length() >= content.length()) {
+            if (content.getChar() == '#') {
+                handleComment(content);
                 continue;
             }
 
             try {
-                FluentBase fluentBase = getBase(input);
+                FluentBase fluentBase = getBase(content);
 
                 if (fluentBase != null) {
                     elementList.add(fluentBase);
@@ -55,48 +59,48 @@ public abstract class FluentParser {
                 continue;
             }
 
-            int startSkip = input.getPosition();
-            StringSliceUtil.skipWhitespaceAndNL(input);
+            int startSkip = content.getPosition();
+            StringSliceUtil.skipWhitespaceAndNL(content);
 
-            if (startSkip == input.getPosition()) {
-                if (input.getChar() == '\n' || input.getChar() == ' ' || input.getChar() == '\0') {
+            if (startSkip == content.getPosition()) {
+                if (content.getChar() == '\n' || content.getChar() == ' ' || content.getChar() == '\0') {
                     break;
                 }
-                exceptionList.add(new FluentParseException("an entry start", input.getCharUTF16(), input.getPosition()));
+                exceptionList.add(new FluentParseException("an entry start", content.getCharUTF16(), content.getPosition()));
 
-                while (input.getChar() != '\n' && !input.isBigger()) {
-                    input.increment();
+                while (content.getChar() != '\n' && !content.isBigger()) {
+                    content.increment();
                 }
             }
         }
 
-        input.setIndex(0);
+        content.setIndex(0);
 
         return new SimpleFluentResource(elementList, exceptionList);
     }
 
-    private static FluentBase getBase(final StringSlice input) {
+    private static FluentBase getBase(final StringSlice content) {
         boolean isIdentifier = false;
 
-        if (input.getChar() == '-') {
-            input.increment();
+        if (content.getChar() == '-') {
+            content.increment();
 
             isIdentifier = true;
-        } else if (!Character.isAlphabetic(input.getChar())) {
+        } else if (!Character.isAlphabetic(content.getChar())) {
             return null;
         }
 
-        StringSlice identifier = StringSliceUtil.getIdentifier(input);
+        StringSlice identifier = StringSliceUtil.getIdentifier(content);
 
-        StringSliceUtil.skipWhitespace(input);
+        StringSliceUtil.skipWhitespace(content);
 
-        if (input.getChar() != '=') {
-            throw new FluentParseException('=', input.getCharUTF16(), input.getAbsolutePosition());
+        if (content.getChar() != '=') {
+            throw new FluentParseException('=', content.getCharUTF16(), content.getAbsolutePosition());
         }
 
-        input.increment();
+        content.increment();
 
-        final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent(input);
+        final Pair<Pair<StringSlice, Integer>, List<FluentAttribute>> pair = getContent(content);
 
         if (!isIdentifier) {
             // must be a Message
@@ -107,9 +111,9 @@ public abstract class FluentParser {
         }
     }
 
-    private static void handleComment(final StringSlice input) {
-        while (input.getChar() != '\n' && input.getChar() != '\0') {
-            input.increment();
+    private static void handleComment(final StringSlice content) {
+        while (content.getChar() != '\n' && content.getChar() != '\0') {
+            content.increment();
         }
     }
 
@@ -137,49 +141,167 @@ public abstract class FluentParser {
         return new ImmutablePair<>(content, attributes);
     }
 
-    private static Pair<StringSlice, Integer> getMessageContent(final StringSlice input) {
-        return getMessageContent(input, character -> character == '.');
+    private static Pair<StringSlice, Integer> getMessageContent(final StringSlice content) {
+        return getMessageContent(content, character -> character == '.');
     }
 
-    public static Pair<StringSlice, Integer> getMessageContent(final StringSlice input, final BreakChecker breaker) {
-        StringSliceUtil.skipWhitespace(input);
-        final int start = input.getPosition();
+    public static Pair<StringSlice, Integer> getMessageContent(final StringSlice content, final BreakChecker breaker) {
+        StringSliceUtil.skipWhitespace(content);
+        final int start = content.getPosition();
         int lastWhitespace = start;
         boolean first = true;
         int leadingWhitespace = Integer.MAX_VALUE;
 
         do {
-            int whitespace = StringSliceUtil.skipWhitespace(input);
+            int whitespace = StringSliceUtil.skipWhitespace(content);
             if (!first && whitespace < leadingWhitespace && whitespace != 0) {
                 leadingWhitespace = whitespace;
             }
 
-            if (!first && breaker.isEndCharacter(input.getChar())) {
+            if (!first && breaker.isEndCharacter(content.getChar())) {
                 break;
             }
 
             first = false;
 
-            while (input.getChar() != '\n' && input.getChar() != '\0') {
-                if (input.getChar() == '{') {
-                    input.increment();
-                    StringSliceUtil.getExpression(input);
+            while (content.getChar() != '\n' && content.getChar() != '\0') {
+                if (content.getChar() == '{') {
+                    getPlaceable(content);
                 }
 
-                if (input.getChar() != ' ') {
-                    lastWhitespace = input.getPosition();
+                if (content.getChar() != ' ') {
+                    lastWhitespace = content.getPosition();
                 }
 
-                input.increment();
+                content.increment();
             }
-            input.increment();
-        } while (input.getChar() == ' ' || input.getChar() == '\n');
+            content.increment();
+        } while (content.getChar() == ' ' || content.getChar() == '\n');
 
         if (leadingWhitespace == Integer.MAX_VALUE) {
             leadingWhitespace = 0;
         }
 
-        return new ImmutablePair<>(input.substring(start, lastWhitespace + 1), leadingWhitespace);
+        return new ImmutablePair<>(content.substring(start, lastWhitespace + 1), leadingWhitespace);
+    }
+
+    public static FluentPlaceable getPlaceable(final StringSlice content) {
+        content.increment();
+        StringSliceUtil.skipWhitespaceAndNL(content);
+
+        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
+
+        boolean canSelect = placeable instanceof FluentSelectable;
+
+        StringSliceUtil.skipWhitespaceAndNL(content);
+
+        if (canSelect && content.getChar() == '-') {
+            content.increment();
+            if (content.getChar() != '>') {
+                throw new FluentParseException("->", "-" + content.getCharUTF16(), content.getAbsolutePosition());
+            }
+
+            content.increment();
+
+            StringSliceUtil.skipWhitespaceAndNL(content);
+
+            List<FluentVariant> fluentVariants = new ArrayList<>();
+            FluentVariant defaultVariant = null;
+
+            while (content.getChar() != '}') {
+                Pair<FluentVariant, Boolean> variant = getVariant(content);
+
+                fluentVariants.add(variant.getLeft());
+
+                if (!variant.getRight()) {
+                    continue;
+                }
+
+                if (defaultVariant != null) {
+                    throw new FluentSelectException("Only one variant can be marked as default (*)");
+                }
+
+                defaultVariant = variant.getLeft();
+            }
+
+            if (defaultVariant == null) {
+                throw new FluentSelectException("Expected one of the variants to be marked as default (*)");
+            }
+
+            placeable = new SelectExpression(placeable, fluentVariants, defaultVariant);
+        }
+
+        StringSliceUtil.skipWhitespaceAndNL(content);
+
+        return placeable;
+    }
+
+    private static Pair<FluentVariant, Boolean> getVariant(final StringSlice content) {
+        StringSliceUtil.skipWhitespaceAndNL(content);
+
+        boolean isDefault = false;
+
+        if (content.getChar() == '*') {
+            isDefault = true;
+            content.increment();
+        }
+
+        if (content.getChar() != '[') {
+            throw new FluentParseException('[', content.getCharUTF16(), content.getAbsolutePosition());
+        }
+
+        content.increment();
+
+        StringSliceUtil.skipWhitespace(content);
+
+        StringSlice identifier = getVariantIdentifier(content);
+
+        StringSliceUtil.skipWhitespace(content);
+
+        if (content.getChar() != ']') {
+            throw getVariantException(content, identifier.toString(), "]");
+        }
+
+        content.increment();
+
+        final Pair<StringSlice, Integer> stringSliceContent = FluentParser.getMessageContent(content,
+                character -> character == '[' || character == '*' || character == '}');
+
+        final FluentAttribute attribute = new FluentAttribute(
+                identifier,
+                stringSliceContent.getLeft(),
+                stringSliceContent.getRight()
+        );
+
+        return new ImmutablePair<>(new FluentVariant(attribute), isDefault);
+    }
+
+    private static StringSlice getVariantIdentifier(final StringSlice content) {
+        char character = content.getChar();
+        final int start = content.getPosition();
+
+        while (character != ' '
+                && character != '\n'
+                && character != ']'
+                && character != '\0'
+        ) {
+            content.increment();
+            character = content.getChar();
+        }
+
+        return content.substring(start, content.getPosition());
+    }
+
+    private static FluentParseException getVariantException(final StringSlice content, final String prev, final String expected) {
+        int start = content.getPosition();
+
+        while (content.getChar() != ']' && !content.isBigger()) {
+            content.increment();
+        }
+
+        return new FluentParseException(expected,
+                prev + content.substring(start, content.getPosition()).toString(),
+                content.getAbsolutePosition());
     }
 
     private final static Pattern stringConverter;
