@@ -55,7 +55,7 @@ public abstract class FluentBase implements FluentElement {
             } else {
                 FluentTextElement text = getText(content, firstLine);
 
-                if (text != null) {
+                if (text != null && !text.isEmpty()) {
                     elements.add(text);
                 }
             }

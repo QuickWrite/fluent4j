@@ -126,12 +126,7 @@ public final class StringSliceUtil {
             case '"' -> {
                 slice.increment();
                 final int start = slice.getPosition();
-                while (!(slice.getChar() == '"' || slice.getChar() == '\n') && !slice.isBigger()) {
-                    if (slice.getChar() == '\\' && slice.peek(1) == '"')
-                        slice.increment();
-
-                    slice.increment();
-                }
+                skipStringLiteral(slice);
 
                 if (slice.getChar() != '"') {
                     slice.decrement(2);
@@ -151,6 +146,16 @@ public final class StringSliceUtil {
         }
 
         return expression;
+    }
+
+    public static void skipStringLiteral(final StringSlice slice) {
+        while (!(slice.getChar() == '"' || slice.getChar() == '\n') && !slice.isBigger()) {
+            final char peek = slice.peek(1);
+            if (slice.getChar() == '\\' && (peek == '"' || peek == '\\'))
+                slice.increment();
+
+            slice.increment();
+        }
     }
 
     private static FluentPlaceable expressionGetDefault(final StringSlice slice) {

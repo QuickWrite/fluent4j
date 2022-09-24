@@ -162,7 +162,8 @@ public abstract class FluentParser {
 
             while (input.getChar() != '\n' && input.getChar() != '\0') {
                 if (input.getChar() == '{') {
-                    skipPlaceable(input);
+                    input.increment();
+                    StringSliceUtil.getExpression(input);
                 }
 
                 if (input.getChar() != ' ') {
@@ -179,52 +180,6 @@ public abstract class FluentParser {
         }
 
         return new ImmutablePair<>(input.substring(start, lastWhitespace + 1), leadingWhitespace);
-    }
-
-    private static void skipPlaceable(final StringSlice input) {
-        input.increment();
-
-        int openCurly = 1;
-        boolean justWhitespace = true;
-
-        while (!input.isBigger()) {
-            char character = input.getChar();
-
-            switch (character) {
-                case '"':
-                    if (!justWhitespace) break;
-
-                    character = input.getChar();
-                    input.increment();
-
-                    while (!(input.getChar() == '"' && character != '\\') && input.getChar() != '\n' && !input.isBigger()) {
-                        character = input.getChar();
-                        input.increment();
-                    }
-
-                    break;
-                case '{':
-                    openCurly++;
-
-                    justWhitespace = true;
-
-                    break;
-                case '}':
-                    openCurly--;
-
-                    if (openCurly == 0) {
-                        return;
-                    }
-
-                    break;
-                default:
-                    if (!Character.isWhitespace(character)) {
-                        justWhitespace = false;
-                    }
-            }
-
-            input.increment();
-        }
     }
 
     private final static Pattern stringConverter;

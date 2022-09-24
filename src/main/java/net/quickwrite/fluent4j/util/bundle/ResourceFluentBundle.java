@@ -128,4 +128,15 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     public List<FluentParseException> getExceptionList() {
         return this.exceptionList;
     }
+
+    @Override
+    public String toString() {
+        return "ResourceFluentBundle: {\n" +
+                "\tlocale: " + this.locale + "\n" +
+                "\tterms: [\n\t\t" + this.terms + "\n\t]\n" +
+                "\tmessages: [\n\t\t" + this.messages + "\n\t]\n" +
+                "\tfunctions: [\n\t\t" + this.functions + "\n\t]\n" +
+                "\texceptions: [\n\t\t" + this.exceptionList + "\n\t]\n" +
+                "}";
+    }
 }
