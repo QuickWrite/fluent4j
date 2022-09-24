@@ -150,12 +150,12 @@ public abstract class FluentParser {
 
         do {
             int whitespace = StringSliceUtil.skipWhitespace(content);
-            if (!first && whitespace < leadingWhitespace && whitespace != 0) {
-                leadingWhitespace = whitespace;
-            }
-
             if (!first && breaker.isEndCharacter(content.getChar())) {
                 break;
+            }
+
+            if (!first && whitespace < leadingWhitespace && whitespace != 0) {
+                leadingWhitespace = whitespace;
             }
 
             first = false;
