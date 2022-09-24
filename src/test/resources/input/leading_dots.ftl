@@ -50,27 +50,14 @@ key15 =
             {"."}Value
     }
 
-# JUNK (variant must have a value)
 key16 =
     { 1 ->
        *[one]
            .Value
     }
 
-# JUNK (unclosed placeable)
 key17 =
     { 1 ->
        *[one] Value
            .Continued
     }
-
-# JUNK (attr .Value must have a value)
-key18 =
-.Value
-
-key19 =
-.attribute = Value
-    Continued
-
-key20 =
-{"."}Value
