@@ -1,21 +1,11 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.ast.placeable.AttributeReference;
-import net.quickwrite.fluent4j.ast.placeable.SelectExpression;
-import net.quickwrite.fluent4j.ast.placeable.TermReference;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.exception.FluentParseException;
-import net.quickwrite.fluent4j.exception.FluentSelectException;
-import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +41,8 @@ public abstract class FluentBase implements FluentElement {
 
         while (!content.isBigger()) {
             if (content.getChar() == '{') {
-                elements.add(FluentParser.getPlaceable(content));
+                content.increment();
+                elements.add(StringSliceUtil.getPlaceable(content));
 
                 if (content.getChar() != '}') {
                     throw new FluentParseException('}', content.getCharUTF16(), content.getAbsolutePosition());
