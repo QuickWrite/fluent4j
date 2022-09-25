@@ -179,7 +179,12 @@ public final class StringSliceUtil {
             if (isTerm)
                 slice.decrement();
 
-            return NumberLiteral.getNumberLiteral(getNumber(slice));
+            final StringSlice number = getNumber(slice);
+            try {
+                return NumberLiteral.getNumberLiteral(number);
+            } catch (final NumberFormatException ignored) {
+                throw new FluentParseException("Number", number.toString(), number.getPosition() - number.length());
+            }
         }
 
         final StringSlice msgIdentifier = getIdentifier(slice);
