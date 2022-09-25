@@ -27,7 +27,7 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
             throw new FluentParseException("The callee has to be an upper-case identifier or a term");
         }
 
-        this.arguments = arguments;
+        this.arguments = arguments != null ? arguments : FluentArgs.EMPTY_ARGS;
     }
 
     /**
