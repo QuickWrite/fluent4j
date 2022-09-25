@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
 
-public class TestLiteralExpessions {
+public class TestLiteralExpressions {
     private FluentBundle bundle;
 
     @Before

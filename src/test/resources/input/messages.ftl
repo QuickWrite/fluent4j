@@ -3,7 +3,7 @@ key01 = Value
 key02 = Value
     .attr = Attribute
 
-key02 = Value
+key02 = Value2
     .attr1 = Attribute 1
     .attr2 = Attribute 2
 

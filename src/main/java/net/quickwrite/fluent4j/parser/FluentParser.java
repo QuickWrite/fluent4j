@@ -185,7 +185,7 @@ public abstract class FluentParser {
     private final static Pattern stringConverter;
 
     static {
-        stringConverter = Pattern.compile("(\\r\\n|\\r|\\f)+");
+        stringConverter = Pattern.compile("(\\r\\n|\\r|\\f)");
     }
 
     private static StringSlice convertString(final String input) {
