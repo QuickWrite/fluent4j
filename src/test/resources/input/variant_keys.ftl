@@ -1,37 +1,37 @@
 simple-identifier =
     { $sel ->
-       *[key] value
+       *[key] Value
     }
 
 identifier-surrounded-by-whitespace =
     { $sel ->
-       *[     key     ] value
+       *[     key     ] Value
     }
 
 int-number =
     { $sel ->
-       *[1] value
+       *[1] Value
     }
 
 float-number =
     { $sel ->
-       *[3.14] value
+       *[3.14] Value
     }
 
 # ERROR
 invalid-identifier =
     { $sel ->
-       *[two words] value
+       *[two words] Value
     }
 
 # ERROR
 invalid-int =
     { $sel ->
-       *[1 apple] value
+       *[1 apple] Value
     }
 
 # ERROR
 invalid-int =
     { $sel ->
-       *[3.14 apples] value
+       *[3.14 apples] Value
     }
