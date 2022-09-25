@@ -67,6 +67,10 @@ public class FluentTextElement implements FluentElement {
         return text.toString();
     }
 
+    public boolean isEmpty() {
+        return text.isEmpty();
+    }
+
     @Override
     public boolean matches(final DirectFluentBundle bundle, final FluentElement selector) {
         return selector.stringValue().equals(this.text);

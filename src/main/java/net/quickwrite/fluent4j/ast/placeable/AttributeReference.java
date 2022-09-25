@@ -53,14 +53,19 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
             return getErrorString();
         }
 
-        return attribute.getResult(bundle, arguments);
+        return attribute.getResult(bundle, getArguments(arguments));
     }
 
     @Override
     public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentAttribute attribute = this.getMessage(bundle, reference.stringValue())
-                .getAttribute(this.attributeIdentifier);
-        if (attribute == null) {
+        final FluentMessage fluentMessage = this.getMessage(bundle, reference.stringValue());
+        if (fluentMessage == null) {
+            return this;
+        }
+
+        final FluentAttribute attribute = fluentMessage.getAttribute(this.attributeIdentifier);
+
+        if(attribute == null) {
             return this;
         }
 
@@ -71,7 +76,7 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
         }
 
         // No recursion (unfortunately :d)
-        return (FluentElement) elementList.get(0);
+        return elementList.get(0);
     }
 
     protected FluentMessage getMessage(final DirectFluentBundle bundle, final String key) {
@@ -80,6 +85,10 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
 
     protected String getErrorString() {
         return "{" + reference.stringValue() + "." + attributeIdentifier + "}";
+    }
+
+    protected FluentArgs getArguments(final FluentArgs defaultArgs) {
+        return defaultArgs;
     }
 
     @Override
@@ -91,8 +100,12 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
     }
 
     public static class TermAttributeReference extends AttributeReference implements FluentSelectable {
-        public TermAttributeReference(FluentPlaceable reference, StringSlice content) {
+        private final FluentArgs arguments;
+
+        public TermAttributeReference(final FluentPlaceable reference, final StringSlice content, final FluentArgs arguments) {
             super(reference, content);
+
+            this.arguments = arguments;
         }
 
         @Override
@@ -103,6 +116,20 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
         @Override
         protected String getErrorString() {
             return "{-" + reference.stringValue() + "." + attributeIdentifier + "}";
+        }
+
+        @Override
+        protected FluentArgs getArguments(final FluentArgs defaultArgs) {
+            return this.arguments;
+        }
+
+        @Override
+        public String toString() {
+            return "FluentTermAttributeReference: {\n" +
+                    "\t\t\tvalue: \"" + this.reference + "\"\n" +
+                    "\t\t\tattribute: \"" + this.attributeIdentifier + "\"\n" +
+                    "\t\t\targuments: \"" + this.arguments + "\"\n" +
+                    "\t\t}";
         }
     }
 }

@@ -3,13 +3,9 @@ package net.quickwrite.fluent4j.ast.placeable.base;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.StringSliceUtil;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Implements the basis for a value that gets
@@ -20,68 +16,18 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
     protected final String functionName;
     protected final FluentArgs arguments;
 
-    public FluentFunction(final StringSlice functionName, final StringSlice content) {
-        this(functionName.toString(), content);
+    public FluentFunction(final StringSlice functionName, final FluentArgs arguments) {
+        this(functionName.toString(), arguments);
     }
 
-    public FluentFunction(final String functionName, final StringSlice content) {
+    public FluentFunction(final String functionName, final FluentArgs arguments) {
         this.functionName = functionName;
         if (!check(functionName)) {
             // TODO: Better Error handling
             throw new FluentParseException("The callee has to be an upper-case identifier or a term");
         }
 
-        this.arguments = (content == null) ? FunctionFluentArgs.EMPTY_ARGS : this.getArguments(content);
-    }
-
-    private FluentArgs getArguments(final StringSlice content) {
-        StringSliceUtil.skipWhitespaceAndNL(content);
-        if (content.isBigger()) {
-            return FunctionFluentArgs.EMPTY_ARGS;
-        }
-
-        final FunctionFluentArgs arguments = (FunctionFluentArgs) this.getFluentArgumentInstance();
-
-        while (!content.isBigger()) {
-            Pair<String, FluentElement> argument = getArgument(content);
-            if (argument.getLeft() != null) {
-                arguments.setNamed(argument.getLeft(), argument.getRight());
-            } else {
-                arguments.addPositional(argument.getRight());
-            }
-
-            StringSliceUtil.skipWhitespaceAndNL(content);
-
-            if (content.getChar() != ',') {
-                if (!content.isBigger()) {
-                    throw new FluentParseException("','", content.getCharUTF16(), content.getAbsolutePosition());
-                }
-                break;
-            }
-            content.increment();
-
-            StringSliceUtil.skipWhitespaceAndNL(content);
-        }
-
-        return arguments;
-    }
-
-    private Pair<String, FluentElement> getArgument(final StringSlice content) {
-        FluentPlaceable placeable = StringSliceUtil.getExpression(content);
-        String identifier = null;
-
-        StringSliceUtil.skipWhitespaceAndNL(content);
-
-        if (content.getChar() == ':') {
-            content.increment();
-            StringSliceUtil.skipWhitespaceAndNL(content);
-
-            identifier = placeable.stringValue();
-
-            placeable = StringSliceUtil.getExpression(content);
-        }
-
-        return new ImmutablePair<>(identifier, placeable);
+        this.arguments = arguments != null ? arguments : FluentArgs.EMPTY_ARGS;
     }
 
     /**
@@ -93,12 +39,10 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @return The sanitized arguments of the function
      */
     protected FluentArgs getArguments(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        this.arguments.sanitize(bundle, arguments);
-        return this.arguments;
-    }
+        if (this.arguments != null)
+            this.arguments.sanitize(bundle, arguments);
 
-    protected FluentArgs getFluentArgumentInstance() {
-        return new FunctionFluentArguments();
+        return this.arguments;
     }
 
     /**

@@ -6,33 +6,19 @@ new-messages =
 
 valid-selector-term-attribute =
     { -term.case ->
-       *[key] value
+       *[key] Value
     }
 
 # ERROR Term values are not valid selectors
 invalid-selector-term-value =
     { -term ->
-       *[key] value
+       *[key] Value
     }
 
 # ERROR CallExpressions on Terms are similar to TermReferences
 invalid-selector-term-variant =
     { -term(case: "nominative") ->
-       *[key] value
-    }
-
-# ERROR Nested expressions are not valid selectors
-invalid-selector-nested-expression =
-    { { 3 } ->
-        *[key] default
-    }
-
-# ERROR Select expressions are not valid selectors
-invalid-selector-select-expression =
-    { { $sel ->
-        *[key] value
-        } ->
-        *[key] default
+       *[key] Value
     }
 
 empty-variant =

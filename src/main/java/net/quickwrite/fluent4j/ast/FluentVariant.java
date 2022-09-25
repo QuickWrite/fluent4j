@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.ast;
 
+import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
@@ -21,14 +22,18 @@ public class FluentVariant implements FluentElement {
     private final FluentPlaceable identifier;
     private final FluentAttribute content;
 
-    public FluentVariant(FluentAttribute content) {
+    public FluentVariant(final FluentAttribute content) {
         this.identifier = getIdentifier(content.identifier);
         this.content = content;
     }
 
-    private FluentPlaceable getIdentifier(String slice) {
+    private FluentPlaceable getIdentifier(final String slice) {
         if (Character.isDigit(slice.charAt(0))) {
-            return NumberLiteral.getNumberLiteral(slice);
+            try {
+                return NumberLiteral.getNumberLiteral(slice);
+            } catch (final NumberFormatException ignored) {
+                throw new FluentParseException("Expected Number but got \"" + slice + "\"");
+            }
         }
 
         return new StringLiteral(slice);
