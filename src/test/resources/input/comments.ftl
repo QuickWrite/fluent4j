@@ -13,8 +13,3 @@ foo = Foo
 #      with indent
 ## Group Comment
 ### Resource Comment
-
-# Errors
-#error
-##error
-###error

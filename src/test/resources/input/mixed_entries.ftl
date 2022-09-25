@@ -9,7 +9,7 @@
 key01 =
     .attr = Attribute
 
-ą=Invalid identifier
+ą=Custom Identifier
 ć=Another one
 
 # Message Comment

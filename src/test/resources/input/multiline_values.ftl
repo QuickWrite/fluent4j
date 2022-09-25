@@ -51,10 +51,3 @@ key11 =
       two
     zero
 
-key12 =
-{"."}
-    four
-
-key13 =
-    four
-{"."}
