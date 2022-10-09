@@ -3,8 +3,8 @@ package net.quickwrite.fluent4j.ast.placeable;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 
 /**
@@ -36,9 +36,10 @@ public class MessageReference implements FluentPlaceable {
     }
 
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final AccessorBundle bundle) {
         return bundle
-                .getMessage(this.stringValue(), arguments)
+                .getBundle()
+                .getMessage(this.stringValue(), bundle.getArguments())
                 .orElse("{" + this.stringValue() + "}");
     }
 

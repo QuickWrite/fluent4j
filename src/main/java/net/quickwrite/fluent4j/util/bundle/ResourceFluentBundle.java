@@ -9,6 +9,7 @@ import net.quickwrite.fluent4j.exception.UnknownElementException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorElementsBundle;
 
 import java.util.*;
 
@@ -111,7 +112,11 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
             return Optional.empty();
         }
 
-        return Optional.of(message.getResult(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS).toString());
+        return Optional.of(
+                message.getResult(
+                        new AccessorElementsBundle(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS)
+                ).toString()
+        );
     }
 
     @Override

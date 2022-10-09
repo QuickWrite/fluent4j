@@ -4,8 +4,8 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.args.FunctionFluentArguments;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * Implements the basis for a value that gets
@@ -34,13 +34,12 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * Returns the arguments that the function
      * has itself in a sanitized form.
      *
-     * @param bundle    The bundle that this is being called from
-     * @param arguments The arguments in this scope
+     * @param bundle The arguments that are getting passed down
      * @return The sanitized arguments of the function
      */
-    protected FluentArgs getArguments(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    protected FluentArgs getArguments(final AccessorBundle bundle) {
         if (this.arguments != null)
-            this.arguments.sanitize(bundle, arguments);
+            this.arguments.sanitize(bundle);
 
         return this.arguments;
     }
@@ -49,10 +48,9 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * Returns the {@link FluentElement} that the function is returning.
      *
      * @param bundle    The bundle that this is being called from
-     * @param arguments The arguments that are passed into this function
      * @return The resulting {@link FluentElement} that has been created
      */
-    public abstract FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments);
+    public abstract FluentElement getArgumentResult(final AccessorBundle bundle);
 
     /**
      * Checks if this FluentFunction and the selector are the same.

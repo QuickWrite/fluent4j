@@ -1,10 +1,7 @@
 package net.quickwrite.fluent4j.util.bundle;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.FluentTerm;
-import net.quickwrite.fluent4j.functions.AbstractFunction;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 public interface DirectFluentBundle extends FluentBundle {
     /**

@@ -7,6 +7,7 @@ import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * Variables are pieces of data received from the app.
@@ -51,7 +52,8 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public FluentElement getArgumentResult(DirectFluentBundle bundle, final FluentArgs arguments) {
+    public FluentElement getArgumentResult(final AccessorBundle bundle) {
+        final FluentArgs arguments = bundle.getArguments();
         final FluentElement argument = arguments.getNamed(content);
 
         if (argument == null) {
@@ -62,14 +64,14 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentElement argument = arguments.getNamed(content);
+    public CharSequence getResult(final AccessorBundle bundle) {
+        final FluentElement argument = bundle.getArguments().getNamed(content);
 
         if (argument == null) {
             return "{$" + content + "}";
         }
 
-        return argument.getResult(bundle, arguments);
+        return argument.getResult(bundle);
     }
 
     @Override

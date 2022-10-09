@@ -3,8 +3,8 @@ package net.quickwrite.fluent4j.ast;
 import net.quickwrite.fluent4j.exception.FluentParseException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.StringSliceUtil;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -88,32 +88,16 @@ public abstract class FluentBase implements FluentElement {
         return this.identifier;
     }
 
-    private StringSlice getVariantIdentifier(final StringSlice content) {
-        char character = content.getChar();
-        final int start = content.getPosition();
-
-        while (character != ' '
-                && character != '\n'
-                && character != ']'
-                && character != '\0'
-        ) {
-            content.increment();
-            character = content.getChar();
-        }
-
-        return content.substring(start, content.getPosition());
-    }
-
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final AccessorBundle bundle) {
         if (this.fluentElements.size() == 1) {
-            return this.fluentElements.get(0).getResult(bundle, arguments);
+            return this.fluentElements.get(0).getResult(bundle);
         }
 
         final StringBuilder builder = new StringBuilder();
 
         for (final FluentElement element : this.fluentElements) {
-            builder.append(element.getResult(bundle, arguments));
+            builder.append(element.getResult(bundle));
         }
 
         return builder;

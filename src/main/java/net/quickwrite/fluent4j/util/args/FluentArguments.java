@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.util.args;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +34,12 @@ public class FluentArguments implements FluentArgs {
     }
 
     @Override
-    public void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public void sanitize(AccessorBundle bundle) {
         for (final String key : namedArguments.keySet()) {
             final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
-                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
+                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
             }
         }
     }
