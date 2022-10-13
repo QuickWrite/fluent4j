@@ -9,6 +9,8 @@ import net.quickwrite.fluent4j.exception.UnknownElementException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.util.bundle.args.AccessedStorageBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 import net.quickwrite.fluent4j.util.bundle.args.AccessorElementsBundle;
 
 import java.util.*;
@@ -46,16 +48,6 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
         this.exceptionList = new ArrayList<>();
 
         this.addResource(resource);
-    }
-
-    @Override
-    public FluentTerm getTerm(final String key) {
-        return this.terms.get(key);
-    }
-
-    @Override
-    public FluentMessage getMessage(final String key) {
-        return this.messages.get(key);
     }
 
     @Override
@@ -106,16 +98,60 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
 
     @Override
     public Optional<String> getMessage(final String key, final FluentArgs arguments) {
+        return getMessage(
+                key,
+                new AccessorElementsBundle(
+                        this,
+                        arguments != null ? arguments : FluentArgs.EMPTY_ARGS,
+                        new AccessedStorageBundle())
+        );
+    }
+
+    @Override
+    public FluentTerm getTerm(final String key) {
+        return this.terms.get(key);
+    }
+
+    @Override
+    public Optional<String> getTerm(final String key, final AccessorBundle bundle) {
+        final FluentTerm term = this.getTerm(key);
+
+        if (term == null) {
+            return Optional.empty();
+        }
+
+        if (bundle.getAccessedStorage().alreadyAccessed(term)) {
+            return Optional.empty();
+        }
+
+        bundle.getAccessedStorage().addElement(term);
+
+        return Optional.of(
+                term.getResult(bundle).toString()
+        );
+    }
+
+    @Override
+    public FluentMessage getMessage(final String key) {
+        return this.messages.get(key);
+    }
+
+    @Override
+    public Optional<String> getMessage(final String key, final AccessorBundle bundle) {
         final FluentMessage message = this.getMessage(key);
 
         if (message == null) {
             return Optional.empty();
         }
 
+        if (bundle.getAccessedStorage().alreadyAccessed(message)) {
+            return Optional.empty();
+        }
+
+        bundle.getAccessedStorage().addElement(message);
+
         return Optional.of(
-                message.getResult(
-                        new AccessorElementsBundle(this, arguments != null ? arguments : FluentArgs.EMPTY_ARGS)
-                ).toString()
+                message.getResult(bundle).toString()
         );
     }
 

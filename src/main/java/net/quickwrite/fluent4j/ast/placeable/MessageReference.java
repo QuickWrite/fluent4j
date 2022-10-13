@@ -37,9 +37,9 @@ public class MessageReference implements FluentPlaceable {
 
     @Override
     public CharSequence getResult(final AccessorBundle bundle) {
-        return bundle
+         return bundle
                 .getBundle()
-                .getMessage(this.stringValue(), bundle.getArguments())
+                .getMessage(this.stringValue(), bundle)
                 .orElse("{" + this.stringValue() + "}");
     }
 

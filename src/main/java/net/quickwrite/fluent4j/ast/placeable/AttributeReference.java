@@ -70,6 +70,12 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
             return this;
         }
 
+        if (bundle.getAccessedStorage().alreadyAccessed(attribute)) {
+            return this;
+        }
+
+        bundle.getAccessedStorage().addElement(attribute);
+
         final List<FluentElement> elementList = attribute.getElements();
 
         if (elementList.size() != 1) {

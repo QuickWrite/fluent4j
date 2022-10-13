@@ -7,4 +7,6 @@ public interface AccessorBundle {
     DirectFluentBundle getBundle();
 
     FluentArgs getArguments();
+
+    AccessedStorage getAccessedStorage();
 }

@@ -41,7 +41,9 @@ public class TermReference extends FluentFunction {
 
     @Override
     public CharSequence getResult(final AccessorBundle bundle) {
-        return this.getArgumentResult(bundle).getResult(new AccessorElementsBundle(bundle.getBundle(), this.getArguments(bundle)));
+        return bundle.getBundle()
+                .getTerm(this.functionName, new AccessorElementsBundle(bundle.getBundle(), this.getArguments(bundle), bundle.getAccessedStorage()))
+                .orElse("{-" + this.functionName + "}");
     }
 
     /**
@@ -50,13 +52,7 @@ public class TermReference extends FluentFunction {
      */
     @Override
     public FluentElement getArgumentResult(final AccessorBundle bundle) {
-        final FluentTerm term = bundle.getBundle().getTerm(this.functionName);
-
-        if (term == null) {
-            return new StringLiteral("{-" + this.functionName + "}");
-        }
-
-        return term;
+        return new StringLiteral(getResult(bundle).toString());
     }
 
     @Override

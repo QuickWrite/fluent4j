@@ -60,7 +60,7 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
             return new StringLiteral("{$" + content + "}");
         }
 
-        return arguments.getNamed(content);
+        return argument;
     }
 
     @Override
