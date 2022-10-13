@@ -38,10 +38,10 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * @return The sanitized arguments of the function
      */
     protected FluentArgs getArguments(final AccessorBundle bundle) {
-        if (this.arguments != null)
-            this.arguments.sanitize(bundle);
+        if (this.arguments == null)
+            return null;
 
-        return this.arguments;
+        return this.arguments.sanitize(bundle);
     }
 
     /**

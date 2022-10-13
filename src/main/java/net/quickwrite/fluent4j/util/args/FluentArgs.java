@@ -23,7 +23,7 @@ public interface FluentArgs {
      *  @param bundle The main bundle
      *
      */
-    void sanitize(final AccessorBundle bundle);
+    FluentArgs sanitize(final AccessorBundle bundle);
 
     /**
      * Adds a new named argument to the named arguments.

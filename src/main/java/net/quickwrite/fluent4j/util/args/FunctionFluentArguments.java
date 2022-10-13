@@ -11,9 +11,8 @@ import java.util.*;
  * are used as the parameters when a message, term or a function
  * is getting accessed.
  */
-public class FunctionFluentArguments implements FunctionFluentArgs {
-    private final Map<String, FluentElement> namedArguments;
-    private final List<FluentElement> positionalArguments;
+public class FunctionFluentArguments extends FluentArguments implements FunctionFluentArgs {
+    protected final List<FluentElement> positionalArguments;
 
     /**
      * Creates a new empty argument
@@ -31,27 +30,34 @@ public class FunctionFluentArguments implements FunctionFluentArgs {
      * @param positionalArguments The positional arguments
      */
     public FunctionFluentArguments(final Map<String, FluentElement> namedArguments, final List<FluentElement> positionalArguments) {
-        this.namedArguments = namedArguments;
+        super(namedArguments);
         this.positionalArguments = positionalArguments;
     }
 
     @Override
-    public void sanitize(AccessorBundle bundle) {
+    public FluentArgs sanitize(final AccessorBundle bundle) {
+        final FunctionFluentArgs args = new FunctionFluentArguments();
+
         for (final String key : namedArguments.keySet()) {
             final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
-                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                args.setNamed(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                continue;
             }
+
+            args.setNamed(key, argument);
         }
 
-        for (int i = 0; i < positionalArguments.size(); i++) {
-            final FluentElement argument = positionalArguments.get(i);
-
+        for (final FluentElement argument : positionalArguments) {
             if (argument instanceof FluentArgumentResult) {
-                positionalArguments.set(i, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                args.addPositional(((FluentArgumentResult) argument).getArgumentResult(bundle));
+                continue;
             }
+            args.addPositional(argument);
         }
+
+        return args;
     }
 
     @Override
@@ -69,21 +75,6 @@ public class FunctionFluentArguments implements FunctionFluentArgs {
     }
 
     @Override
-    public void setNamed(final String key, final FluentElement argument) {
-        this.namedArguments.put(key, argument);
-    }
-
-    @Override
-    public FluentElement getNamed(final String key) {
-        return this.namedArguments.get(key);
-    }
-
-    @Override
-    public Set<String> getNamedKeys() {
-        return this.namedArguments.keySet();
-    }
-
-    @Override
     public void addPositional(final FluentElement argument) {
         this.positionalArguments.add(argument);
     }
@@ -95,7 +86,7 @@ public class FunctionFluentArguments implements FunctionFluentArgs {
 
     @Override
     public String toString() {
-        return "ResourceFluentArguments: {\n" +
+        return "FunctionFluentArguments: {\n" +
                 "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
                 "\t\t\tpositionalArguments: \"" + this.positionalArguments + "\"\n" +
                 "\t\t}";
