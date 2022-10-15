@@ -22,6 +22,6 @@ public class TestRecursion {
 
     @Test
     public void testRecursiveTerm01() {
-        Assertions.assertEquals("{recursive-term01}", GetFileHelper.getMessage(bundle, "recursive-term01"));
+        Assertions.assertEquals("{-recursive-term01}", GetFileHelper.getMessage(bundle, "recursive-term01"));
     }
 }
