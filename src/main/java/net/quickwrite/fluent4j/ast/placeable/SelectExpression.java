@@ -4,8 +4,8 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentVariant;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.util.List;
 
@@ -50,17 +50,17 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public CharSequence getResult(final AccessorBundle bundle) {
         final FluentElement argument = (identifier instanceof FluentArgumentResult) ?
-                ((FluentArgumentResult) identifier).getArgumentResult(bundle, arguments) : identifier;
+                ((FluentArgumentResult) identifier).getArgumentResult(bundle) : identifier;
 
         for (final FluentVariant variant : variants) {
-            if (argument.matches(bundle, variant.getIdentifier())) {
-                return variant.getResult(bundle, arguments);
+            if (argument.matches(bundle.getBundle(), variant.getIdentifier())) {
+                return variant.getResult(bundle);
             }
         }
 
-        return defaultVariant.getResult(bundle, arguments);
+        return defaultVariant.getResult(bundle);
     }
 
     @Override

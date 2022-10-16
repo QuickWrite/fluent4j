@@ -3,10 +3,9 @@ package net.quickwrite.fluent4j.ast.placeable;
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
-import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -21,12 +20,13 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public FluentElement getArgumentResult(final AccessorBundle bundle) {
         try {
             return bundle
+                    .getBundle()
                     .getFunction(this.functionName)
                     .orElseThrow()
-                    .getResult(bundle, (FunctionFluentArgs) this.getArguments(bundle, arguments));
+                    .getResult(bundle, (FunctionFluentArgs) this.getArguments(bundle));
         } catch (final Exception exception) {
             return new StringLiteral("{" + functionName + "()}");
         }
@@ -69,13 +69,12 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
      * This means that the {@code NUMBER}-function gets no arguments
      * this function will return <code>{NUMBER()}</code>.
      *
-     * @param bundle    The base bundle
-     * @param arguments The arguments that are being passed on the scope
-     * @return The result of the function with the specific parameters
+     *
+     * @param bundle@return The result of the function with the specific parameters
      */
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-            return this.getArgumentResult(bundle, arguments).getResult(bundle, arguments);
+    public CharSequence getResult(AccessorBundle bundle) {
+            return this.getArgumentResult(bundle).getResult(bundle);
     }
 
     @Override

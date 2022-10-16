@@ -10,9 +10,9 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
 import net.quickwrite.fluent4j.util.StringSlice;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.math.BigDecimal;
 
@@ -51,8 +51,8 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        return NumberFormat.getInstance(bundle.getLocale()).format(number);
+    public CharSequence getResult(final AccessorBundle bundle) {
+        return NumberFormat.getInstance(bundle.getBundle().getLocale()).format(number);
     }
 
     private static BigDecimal convertToBigDecimal(final Number number) {
