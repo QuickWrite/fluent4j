@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -316,7 +317,7 @@ public class TestCallExpressions {
         }
 
         @Override
-        public FluentPlaceable getResult(final DirectFluentBundle bundle, final FunctionFluentArgs arguments) {
+        public FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments) {
             if (arguments.isEmpty()) {
                 return new StringLiteral("{FUN(void)}");
             }
@@ -325,7 +326,7 @@ public class TestCallExpressions {
             stringBuilder.append("[p:");
 
             for (int i = 0; i < arguments.getPositionalSize(); i++) {
-                stringBuilder.append(arguments.getPositional(i).getResult(bundle, arguments));
+                stringBuilder.append(arguments.getPositional(i).getResult(bundle));
                 stringBuilder.append(",");
             }
 
@@ -334,7 +335,7 @@ public class TestCallExpressions {
             for (final String key : arguments.getNamedKeys()) {
                 stringBuilder.append(key);
                 stringBuilder.append(".");
-                stringBuilder.append(arguments.getNamed(key).getResult(bundle, arguments));
+                stringBuilder.append(arguments.getNamed(key).getResult(bundle));
                 stringBuilder.append(",");
             }
 

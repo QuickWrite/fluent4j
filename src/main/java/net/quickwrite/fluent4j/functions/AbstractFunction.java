@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * Functions provide additional functionality available to the localizers.
@@ -70,5 +71,5 @@ public abstract class AbstractFunction {
      * @param arguments The arguments the function gets
      * @return The result
      */
-    public abstract FluentPlaceable getResult(final DirectFluentBundle bundle, final FunctionFluentArgs arguments);
+    public abstract FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments);
 }

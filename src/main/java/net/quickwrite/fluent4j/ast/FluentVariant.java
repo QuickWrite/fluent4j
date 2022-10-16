@@ -1,11 +1,11 @@
 package net.quickwrite.fluent4j.ast;
 
 import net.quickwrite.fluent4j.exception.FluentParseException;
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * A variant stores a single variant of a
@@ -53,8 +53,8 @@ public class FluentVariant implements FluentElement {
         return identifier.stringValue();
     }
 
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        return this.content.getResult(bundle, arguments);
+    public CharSequence getResult(AccessorBundle bundle) {
+        return this.content.getResult(bundle);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.ast;
 
-import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.StringSlice;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 /**
  * The TextElement is just storing a text that does
@@ -82,7 +82,7 @@ public class FluentTextElement implements FluentElement {
     }
 
     @Override
-    public CharSequence getResult(DirectFluentBundle bundle, FluentArgs arguments) {
+    public CharSequence getResult(AccessorBundle bundle) {
         return this.text;
     }
 

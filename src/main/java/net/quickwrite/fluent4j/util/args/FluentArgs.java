@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.util.args;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.util.Set;
 
@@ -20,11 +20,10 @@ public interface FluentArgs {
      * <p>
      * This is necessary if the scopes are getting changed as a new scope does not have access
      * every variable the previous scope had.
+     *  @param bundle The main bundle
      *
-     * @param bundle The main bundle
-     * @param arguments The old arguments
      */
-    void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments);
+    FluentArgs sanitize(final AccessorBundle bundle);
 
     /**
      * Adds a new named argument to the named arguments.

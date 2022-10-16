@@ -5,7 +5,8 @@ import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorElementsBundle;
 
 /**
  * Terms are similar to regular messages but they can
@@ -39,24 +40,19 @@ public class TermReference extends FluentFunction {
     }
 
     @Override
-    public CharSequence getResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        return this.getArgumentResult(bundle, arguments).getResult(bundle, this.getArguments(bundle, arguments));
+    public CharSequence getResult(final AccessorBundle bundle) {
+        return bundle.getBundle()
+                .getTerm(this.functionName, new AccessorElementsBundle(bundle.getBundle(), this.getArguments(bundle), bundle.getAccessedStorage()))
+                .orElse("{-" + this.functionName + "}");
     }
 
     /**
      * @param bundle    The bundle that this is being called from
-     * @param arguments The arguments that are passed into this function
-     * @return
+     * @return The result of the term that is being called
      */
     @Override
-    public FluentElement getArgumentResult(final DirectFluentBundle bundle, final FluentArgs arguments) {
-        final FluentTerm term = bundle.getTerm(this.functionName);
-
-        if (term == null) {
-            return new StringLiteral("{-" + this.functionName + "}");
-        }
-
-        return term;
+    public FluentElement getArgumentResult(final AccessorBundle bundle) {
+        return new StringLiteral(getResult(bundle).toString());
     }
 
     @Override

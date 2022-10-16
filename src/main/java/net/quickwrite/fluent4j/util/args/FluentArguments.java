@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.util.args;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
+import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Set;
  * positional arguments.
  */
 public class FluentArguments implements FluentArgs {
-    private final Map<String, FluentElement> namedArguments;
+    protected final Map<String, FluentElement> namedArguments;
 
     /**
      * Creates a new argument container with the given
@@ -34,14 +34,21 @@ public class FluentArguments implements FluentArgs {
     }
 
     @Override
-    public void sanitize(final DirectFluentBundle bundle, final FluentArgs arguments) {
+    public FluentArgs sanitize(final AccessorBundle bundle) {
+        final FluentArgs args = new FluentArguments();
+
         for (final String key : namedArguments.keySet()) {
             final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
-                namedArguments.put(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, arguments));
+                args.setNamed(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                continue;
             }
+
+            args.setNamed(key, argument);
         }
+
+        return args;
     }
 
     @Override
@@ -64,9 +71,13 @@ public class FluentArguments implements FluentArgs {
         return this.namedArguments.isEmpty();
     }
 
+    public FluentArgs clone() throws CloneNotSupportedException {
+        return (FluentArgs) super.clone();
+    }
+
     @Override
     public String toString() {
-        return "ResourceNamedFluentArguments: {\n" +
+        return "FluentArguments: {\n" +
                 "\t\t\tnamedArguments: \"" + this.namedArguments + "\"\n" +
                 "\t\t}";
     }
