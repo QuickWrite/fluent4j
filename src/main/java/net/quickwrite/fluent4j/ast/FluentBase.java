@@ -89,15 +89,15 @@ public abstract class FluentBase implements FluentElement {
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         if (this.fluentElements.size() == 1) {
-            return this.fluentElements.get(0).getResult(bundle);
+            return this.fluentElements.get(0).getResult(bundle, recursionDepth - 1);
         }
 
         final StringBuilder builder = new StringBuilder();
 
         for (final FluentElement element : this.fluentElements) {
-            builder.append(element.getResult(bundle));
+            builder.append(element.getResult(bundle, recursionDepth - 1));
         }
 
         return builder;

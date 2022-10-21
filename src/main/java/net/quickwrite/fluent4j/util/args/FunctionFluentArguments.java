@@ -35,14 +35,15 @@ public class FunctionFluentArguments extends FluentArguments implements Function
     }
 
     @Override
-    public FluentArgs sanitize(final AccessorBundle bundle) {
+    public FluentArgs sanitize(final AccessorBundle bundle, int recursionDepth) {
         final FunctionFluentArgs args = new FunctionFluentArguments();
 
         for (final String key : namedArguments.keySet()) {
             final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
-                args.setNamed(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                args.setNamed(key, ((FluentArgumentResult) argument)
+                        .getArgumentResult(bundle, recursionDepth - 1));
                 continue;
             }
 
@@ -51,7 +52,8 @@ public class FunctionFluentArguments extends FluentArguments implements Function
 
         for (final FluentElement argument : positionalArguments) {
             if (argument instanceof FluentArgumentResult) {
-                args.addPositional(((FluentArgumentResult) argument).getArgumentResult(bundle));
+                args.addPositional(((FluentArgumentResult) argument)
+                        .getArgumentResult(bundle, recursionDepth - 1));
                 continue;
             }
             args.addPositional(argument);

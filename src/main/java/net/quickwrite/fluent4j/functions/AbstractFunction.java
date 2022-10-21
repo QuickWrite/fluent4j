@@ -1,8 +1,7 @@
 package net.quickwrite.fluent4j.functions;
 
-import net.quickwrite.fluent4j.util.args.FluentArgs;
+import net.quickwrite.fluent4j.exception.RecursionDepthReachedException;
 import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.NumberLiteral;
 import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
@@ -51,6 +50,27 @@ public abstract class AbstractFunction {
     }
 
     /**
+     * Returns the result of {@link AbstractFunction#getResult(AccessorBundle, FunctionFluentArgs, int)},
+     * but also checks the recursion depth.
+     *
+     * @param bundle The bundle that this is getting called from
+     * @param arguments The arguments the function gets
+     * @param recursionDepth The amount of recursive calls that can still be made
+     * @return The result
+     */
+    public FluentPlaceable getFunctionResult(
+            final AccessorBundle bundle,
+            final FunctionFluentArgs arguments,
+            final int recursionDepth
+    ) {
+        if (recursionDepth <= 0) {
+            throw new RecursionDepthReachedException();
+        }
+
+        return getResult(bundle, arguments, recursionDepth);
+    }
+
+    /**
      * Returns the value that should result from the
      * specific argument or the bundle itself. <br>
      * (For example the language or a single parameter)
@@ -69,7 +89,8 @@ public abstract class AbstractFunction {
      *
      * @param bundle The bundle that this is getting called from
      * @param arguments The arguments the function gets
+     * @param recursionDepth The amount of recursive calls that can still be made
      * @return The result
      */
-    public abstract FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments);
+    public abstract FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments, final int recursionDepth);
 }

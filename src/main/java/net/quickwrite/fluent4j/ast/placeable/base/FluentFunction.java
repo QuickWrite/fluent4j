@@ -35,22 +35,24 @@ public abstract class FluentFunction implements FluentPlaceable, FluentArgumentR
      * has itself in a sanitized form.
      *
      * @param bundle The arguments that are getting passed down
+     * @param recursionDepth
      * @return The sanitized arguments of the function
      */
-    protected FluentArgs getArguments(final AccessorBundle bundle) {
+    protected FluentArgs getArguments(final AccessorBundle bundle, final int recursionDepth) {
         if (this.arguments == null)
             return null;
 
-        return this.arguments.sanitize(bundle);
+        return this.arguments.sanitize(bundle, recursionDepth);
     }
 
     /**
      * Returns the {@link FluentElement} that the function is returning.
      *
      * @param bundle    The bundle that this is being called from
+     * @param recursionDepth
      * @return The resulting {@link FluentElement} that has been created
      */
-    public abstract FluentElement getArgumentResult(final AccessorBundle bundle);
+    public abstract FluentElement getArgumentResult(final AccessorBundle bundle, int recursionDepth);
 
     /**
      * Checks if this FluentFunction and the selector are the same.

@@ -50,17 +50,17 @@ public class SelectExpression implements FluentPlaceable {
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         final FluentElement argument = (identifier instanceof FluentArgumentResult) ?
-                ((FluentArgumentResult) identifier).getArgumentResult(bundle) : identifier;
+                ((FluentArgumentResult) identifier).getArgumentResult(bundle, recursionDepth - 1) : identifier;
 
         for (final FluentVariant variant : variants) {
             if (argument.matches(bundle.getBundle(), variant.getIdentifier())) {
-                return variant.getResult(bundle);
+                return variant.getResult(bundle, recursionDepth - 1);
             }
         }
 
-        return defaultVariant.getResult(bundle);
+        return defaultVariant.getResult(bundle, recursionDepth - 1);
     }
 
     @Override

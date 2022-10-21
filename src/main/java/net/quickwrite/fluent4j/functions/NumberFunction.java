@@ -71,10 +71,11 @@ public class NumberFunction extends AbstractFunction {
      *
      * @param bundle    The bundle that this is getting called from
      * @param arguments The arguments the function gets
+     * @param recursionDepth The amount of recursive calls that can still be made
      * @return The number as a {@link CustomNumberLiteral} with the parameters
      */
     @Override
-    public FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments) {
+    public FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments, int recursionDepth) {
         final FluentElement number = arguments.getPositional(0);
 
         CustomNumberLiteral numberLiteral;

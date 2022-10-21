@@ -20,13 +20,17 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
     }
 
     @Override
-    public FluentElement getArgumentResult(final AccessorBundle bundle) {
+    public FluentElement getArgumentResult(final AccessorBundle bundle, int recursionDepth) {
         try {
             return bundle
                     .getBundle()
                     .getFunction(this.functionName)
                     .orElseThrow()
-                    .getResult(bundle, (FunctionFluentArgs) this.getArguments(bundle));
+                    .getFunctionResult(
+                            bundle,
+                            (FunctionFluentArgs) this.getArguments(bundle, recursionDepth),
+                            recursionDepth - 1
+                    );
         } catch (final Exception exception) {
             return new StringLiteral("{" + functionName + "()}");
         }
@@ -70,11 +74,12 @@ public class FunctionReference extends FluentFunction implements FluentSelectabl
      * this function will return <code>{NUMBER()}</code>.
      *
      *
-     * @param bundle@return The result of the function with the specific parameters
+     * @param bundle @return The result of the function with the specific parameters
+     * @param recursionDepth The amount of recursive calls that can be made
      */
     @Override
-    public CharSequence getResult(AccessorBundle bundle) {
-            return this.getArgumentResult(bundle).getResult(bundle);
+    public CharSequence getResult(AccessorBundle bundle, final int recursionDepth) {
+            return this.getArgumentResult(bundle, recursionDepth - 1).getResult(bundle, recursionDepth - 1);
     }
 
     @Override

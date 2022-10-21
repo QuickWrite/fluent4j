@@ -46,7 +46,7 @@ public class CustomNumberLiteral extends NumberLiteral {
     }
 
     @Override
-    public String getResult(final AccessorBundle bundle) {
+    public String getResult(final AccessorBundle bundle, int recursionDepth) {
         NumberFormat numberFormat = NumberFormat.getInstance(bundle.getBundle().getLocale());
         numberFormat.setGroupingUsed(useGrouping);
         numberFormat.setMaximumFractionDigits(maximumFractionDigits);

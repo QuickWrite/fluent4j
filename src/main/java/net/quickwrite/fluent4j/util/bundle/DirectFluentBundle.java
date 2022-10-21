@@ -36,11 +36,12 @@ public interface DirectFluentBundle extends FluentBundle {
      * it would return the {@link FluentTerm} for the key
      * {@code test} but {@code null} for anything else.
      *
-     * @param bundle The bundle that is being used as an argument
      * @param key    The key that the {@link FluentTerm} is stored in.
+     * @param bundle The bundle that is being used as an argument
+     * @param recursionDepth
      * @return The term itself
      */
-    Optional<String> getTerm(final String key, final AccessorBundle bundle);
+    Optional<String> getTerm(final String key, final AccessorBundle bundle, int recursionDepth);
 
     /**
      * Returns the {@link FluentMessage} that is being stored
@@ -75,7 +76,8 @@ public interface DirectFluentBundle extends FluentBundle {
      *
      * @param key    The key that the {@link FluentMessage} is stored in.
      * @param bundle The bundle that is being used as an argument
+     * @param recursionDepth
      * @return The message itself
      */
-    Optional<String> getMessage(final String key, final AccessorBundle bundle);
+    Optional<String> getMessage(final String key, final AccessorBundle bundle, int recursionDepth);
 }

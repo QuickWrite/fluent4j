@@ -42,7 +42,8 @@ public interface FluentElement {
      * it has been called from.
      *
      * @param bundle The bundle that is getting passed down
+     * @param recursionDepth The amount of recursive calls that can still be made
      * @return The {@link CharSequence} value of the argument with the parameters
      */
-    CharSequence getResult(final AccessorBundle bundle);
+    CharSequence getResult(final AccessorBundle bundle, final int recursionDepth);
 }
