@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.util.bundle;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.exception.FluentParseException;
+import net.quickwrite.fluent4j.exception.RecursionDepthReachedException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 
@@ -89,9 +90,50 @@ public interface FluentBundle {
      *
      * @param key       The key of the message
      * @param arguments The arguments that should be passed on
+     * @param recursionDepth The amount of recursive calls that can be made
+     * @throws RecursionDepthReachedException If the amount of recursive calls is reached
      * @return The generated string
      */
-    Optional<String> getMessage(final String key, final FluentArgs arguments);
+    Optional<String> getMessage(final String key, final FluentArgs arguments, int recursionDepth);
+
+    /**
+     * Returns the result of a Message with a specific
+     * key. Parameters are optional and can be (if not needed)
+     * called with a {@code null} value.
+     *
+     * <p>
+     * When the key is {@code hello-world} and there was
+     * a {@link FluentBundle} added that had the Message
+     * <pre>
+     *     hello-world = Hi! How are you?
+     * </pre>
+     * it will return the String {@code Hi! How are you?}.
+     * <p>
+     * In the case of needed parameters (if variables are
+     * in the Message) then the {@link FluentArgs} with the variable
+     * should be defined.
+     * <br>
+     * So then the call of {@code getMessage("hello-world-with-test", arguments)}
+     * on a FluentBundle with the Message:
+     * <pre>
+     *     hello-world-with-test = Hi! How are you { $name }?
+     * </pre>
+     * with the arguments having the variable {@code $name = "Max"} it would
+     * return {@code Hi! How are you Max?}.
+     *
+     * <p>
+     * If the message does not exist it returns a string with the format of
+     * <code>{ + key + }</code> which means that when the key is {@code test}
+     * the return value would be <code>{test}</code>.
+     *
+     * @param key       The key of the message
+     * @param arguments The arguments that should be passed on
+     * @throws RecursionDepthReachedException If the amount of recursive calls is reached
+     * @return The generated string
+     */
+    default Optional<String> getMessage(final String key, final FluentArgs arguments) {
+        return getMessage(key, arguments, 100);
+    }
 
     /**
      * Returns the locale the bundle has.

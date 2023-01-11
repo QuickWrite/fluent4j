@@ -51,7 +51,7 @@ public class NumberLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         return NumberFormat.getInstance(bundle.getBundle().getLocale()).format(number);
     }
 

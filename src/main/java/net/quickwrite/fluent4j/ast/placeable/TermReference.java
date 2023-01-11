@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.ast.FluentElement;
-import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentFunction;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
@@ -40,19 +39,24 @@ public class TermReference extends FluentFunction {
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         return bundle.getBundle()
-                .getTerm(this.functionName, new AccessorElementsBundle(bundle.getBundle(), this.getArguments(bundle), bundle.getAccessedStorage()))
+                .getTerm(this.functionName,
+                        new AccessorElementsBundle(bundle.getBundle(),
+                        this.getArguments(bundle, recursionDepth)),
+                        recursionDepth - 1
+                )
                 .orElse("{-" + this.functionName + "}");
     }
 
     /**
      * @param bundle    The bundle that this is being called from
+     * @param recursionDepth The amount of recursive calls that can still be made
      * @return The result of the term that is being called
      */
     @Override
-    public FluentElement getArgumentResult(final AccessorBundle bundle) {
-        return new StringLiteral(getResult(bundle).toString());
+    public FluentElement getArgumentResult(final AccessorBundle bundle, final int recursionDepth) {
+        return new StringLiteral(getResult(bundle, recursionDepth - 1).toString());
     }
 
     @Override

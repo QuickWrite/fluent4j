@@ -20,10 +20,11 @@ public interface FluentArgs {
      * <p>
      * This is necessary if the scopes are getting changed as a new scope does not have access
      * every variable the previous scope had.
-     *  @param bundle The main bundle
+     * @param bundle The main bundle
+     * @param recursionDepth
      *
      */
-    FluentArgs sanitize(final AccessorBundle bundle);
+    FluentArgs sanitize(final AccessorBundle bundle, int recursionDepth);
 
     /**
      * Adds a new named argument to the named arguments.

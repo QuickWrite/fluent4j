@@ -6,13 +6,10 @@ import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 public class AccessorElementsBundle implements AccessorBundle {
     private final DirectFluentBundle bundle;
     private final FluentArgs arguments;
-    private final AccessedStorage accessedStorage;
 
-    public AccessorElementsBundle(final DirectFluentBundle bundle, final FluentArgs arguments, final AccessedStorage accessedStorage) {
+    public AccessorElementsBundle(final DirectFluentBundle bundle, final FluentArgs arguments) {
         this.bundle = bundle;
         this.arguments = arguments;
-
-        this.accessedStorage = accessedStorage;
     }
 
     @Override
@@ -23,10 +20,5 @@ public class AccessorElementsBundle implements AccessorBundle {
     @Override
     public FluentArgs getArguments() {
         return this.arguments;
-    }
-
-    @Override
-    public AccessedStorage getAccessedStorage() {
-        return this.accessedStorage;
     }
 }

@@ -4,7 +4,6 @@ import net.quickwrite.fluent4j.ast.placeable.StringLiteral;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.args.FunctionFluentArgs;
-import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
 import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 import org.junit.Before;
@@ -317,7 +316,7 @@ public class TestCallExpressions {
         }
 
         @Override
-        public FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments) {
+        public FluentPlaceable getResult(final AccessorBundle bundle, final FunctionFluentArgs arguments, int recursionDepth) {
             if (arguments.isEmpty()) {
                 return new StringLiteral("{FUN(void)}");
             }
@@ -326,7 +325,7 @@ public class TestCallExpressions {
             stringBuilder.append("[p:");
 
             for (int i = 0; i < arguments.getPositionalSize(); i++) {
-                stringBuilder.append(arguments.getPositional(i).getResult(bundle));
+                stringBuilder.append(arguments.getPositional(i).getResult(bundle, recursionDepth - 1));
                 stringBuilder.append(",");
             }
 
@@ -335,7 +334,7 @@ public class TestCallExpressions {
             for (final String key : arguments.getNamedKeys()) {
                 stringBuilder.append(key);
                 stringBuilder.append(".");
-                stringBuilder.append(arguments.getNamed(key).getResult(bundle));
+                stringBuilder.append(arguments.getNamed(key).getResult(bundle, recursionDepth - 1));
                 stringBuilder.append(",");
             }
 

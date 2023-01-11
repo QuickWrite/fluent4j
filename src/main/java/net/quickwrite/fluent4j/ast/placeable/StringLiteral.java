@@ -55,7 +55,7 @@ public class StringLiteral implements FluentPlaceable, FluentSelectable {
     }
 
     @Override
-    public CharSequence getResult(AccessorBundle bundle) {
+    public CharSequence getResult(AccessorBundle bundle, final int recursionDepth) {
         return this.literal;
     }
 

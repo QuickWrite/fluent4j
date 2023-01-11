@@ -53,8 +53,8 @@ public class FluentVariant implements FluentElement {
         return identifier.stringValue();
     }
 
-    public CharSequence getResult(AccessorBundle bundle) {
-        return this.content.getResult(bundle);
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
+        return this.content.getResult(bundle, recursionDepth - 1);
     }
 
     @Override

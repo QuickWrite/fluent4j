@@ -82,7 +82,7 @@ public class FluentTextElement implements FluentElement {
     }
 
     @Override
-    public CharSequence getResult(AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         return this.text;
     }
 
