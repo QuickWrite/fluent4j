@@ -9,7 +9,7 @@ public interface ParseResult<T> {
         return new ParseResult<>() {
             @Override
             public ParseResultType getType() {
-                return ParseResultType.SUCESS;
+                return ParseResultType.SUCCESS;
             }
 
             @Override
@@ -48,7 +48,7 @@ public interface ParseResult<T> {
     }
 
     enum ParseResultType {
-        SUCESS,
+        SUCCESS,
         SKIP,
         FAILURE
     }

@@ -1,13 +1,14 @@
-package net.quickwrite.fluent4j.parser;
+package net.quickwrite.fluent4j.impl.parser;
 
 import net.quickwrite.fluent4j.FluentResource;
+import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.parser.FluentResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
-import net.quickwrite.fluent4j.stream.ContentStream;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class FluentParserGroup implements FluentResourceParser {
     private final List<FluentBaseParser> baseParser = new ArrayList<>();
@@ -16,16 +17,16 @@ public class FluentParserGroup implements FluentResourceParser {
         this.baseParser.add(parser);
     }
 
-    static FluentParserGroup getBasicParser() {
+    public static FluentParserGroup getBasicParser() {
         final FluentParserGroup group = new FluentParserGroup();
 
-        group.addParser(content -> {
+        group.addParser(iterator -> {
             // TODO: Make this parser more fluent compliant
-            if (content.next() != '#') {
+            if (iterator.character() != '#') {
                 return ParseResult.failure();
             }
 
-            content.getLine();
+            iterator.nextLine();
 
             return ParseResult.skip();
         });
@@ -36,24 +37,28 @@ public class FluentParserGroup implements FluentResourceParser {
     }
 
     @Override
-    public FluentResource parse(final ContentStream stream) {
+    public FluentResource parse(final ContentIterator iterator) {
         final List<Object> elements = new ArrayList<>();
-        while (stream.hasNext()) {
-            final long position = stream.getPosition();
+
+        back:
+        if (iterator.line() != null) {
+            final int[] position = iterator.position();
 
             for(final FluentBaseParser parser : baseParser) {
-                final ParseResult<?> result = parser.tryParse(stream);
+                final ParseResult<?> result = parser.tryParse(iterator);
 
-                if (result.getType() == ParseResult.ParseResultType.SUCESS) {
+                if (result.getType() == ParseResult.ParseResultType.SUCCESS) {
                     elements.add(result.getValue());
-                    break;
+                    break back;
                 }
                 if (result.getType() == ParseResult.ParseResultType.SKIP) {
-                    break;
+                    break back;
                 }
 
-                stream.setPosition(position);
+                iterator.setPosition(position);
             }
+
+            // TODO: Something went wrong and it must be handled
         }
 
         return null;
