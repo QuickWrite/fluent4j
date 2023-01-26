@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.FluentResource;
 import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
+import net.quickwrite.fluent4j.parser.result.ParseResult;
 import net.quickwrite.fluent4j.stream.ContentStream;
 
 import java.util.ArrayList;
@@ -15,6 +16,25 @@ public class FluentParserGroup implements FluentResourceParser {
         this.baseParser.add(parser);
     }
 
+    static FluentParserGroup getBasicParser() {
+        final FluentParserGroup group = new FluentParserGroup();
+
+        group.addParser(content -> {
+            // TODO: Make this parser more fluent compliant
+            if (content.next() != '#') {
+                return ParseResult.failure();
+            }
+
+            content.getLine();
+
+            return ParseResult.skip();
+        });
+
+        // TODO: Add element parser
+
+        return group;
+    }
+
     @Override
     public FluentResource parse(final ContentStream stream) {
         final List<Object> elements = new ArrayList<>();
@@ -22,10 +42,13 @@ public class FluentParserGroup implements FluentResourceParser {
             final long position = stream.getPosition();
 
             for(final FluentBaseParser parser : baseParser) {
-                final Optional<?> element = parser.tryParse(stream);
+                final ParseResult<?> result = parser.tryParse(stream);
 
-                if (element.isPresent()) {
-                    elements.add(element.get());
+                if (result.getType() == ParseResult.ParseResultType.SUCESS) {
+                    elements.add(result.getValue());
+                    break;
+                }
+                if (result.getType() == ParseResult.ParseResultType.SKIP) {
                     break;
                 }
 
