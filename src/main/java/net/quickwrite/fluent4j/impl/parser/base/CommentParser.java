@@ -1,12 +1,13 @@
 package net.quickwrite.fluent4j.impl.parser.base;
 
+import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 public class CommentParser implements FluentBaseParser {
     @Override
-    public ParseResult<?> tryParse(final ContentIterator content) {
+    public ParseResult<FluentEntry> tryParse(final ContentIterator content) {
         for (int i = 0; i < 3; i++) {
             if (content.character() != '#') {
                 if (i == 0) {
@@ -27,6 +28,8 @@ public class CommentParser implements FluentBaseParser {
         final String text = content.line();
         content.nextLine();
 
-        return ParseResult.success(text);
+        return ParseResult.success(new FluentEntry() {
+            private final String value = text;
+        });
     }
 }

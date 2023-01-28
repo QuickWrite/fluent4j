@@ -15,12 +15,14 @@ public interface ParseResult<T> {
         };
     }
 
-    static ParseResult<?> failure() {
-        return ParseResultType.FAILURE_IMPL;
+    @SuppressWarnings("unchecked")
+    static <V> ParseResult<V> failure() {
+        return (ParseResult<V>) ParseResultType.FAILURE_IMPL;
     }
 
-    static ParseResult<?> skip() {
-        return ParseResultType.SKIP_IMPL;
+    @SuppressWarnings("unchecked")
+    static <V> ParseResult<V> skip() {
+        return (ParseResult<V>) ParseResultType.SKIP_IMPL;
     }
 
     ParseResultType getType();
