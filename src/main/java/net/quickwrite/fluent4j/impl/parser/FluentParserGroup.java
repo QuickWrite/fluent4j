@@ -35,7 +35,7 @@ public class FluentParserGroup implements FluentResourceParser {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for(final FluentBaseParser parser : baseParser) {
+            for (final FluentBaseParser parser : baseParser) {
                 final ParseResult<?> result = parser.tryParse(iterator);
 
                 switch (result.getType()) {

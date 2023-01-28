@@ -1,10 +1,6 @@
 package net.quickwrite.fluent4j.parser.result;
 
 public interface ParseResult<T> {
-    ParseResultType getType();
-
-    T getValue();
-
     static <V> ParseResult<V> success(final V value) {
         return new ParseResult<>() {
             @Override
@@ -27,6 +23,10 @@ public interface ParseResult<T> {
         return ParseResultType.SKIP_IMPL;
     }
 
+    ParseResultType getType();
+
+    T getValue();
+
     enum ParseResultType {
         SUCCESS,
         SKIP,
@@ -35,7 +35,7 @@ public interface ParseResult<T> {
         static final ParseResult<?> FAILURE_IMPL = new ParseResult<>() {
             @Override
             public ParseResultType getType() {
-                return ParseResultType.FAILURE;
+                return FAILURE;
             }
 
             @Override
@@ -47,7 +47,7 @@ public interface ParseResult<T> {
         static final ParseResult<?> SKIP_IMPL = new ParseResult<>() {
             @Override
             public ParseResultType getType() {
-                return ParseResultType.SKIP;
+                return SKIP;
             }
 
             @Override

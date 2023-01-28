@@ -26,11 +26,11 @@ public class StringContentIterator implements ContentIterator {
     public int nextChar() {
         if (line().length() <= this.characterIndex + 1) {
             this.characterIndex = 0;
-            if(nextLine() == null) {
+            if (nextLine() == null) {
                 return 0;
             }
         } else {
-            this.characterIndex += 1;
+            this.characterIndex++;
         }
         return character();
     }
@@ -46,7 +46,7 @@ public class StringContentIterator implements ContentIterator {
 
     @Override
     public String nextLine() {
-        line += 1;
+        line++;
         characterIndex = 0;
         return line();
     }

@@ -7,8 +7,8 @@ import net.quickwrite.fluent4j.parser.result.ParseResult;
 public class CommentParser implements FluentBaseParser {
     @Override
     public ParseResult<?> tryParse(final ContentIterator content) {
-        for(int i = 0; i < 3; i++) {
-            if(content.character() != '#') {
+        for (int i = 0; i < 3; i++) {
+            if (content.character() != '#') {
                 if (i == 0) {
                     return ParseResult.failure();
                 }
