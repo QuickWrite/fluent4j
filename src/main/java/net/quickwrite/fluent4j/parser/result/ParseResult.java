@@ -20,7 +20,19 @@ public interface ParseResult<T> {
     }
 
     static ParseResult<?> failure() {
-        return new ParseResult<>() {
+        return ParseResultType.FAILURE_IMPL;
+    }
+
+    static ParseResult<?> skip() {
+        return ParseResultType.SKIP_IMPL;
+    }
+
+    enum ParseResultType {
+        SUCCESS,
+        SKIP,
+        FAILURE;
+
+        static final ParseResult<?> FAILURE_IMPL = new ParseResult<>() {
             @Override
             public ParseResultType getType() {
                 return ParseResultType.FAILURE;
@@ -31,10 +43,8 @@ public interface ParseResult<T> {
                 return null;
             }
         };
-    }
 
-    static ParseResult<?> skip() {
-        return new ParseResult<>() {
+        static final ParseResult<?> SKIP_IMPL = new ParseResult<>() {
             @Override
             public ParseResultType getType() {
                 return ParseResultType.SKIP;
@@ -45,11 +55,5 @@ public interface ParseResult<T> {
                 return null;
             }
         };
-    }
-
-    enum ParseResultType {
-        SUCCESS,
-        SKIP,
-        FAILURE
     }
 }
