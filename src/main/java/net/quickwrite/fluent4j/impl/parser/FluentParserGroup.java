@@ -21,16 +21,7 @@ public class FluentParserGroup implements FluentResourceParser {
     public static FluentParserGroup getBasicParser() {
         final FluentParserGroup group = new FluentParserGroup();
 
-        group.addParser(iterator -> {
-            // TODO: Make this parser more fluent compliant
-            if (iterator.character() != '#') {
-                return ParseResult.failure();
-            }
-
-            iterator.nextLine();
-
-            return ParseResult.skip();
-        });
+        group.addParser(new CommentParser());
 
         // TODO: Add element parser
 
