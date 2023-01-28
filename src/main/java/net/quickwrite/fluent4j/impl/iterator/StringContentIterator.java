@@ -47,6 +47,7 @@ public class StringContentIterator implements ContentIterator {
     @Override
     public String nextLine() {
         line += 1;
+        characterIndex = 0;
         return line();
     }
 

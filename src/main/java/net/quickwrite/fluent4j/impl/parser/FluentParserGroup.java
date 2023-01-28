@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser;
 
 import net.quickwrite.fluent4j.FluentResource;
+import net.quickwrite.fluent4j.impl.parser.base.CommentParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.FluentResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
@@ -40,8 +41,8 @@ public class FluentParserGroup implements FluentResourceParser {
     public FluentResource parse(final ContentIterator iterator) {
         final List<Object> elements = new ArrayList<>();
 
-        back:
-        if (iterator.line() != null) {
+        outer:
+        while (iterator.line() != null) {
             final int[] position = iterator.position();
 
             for(final FluentBaseParser parser : baseParser) {
@@ -49,16 +50,17 @@ public class FluentParserGroup implements FluentResourceParser {
 
                 if (result.getType() == ParseResult.ParseResultType.SUCCESS) {
                     elements.add(result.getValue());
-                    break back;
+                    continue outer;
                 }
                 if (result.getType() == ParseResult.ParseResultType.SKIP) {
-                    break back;
+                    continue outer;
                 }
 
                 iterator.setPosition(position);
             }
 
             // TODO: Something went wrong and it must be handled
+            throw new RuntimeException("Every parser returned FAILURE.");
         }
 
         return null;
