@@ -7,7 +7,6 @@ import net.quickwrite.fluent4j.parser.FluentResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +38,11 @@ public class FluentParserGroup implements FluentResourceParser {
             for(final FluentBaseParser parser : baseParser) {
                 final ParseResult<?> result = parser.tryParse(iterator);
 
-                if (result.getType() == ParseResult.ParseResultType.SUCCESS) {
-                    elements.add(result.getValue());
-                    continue outer;
-                }
-                if (result.getType() == ParseResult.ParseResultType.SKIP) {
-                    continue outer;
+                switch (result.getType()) {
+                    case SUCCESS:
+                        elements.add(result.getValue());
+                    case SKIP:
+                        continue outer;
                 }
 
                 iterator.setPosition(position);
