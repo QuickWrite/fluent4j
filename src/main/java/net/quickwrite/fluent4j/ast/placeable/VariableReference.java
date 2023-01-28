@@ -52,7 +52,7 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public FluentElement getArgumentResult(final AccessorBundle bundle) {
+    public FluentElement getArgumentResult(final AccessorBundle bundle, final int recursionDepth) {
         final FluentArgs arguments = bundle.getArguments();
         final FluentElement argument = arguments.getNamed(content);
 
@@ -64,14 +64,14 @@ public class VariableReference implements FluentPlaceable, FluentSelectable, Flu
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, final int recursionDepth) {
         final FluentElement argument = bundle.getArguments().getNamed(content);
 
         if (argument == null) {
             return "{$" + content + "}";
         }
 
-        return argument.getResult(bundle);
+        return argument.getResult(bundle, recursionDepth - 1);
     }
 
     @Override

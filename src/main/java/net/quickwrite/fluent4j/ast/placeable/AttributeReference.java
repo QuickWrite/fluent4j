@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentArgumentResult;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.base.FluentSelectable;
+import net.quickwrite.fluent4j.exception.RecursionDepthReachedException;
 import net.quickwrite.fluent4j.util.StringSlice;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
 import net.quickwrite.fluent4j.util.bundle.DirectFluentBundle;
@@ -42,7 +43,7 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
     }
 
     @Override
-    public CharSequence getResult(final AccessorBundle bundle) {
+    public CharSequence getResult(final AccessorBundle bundle, int recursionDepth) {
         final FluentMessage fluentMessage = this.getMessage(bundle.getBundle(), reference.stringValue());
         if (fluentMessage == null) {
             return getErrorString();
@@ -54,11 +55,11 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
             return getErrorString();
         }
 
-        return attribute.getResult(bundle);
+        return attribute.getResult(bundle, recursionDepth - 1);
     }
 
     @Override
-    public FluentElement getArgumentResult(final AccessorBundle bundle) {
+    public FluentElement getArgumentResult(final AccessorBundle bundle, int recursionDepth) {
         final FluentMessage fluentMessage = this.getMessage(bundle.getBundle(), reference.stringValue());
         if (fluentMessage == null) {
             return this;
@@ -70,11 +71,9 @@ public class AttributeReference implements FluentPlaceable, FluentSelectable, Fl
             return this;
         }
 
-        if (bundle.getAccessedStorage().alreadyAccessed(attribute)) {
-            return this;
+        if (recursionDepth <= 0) {
+            throw new RecursionDepthReachedException();
         }
-
-        bundle.getAccessedStorage().addElement(attribute);
 
         final List<FluentElement> elementList = attribute.getElements();
 

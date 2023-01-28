@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j;
 
+import net.quickwrite.fluent4j.exception.RecursionDepthReachedException;
 import net.quickwrite.fluent4j.util.bundle.FluentBundle;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +18,15 @@ public class TestRecursion {
 
     @Test
     public void testRecursiveKey01() {
-        Assertions.assertEquals("{recursive-key01}", GetFileHelper.getMessage(bundle, "recursive-key01"));
+        Assertions.assertThrows(RecursionDepthReachedException.class, () -> {
+            GetFileHelper.getMessage(bundle, "recursive-key01");
+        });
     }
 
     @Test
     public void testRecursiveTerm01() {
-        Assertions.assertEquals("{-recursive-term01}", GetFileHelper.getMessage(bundle, "recursive-term01"));
+        Assertions.assertThrows(RecursionDepthReachedException.class, () -> {
+            GetFileHelper.getMessage(bundle, "recursive-term01");
+        });
     }
 }

@@ -34,14 +34,14 @@ public class FluentArguments implements FluentArgs {
     }
 
     @Override
-    public FluentArgs sanitize(final AccessorBundle bundle) {
+    public FluentArgs sanitize(final AccessorBundle bundle, final int recursionDepth) {
         final FluentArgs args = new FluentArguments();
 
         for (final String key : namedArguments.keySet()) {
             final FluentElement argument = namedArguments.get(key);
 
             if (argument instanceof FluentArgumentResult) {
-                args.setNamed(key, ((FluentArgumentResult) argument).getArgumentResult(bundle));
+                args.setNamed(key, ((FluentArgumentResult) argument).getArgumentResult(bundle, recursionDepth - 1));
                 continue;
             }
 

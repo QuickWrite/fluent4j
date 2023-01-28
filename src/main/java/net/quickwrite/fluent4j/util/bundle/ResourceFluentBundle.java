@@ -5,11 +5,11 @@ import net.quickwrite.fluent4j.ast.FluentElement;
 import net.quickwrite.fluent4j.ast.FluentMessage;
 import net.quickwrite.fluent4j.ast.FluentTerm;
 import net.quickwrite.fluent4j.exception.FluentParseException;
+import net.quickwrite.fluent4j.exception.RecursionDepthReachedException;
 import net.quickwrite.fluent4j.exception.UnknownElementException;
 import net.quickwrite.fluent4j.functions.AbstractFunction;
 import net.quickwrite.fluent4j.util.BuiltinFunctions;
 import net.quickwrite.fluent4j.util.args.FluentArgs;
-import net.quickwrite.fluent4j.util.bundle.args.AccessedStorageBundle;
 import net.quickwrite.fluent4j.util.bundle.args.AccessorBundle;
 import net.quickwrite.fluent4j.util.bundle.args.AccessorElementsBundle;
 
@@ -97,13 +97,14 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     }
 
     @Override
-    public Optional<String> getMessage(final String key, final FluentArgs arguments) {
+    public Optional<String> getMessage(final String key, final FluentArgs arguments, int recursionDepth) {
         return getMessage(
                 key,
                 new AccessorElementsBundle(
                         this,
-                        arguments != null ? arguments : FluentArgs.EMPTY_ARGS,
-                        new AccessedStorageBundle())
+                        arguments != null ? arguments : FluentArgs.EMPTY_ARGS
+                ),
+                recursionDepth
         );
     }
 
@@ -113,21 +114,19 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     }
 
     @Override
-    public Optional<String> getTerm(final String key, final AccessorBundle bundle) {
+    public Optional<String> getTerm(final String key, final AccessorBundle bundle, int recursionDepth) {
         final FluentTerm term = this.getTerm(key);
 
         if (term == null) {
             return Optional.empty();
         }
 
-        if (bundle.getAccessedStorage().alreadyAccessed(term)) {
-            return Optional.empty();
+        if (recursionDepth <= 0) {
+            throw new RecursionDepthReachedException();
         }
 
-        bundle.getAccessedStorage().addElement(term);
-
         return Optional.of(
-                term.getResult(bundle).toString()
+                term.getResult(bundle, recursionDepth).toString()
         );
     }
 
@@ -137,21 +136,19 @@ public class ResourceFluentBundle implements FluentBundle, DirectFluentBundle {
     }
 
     @Override
-    public Optional<String> getMessage(final String key, final AccessorBundle bundle) {
+    public Optional<String> getMessage(final String key, final AccessorBundle bundle, int recursionDepth) {
         final FluentMessage message = this.getMessage(key);
 
         if (message == null) {
             return Optional.empty();
         }
 
-        if (bundle.getAccessedStorage().alreadyAccessed(message)) {
-            return Optional.empty();
+        if (recursionDepth <= 0) {
+            throw new RecursionDepthReachedException();
         }
 
-        bundle.getAccessedStorage().addElement(message);
-
         return Optional.of(
-                message.getResult(bundle).toString()
+                message.getResult(bundle, recursionDepth).toString()
         );
     }
 
