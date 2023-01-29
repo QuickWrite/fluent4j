@@ -3,7 +3,8 @@ package net.quickwrite.fluent4j.impl.parser;
 import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.impl.container.FluentEntryResource;
-import net.quickwrite.fluent4j.impl.parser.base.CommentParser;
+import net.quickwrite.fluent4j.impl.parser.base.CommentSkipper;
+import net.quickwrite.fluent4j.impl.parser.base.WhitespaceSkipper;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.FluentResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentParser;
@@ -22,7 +23,8 @@ public class FluentParserGroup implements FluentResourceParser {
     public static FluentParserGroup getBasicParser() {
         final FluentParserGroup group = new FluentParserGroup();
 
-        group.addParser(new CommentParser());
+        group.addParser(new WhitespaceSkipper());
+        group.addParser(new CommentSkipper());
 
         // TODO: Add element parser
 

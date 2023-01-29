@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
-public class CommentParser implements FluentParser<FluentEntry> {
+public class CommentSkipper implements FluentParser<FluentEntry> {
     @Override
     public ParseResult<FluentEntry> tryParse(final ContentIterator content) {
         for (int i = 0; i < 3; i++) {
@@ -25,11 +25,8 @@ public class CommentParser implements FluentParser<FluentEntry> {
             throw new RuntimeException();
         }
 
-        final String text = content.line();
         content.nextLine();
 
-        return ParseResult.success(new FluentEntry() {
-            private final String value = text;
-        });
+        return ParseResult.skip();
     }
 }
