@@ -15,7 +15,11 @@ public class StringContentIterator implements ContentIterator {
 
     @Override
     public int character() {
-        if (line().length() <= this.characterIndex) {
+        if (line().length() == this.characterIndex) {
+            return '\n';
+        }
+
+        if (line().length() < this.characterIndex) {
             return 0;
         }
 
@@ -24,7 +28,7 @@ public class StringContentIterator implements ContentIterator {
 
     @Override
     public int nextChar() {
-        if (line().length() <= this.characterIndex + 1) {
+        if (line().length() < this.characterIndex + 1) {
             this.characterIndex = 0;
             if (nextLine() == null) {
                 return 0;
@@ -32,6 +36,7 @@ public class StringContentIterator implements ContentIterator {
         } else {
             this.characterIndex++;
         }
+
         return character();
     }
 
