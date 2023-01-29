@@ -1,15 +1,24 @@
 package net.quickwrite.fluent4j.impl.parser.base.entry;
 
+import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentEntryBase;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.base.FluentParser;
+import net.quickwrite.fluent4j.parser.base.FluentElementParser;
+import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
+import java.util.List;
 import java.util.Optional;
 
-public abstract class FluentEntryParser<T extends FluentEntryBase> implements FluentParser<T> {
+public abstract class FluentEntryParser<T extends FluentEntryBase> implements FluentElementParser<T> {
+    private final FluentPatternParser patternParser;
+
+    public FluentEntryParser(final FluentPatternParser patternParser) {
+        this.patternParser = patternParser;
+    }
+
     @Override
-    public ParseResult<T> tryParse(final ContentIterator content) {
+    public ParseResult<T> parse(final ContentIterator content) {
         final Optional<String> identifier = getIdentifier(content);
 
         if (identifier.isEmpty()) {
@@ -23,10 +32,9 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
             throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) +  "'");
         }
 
-        // TODO: Generate the tree
-        content.nextLine();
+        final List<FluentPattern> patterns = patternParser.parse(content);
 
-        return ParseResult.success(getInstance(identifier.get()));
+        return ParseResult.success(getInstance(identifier.get(), patterns));
     }
 
     private void skipWhitespace(final ContentIterator content) {
@@ -52,7 +60,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
                 || character == '_';
     }
 
-    protected abstract T getInstance(final String identifier);
+    protected abstract T getInstance(final String identifier, List<FluentPattern> patterns);
 
     protected abstract Optional<String> getIdentifier(final ContentIterator content);
 }

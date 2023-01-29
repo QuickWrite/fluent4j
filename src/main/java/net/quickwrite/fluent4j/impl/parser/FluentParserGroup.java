@@ -8,17 +8,18 @@ import net.quickwrite.fluent4j.impl.parser.base.entry.FluentMessageParser;
 import net.quickwrite.fluent4j.impl.parser.base.WhitespaceSkipper;
 import net.quickwrite.fluent4j.impl.parser.base.entry.FluentTermParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.FluentResourceParser;
-import net.quickwrite.fluent4j.parser.base.FluentParser;
+import net.quickwrite.fluent4j.parser.FluentParser;
+import net.quickwrite.fluent4j.parser.base.FluentElementParser;
+import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class FluentParserGroup implements FluentResourceParser {
-    private final List<FluentParser<? extends FluentEntry>> baseParser = new ArrayList<>();
+public final class FluentParserGroup implements FluentParser<FluentResource> {
+    private final List<FluentElementParser<? extends FluentEntry>> baseParser = new ArrayList<>();
 
-    public void addParser(final FluentParser<? extends FluentEntry> parser) {
+    public void addParser(final FluentElementParser<? extends FluentEntry> parser) {
         this.baseParser.add(parser);
     }
 
@@ -28,8 +29,8 @@ public final class FluentParserGroup implements FluentResourceParser {
         group.addParser(new WhitespaceSkipper());
         group.addParser(new CommentSkipper());
 
-        group.addParser(new FluentTermParser());
-        group.addParser(new FluentMessageParser());
+        group.addParser(new FluentTermParser(FluentPatternParser.DEFAULT_PARSER));
+        group.addParser(new FluentMessageParser(FluentPatternParser.DEFAULT_PARSER));
 
         return group;
     }
@@ -42,8 +43,8 @@ public final class FluentParserGroup implements FluentResourceParser {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentParser<? extends FluentEntry> parser : baseParser) {
-                final ParseResult<? extends FluentEntry> result = parser.tryParse(iterator);
+            for (final FluentElementParser<? extends FluentEntry> parser : baseParser) {
+                final ParseResult<? extends FluentEntry> result = parser.parse(iterator);
 
                 switch (result.getType()) {
                     case SUCCESS:

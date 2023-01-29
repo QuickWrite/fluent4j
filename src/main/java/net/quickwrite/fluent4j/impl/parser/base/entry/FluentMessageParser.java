@@ -1,14 +1,21 @@
 package net.quickwrite.fluent4j.impl.parser.base.entry;
 
+import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
 
+import java.util.List;
 import java.util.Optional;
 
 public final class FluentMessageParser extends FluentEntryParser<FluentMessage> {
+    public FluentMessageParser(final FluentPatternParser patternParser) {
+        super(patternParser);
+    }
+
     @Override
-    protected FluentMessage getInstance(final String identifier) {
-        return new FluentMessage(identifier);
+    protected FluentMessage getInstance(final String identifier, final List<FluentPattern> patterns) {
+        return new FluentMessage(identifier, patterns);
     }
 
     @Override

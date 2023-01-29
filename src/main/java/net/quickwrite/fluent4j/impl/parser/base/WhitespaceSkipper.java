@@ -2,12 +2,12 @@ package net.quickwrite.fluent4j.impl.parser.base;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.base.FluentParser;
+import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
-public final class WhitespaceSkipper implements FluentParser<FluentEntry> {
+public final class WhitespaceSkipper implements FluentElementParser<FluentEntry> {
     @Override
-    public ParseResult<FluentEntry> tryParse(final ContentIterator content) {
+    public ParseResult<FluentEntry> parse(final ContentIterator content) {
         if (content.line().length() != 0 && !Character.isWhitespace(content.character())) {
             return ParseResult.failure();
         }
