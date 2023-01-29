@@ -1,4 +1,4 @@
-package net.quickwrite.fluent4j.impl.parser.base;
+package net.quickwrite.fluent4j.impl.parser.base.entry;
 
 import net.quickwrite.fluent4j.impl.ast.entry.FluentEntryBase;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
@@ -23,6 +23,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
             throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) +  "'");
         }
 
+        // TODO: Generate the tree
         content.nextLine();
 
         return ParseResult.success(getInstance(identifier.get()));

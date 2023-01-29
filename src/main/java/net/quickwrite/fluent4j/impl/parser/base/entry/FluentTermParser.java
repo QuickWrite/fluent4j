@@ -1,19 +1,23 @@
-package net.quickwrite.fluent4j.impl.parser.base;
+package net.quickwrite.fluent4j.impl.parser.base.entry;
 
-import net.quickwrite.fluent4j.impl.ast.entry.FluentMessage;
+import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 
 import java.util.Optional;
 
-public final class FluentMessageParser extends FluentEntryParser<FluentMessage> {
+public class FluentTermParser extends FluentEntryParser<FluentTerm> {
     @Override
-    protected FluentMessage getInstance(final String identifier) {
-        return new FluentMessage(identifier);
+    protected FluentTerm getInstance(final String identifier) {
+        return new FluentTerm(identifier);
     }
 
     @Override
     protected Optional<String> getIdentifier(final ContentIterator content) {
-        if (!isFluentIdentifierStart(content.character())) {
+        if (content.character() != '-') {
+            return Optional.empty();
+        }
+
+        if (!isFluentIdentifierStart(content.nextChar())) {
             return Optional.empty();
         }
 
