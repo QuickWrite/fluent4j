@@ -2,10 +2,10 @@ package net.quickwrite.fluent4j.impl.parser.base;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
+import net.quickwrite.fluent4j.parser.base.FluentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
-public class CommentParser implements FluentBaseParser {
+public class CommentParser implements FluentParser<FluentEntry> {
     @Override
     public ParseResult<FluentEntry> tryParse(final ContentIterator content) {
         for (int i = 0; i < 3; i++) {

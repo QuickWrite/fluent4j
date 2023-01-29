@@ -6,16 +6,16 @@ import net.quickwrite.fluent4j.impl.container.FluentEntryResource;
 import net.quickwrite.fluent4j.impl.parser.base.CommentParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.FluentResourceParser;
-import net.quickwrite.fluent4j.parser.base.FluentBaseParser;
+import net.quickwrite.fluent4j.parser.base.FluentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FluentParserGroup implements FluentResourceParser {
-    private final List<FluentBaseParser> baseParser = new ArrayList<>();
+    private final List<FluentParser<? extends FluentEntry>> baseParser = new ArrayList<>();
 
-    public void addParser(final FluentBaseParser parser) {
+    public void addParser(final FluentParser<? extends FluentEntry> parser) {
         this.baseParser.add(parser);
     }
 
@@ -37,8 +37,8 @@ public class FluentParserGroup implements FluentResourceParser {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentBaseParser parser : baseParser) {
-                final ParseResult<FluentEntry> result = parser.tryParse(iterator);
+            for (final FluentParser<? extends FluentEntry> parser : baseParser) {
+                final ParseResult<? extends FluentEntry> result = parser.tryParse(iterator);
 
                 switch (result.getType()) {
                     case SUCCESS:
