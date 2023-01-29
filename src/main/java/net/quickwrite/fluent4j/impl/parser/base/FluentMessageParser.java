@@ -5,7 +5,7 @@ import net.quickwrite.fluent4j.iterator.ContentIterator;
 
 import java.util.Optional;
 
-public class FluentMessageParser extends FluentEntryParser<FluentMessage> {
+public final class FluentMessageParser extends FluentEntryParser<FluentMessage> {
     @Override
     protected FluentMessage getInstance(final String identifier) {
         return new FluentMessage(identifier);

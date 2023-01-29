@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.impl.iterator;
 
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 
-public class StringContentIterator implements ContentIterator {
+public final class StringContentIterator implements ContentIterator {
     private final String[] lines;
     private int line;
     private int characterIndex;

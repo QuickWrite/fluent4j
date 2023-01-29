@@ -13,7 +13,7 @@ import net.quickwrite.fluent4j.parser.result.ParseResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluentParserGroup implements FluentResourceParser {
+public final class FluentParserGroup implements FluentResourceParser {
     private final List<FluentParser<? extends FluentEntry>> baseParser = new ArrayList<>();
 
     public void addParser(final FluentParser<? extends FluentEntry> parser) {
