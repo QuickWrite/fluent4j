@@ -143,7 +143,7 @@ public class FluentContentParserGroup implements FluentContentParser {
             if (textElement.isAfterNL()) {
                 builder.append('\n');
                 builder.append(
-                        slice(textElement.getContent(), textElement.getWhitespace(), textElement.getContent().length())
+                        slice(textElement.getContent(), minWhitespace, textElement.getContent().length())
                 );
                 continue;
             }
