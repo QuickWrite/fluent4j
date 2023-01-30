@@ -9,6 +9,7 @@ import net.quickwrite.fluent4j.parser.result.ParseResult;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class FluentContentParserGroup implements FluentContentParser {
     private final List<FluentPatternParser<? extends FluentPattern>> patternParserList = new ArrayList<>();
@@ -24,7 +25,7 @@ public class FluentContentParserGroup implements FluentContentParser {
     }
 
     @Override
-    public List<FluentPattern> parse(final ContentIterator iterator) {
+    public List<FluentPattern> parse(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
         final List<FluentPattern> patternList = new ArrayList<>();
 
         int textStart = iterator.position()[1];
@@ -60,8 +61,15 @@ public class FluentContentParserGroup implements FluentContentParser {
             if (iterator.character() == '\n') {
                 patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
 
+                iterator.nextChar();
+                if (endChecker.apply(iterator)) {
+                    break;
+                }
+
                 textStart = 0;
                 isAfterNL = true;
+
+                continue;
             }
 
             iterator.nextChar();

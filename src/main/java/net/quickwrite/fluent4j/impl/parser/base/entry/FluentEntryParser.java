@@ -32,7 +32,10 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
             throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) +  "'");
         }
 
-        final List<FluentPattern> patterns = patternParser.parse(content);
+        final List<FluentPattern> patterns = patternParser.parse(
+                content,
+                iterator -> !Character.isWhitespace(iterator.character())
+        );
 
         return ParseResult.success(getInstance(identifier.get(), patterns));
     }

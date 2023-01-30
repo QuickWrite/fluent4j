@@ -15,12 +15,12 @@ public final class StringContentIterator implements ContentIterator {
 
     @Override
     public int character() {
-        if (line().length() == this.characterIndex) {
-            return '\n';
+        if (line() == null || line().length() < this.characterIndex) {
+            return 0;
         }
 
-        if (line().length() < this.characterIndex) {
-            return 0;
+        if (line().length() == this.characterIndex) {
+            return '\n';
         }
 
         return line().codePointAt(characterIndex);
@@ -28,6 +28,10 @@ public final class StringContentIterator implements ContentIterator {
 
     @Override
     public int nextChar() {
+        if (line() == null) {
+            return 0;
+        }
+
         if (line().length() < this.characterIndex + 1) {
             this.characterIndex = 0;
             if (nextLine() == null) {
