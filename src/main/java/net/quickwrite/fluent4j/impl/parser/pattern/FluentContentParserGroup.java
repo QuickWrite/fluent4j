@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
@@ -26,9 +27,15 @@ public class FluentContentParserGroup implements FluentContentParser {
 
     @Override
     public List<FluentPattern> parse(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
+        final List<FluentPattern> patternList = generatePatternList(iterator, endChecker);
+
+        return sanitizePatternList(patternList);
+    }
+
+    private List<FluentPattern> generatePatternList(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
         final List<FluentPattern> patternList = new ArrayList<>();
 
-        int textStart = iterator.position()[1];
+        int textStart = iterator.position()[1] + 1;
         boolean isAfterNL = false;
 
         outer:
@@ -78,6 +85,107 @@ public class FluentContentParserGroup implements FluentContentParser {
         return patternList;
     }
 
+    final List<FluentPattern> sanitizePatternList(final List<FluentPattern> patternList) {
+        int minWhitespace = Integer.MAX_VALUE;
+
+        for (final FluentPattern pattern : patternList) {
+            if (!(pattern instanceof IntermediateTextElement)) {
+                continue;
+            }
+
+            final IntermediateTextElement textElement = (IntermediateTextElement) pattern;
+
+            if (!textElement.isAfterNL()) {
+                continue;
+            }
+
+            final int whitespace = textElement.getWhitespace();
+            if (whitespace != -1 && whitespace < minWhitespace) {
+                minWhitespace = whitespace;
+            }
+        }
+
+        final List<FluentPattern> result = new ArrayList<>(patternList.size());
+        final StringBuilder builder = new StringBuilder();
+
+        firstElementIf:
+        if (patternList.get(0) instanceof IntermediateTextElement) {
+            final IntermediateTextElement textElement = (IntermediateTextElement)patternList.get(0);
+
+            if (textElement.getWhitespace() == -1) {
+                break firstElementIf;
+            }
+
+            builder.append(
+                    slice(textElement.getContent(), textElement.getWhitespace(), textElement.getContent().length())
+            );
+        }
+
+        for (int i = 1; i < patternList.size(); i++) {
+            if(!(patternList.get(i) instanceof IntermediateTextElement)) {
+                result.add(new FluentTextElement(builder.toString()));
+
+                // clear the StringBuilder
+                builder.setLength(0);
+
+                result.add(patternList.get(i));
+
+                continue;
+            }
+
+            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
+
+            if (textElement.getWhitespace() == -1) {
+                builder.append('\n');
+                continue;
+            }
+
+            if (textElement.isAfterNL()) {
+                builder.append('\n');
+                builder.append(
+                        slice(textElement.getContent(), textElement.getWhitespace(), textElement.getContent().length())
+                );
+                continue;
+            }
+
+            builder.append(textElement.getContent());
+        }
+
+        removeTrailingWhitespace(builder);
+
+        if (builder.length() != 0) {
+            result.add(new FluentTextElement(builder.toString()));
+        }
+
+        return result;
+    }
+
+    private int countWhitespace(final CharSequence sequence) {
+        for (int i = 0; i < sequence.length(); i++) {
+            if (!Character.isWhitespace(sequence.charAt(i))) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private CharBuffer slice(final CharBuffer base, final int start, final int end) {
+        return base.subSequence(start, end);
+    }
+
+    private void removeTrailingWhitespace(final StringBuilder builder) {
+        for (int i = builder.length() - 1; i > -1; i--) {
+            if (!Character.isWhitespace(builder.codePointAt(i))) {
+                builder.setLength(i + 1);
+
+                return;
+            }
+        }
+
+        builder.setLength(0);
+    }
+
     private IntermediateTextElement createIntermediateTextElement(
             final ContentIterator iterator,
             final int start,
@@ -87,8 +195,11 @@ public class FluentContentParserGroup implements FluentContentParser {
         final int[] currentPos = iterator.position();
 
         iterator.setPosition(end);
+
+        final CharBuffer buffer = CharBuffer.wrap(iterator.line(), start, end[1]);
         final IntermediateTextElement textElement = new IntermediateTextElement(
-                CharBuffer.wrap(iterator.line(), start, end[1]),
+                buffer,
+                countWhitespace(buffer),
                 isAfterNL
         );
         iterator.setPosition(currentPos);
