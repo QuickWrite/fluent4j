@@ -10,7 +10,7 @@ import net.quickwrite.fluent4j.impl.parser.base.entry.FluentTermParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
-import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
+import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ public final class FluentParserGroup implements FluentParser<FluentResource> {
         group.addParser(new WhitespaceSkipper());
         group.addParser(new CommentSkipper());
 
-        group.addParser(new FluentTermParser(FluentPatternParser.DEFAULT_PARSER));
-        group.addParser(new FluentMessageParser(FluentPatternParser.DEFAULT_PARSER));
+        group.addParser(new FluentTermParser(FluentContentParser.DEFAULT_PARSER));
+        group.addParser(new FluentMessageParser(FluentContentParser.DEFAULT_PARSER));
 
         return group;
     }

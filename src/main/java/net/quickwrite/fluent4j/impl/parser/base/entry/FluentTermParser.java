@@ -3,13 +3,13 @@ package net.quickwrite.fluent4j.impl.parser.base.entry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
+import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 
 import java.util.List;
 import java.util.Optional;
 
 public class FluentTermParser extends FluentEntryParser<FluentTerm> {
-    public FluentTermParser(FluentPatternParser patternParser) {
+    public FluentTermParser(FluentContentParser patternParser) {
         super(patternParser);
     }
 

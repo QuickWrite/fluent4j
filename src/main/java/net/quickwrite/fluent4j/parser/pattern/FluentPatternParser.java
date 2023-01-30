@@ -1,11 +1,10 @@
 package net.quickwrite.fluent4j.parser.pattern;
 
-import net.quickwrite.fluent4j.ast.FluentPattern;
-import net.quickwrite.fluent4j.impl.parser.pattern.FluentPatternParserGroup;
-import net.quickwrite.fluent4j.parser.FluentParser;
+import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.parser.result.ParseResult;
 
-import java.util.List;
+public interface FluentPatternParser<T> {
+    int getStartingChar();
 
-public interface FluentPatternParser extends FluentParser<List<FluentPattern>> {
-    FluentPatternParser DEFAULT_PARSER = FluentPatternParserGroup.getBasicParser();
+    ParseResult<T> parse(final ContentIterator iterator, final FluentContentParser contentParser);
 }

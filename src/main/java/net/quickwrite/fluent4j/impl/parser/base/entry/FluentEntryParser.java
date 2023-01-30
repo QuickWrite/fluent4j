@@ -4,16 +4,16 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentEntryBase;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
-import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
+import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.List;
 import java.util.Optional;
 
 public abstract class FluentEntryParser<T extends FluentEntryBase> implements FluentElementParser<T> {
-    private final FluentPatternParser patternParser;
+    private final FluentContentParser patternParser;
 
-    public FluentEntryParser(final FluentPatternParser patternParser) {
+    public FluentEntryParser(final FluentContentParser patternParser) {
         this.patternParser = patternParser;
     }
 
