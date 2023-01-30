@@ -29,7 +29,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
 
         if (content.character() != '=') {
             // TODO: Better exception
-            throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) +  "'");
+            throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) + "'");
         }
 
         final List<FluentPattern> patterns = patternParser.parse(

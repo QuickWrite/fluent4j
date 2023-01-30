@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluentTermParser extends FluentEntryParser<FluentTerm> {
-    public FluentTermParser(FluentContentParser patternParser) {
+    public FluentTermParser(final FluentContentParser patternParser) {
         super(patternParser);
     }
 

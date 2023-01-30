@@ -110,7 +110,7 @@ public class FluentContentParserGroup implements FluentContentParser {
 
         firstElementIf:
         if (patternList.get(0) instanceof IntermediateTextElement) {
-            final IntermediateTextElement textElement = (IntermediateTextElement)patternList.get(0);
+            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
 
             if (textElement.getWhitespace() == -1) {
                 break firstElementIf;
@@ -122,7 +122,7 @@ public class FluentContentParserGroup implements FluentContentParser {
         }
 
         for (int i = 1; i < patternList.size(); i++) {
-            if(!(patternList.get(i) instanceof IntermediateTextElement)) {
+            if (!(patternList.get(i) instanceof IntermediateTextElement)) {
                 result.add(new FluentTextElement(builder.toString()));
 
                 // clear the StringBuilder
