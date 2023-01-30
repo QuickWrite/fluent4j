@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FluentPatternParserGroup implements FluentPatternParser {
-    private final List<FluentElementParser<? extends FluentPattern>> patternParser = new ArrayList<>();
+    private final List<FluentElementParser<? extends FluentPattern>> patternParserList = new ArrayList<>();
 
     public static FluentPatternParserGroup getBasicParser() {
         final FluentPatternParserGroup group = new FluentPatternParserGroup();
@@ -18,7 +18,7 @@ public class FluentPatternParserGroup implements FluentPatternParser {
     }
 
     public void addParser(final FluentElementParser<? extends FluentPattern> parser) {
-        this.patternParser.add(parser);
+        this.patternParserList.add(parser);
     }
 
     @Override

@@ -17,11 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FluentParserGroup implements FluentParser<FluentResource> {
-    private final List<FluentElementParser<? extends FluentEntry>> baseParser = new ArrayList<>();
-
-    public void addParser(final FluentElementParser<? extends FluentEntry> parser) {
-        this.baseParser.add(parser);
-    }
+    private final List<FluentElementParser<? extends FluentEntry>> baseParserList = new ArrayList<>();
 
     public static FluentParserGroup getBasicParser() {
         final FluentParserGroup group = new FluentParserGroup();
@@ -35,6 +31,10 @@ public final class FluentParserGroup implements FluentParser<FluentResource> {
         return group;
     }
 
+    public void addParser(final FluentElementParser<? extends FluentEntry> parser) {
+        this.baseParserList.add(parser);
+    }
+
     @Override
     public FluentResource parse(final ContentIterator iterator) {
         final List<FluentEntry> elements = new ArrayList<>();
@@ -43,7 +43,7 @@ public final class FluentParserGroup implements FluentParser<FluentResource> {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentElementParser<? extends FluentEntry> parser : baseParser) {
+            for (final FluentElementParser<? extends FluentEntry> parser : baseParserList) {
                 final ParseResult<? extends FluentEntry> result = parser.parse(iterator);
 
                 switch (result.getType()) {
