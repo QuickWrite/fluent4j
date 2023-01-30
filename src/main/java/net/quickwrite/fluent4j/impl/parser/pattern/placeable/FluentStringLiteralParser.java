@@ -84,6 +84,6 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
 
     @Override
     public boolean canSelectExpression() {
-        return false;
+        return true;
     }
 }
