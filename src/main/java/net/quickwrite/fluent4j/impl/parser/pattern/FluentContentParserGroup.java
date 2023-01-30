@@ -18,6 +18,8 @@ public class FluentContentParserGroup implements FluentContentParser {
     public static FluentContentParserGroup getBasicParser() {
         final FluentContentParserGroup group = new FluentContentParserGroup();
 
+        group.addParser(FluentPatternParser.DEFAULT_PLACEABLE_PARSER);
+
         return group;
     }
 
@@ -54,7 +56,9 @@ public class FluentContentParserGroup implements FluentContentParser {
                     continue;
                 }
 
-                patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+                if (textStart != position[1]) {
+                    patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+                }
 
                 if (result.getType() == ParseResult.ParseResultType.SUCCESS) {
                     patternList.add(result.getValue());
@@ -66,7 +70,9 @@ public class FluentContentParserGroup implements FluentContentParser {
             }
 
             if (iterator.character() == '\n') {
-                patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+                if(textStart != position[1]) {
+                    patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+                }
 
                 iterator.nextChar();
                 if (endChecker.apply(iterator)) {
@@ -107,9 +113,12 @@ public class FluentContentParserGroup implements FluentContentParser {
 
         final List<FluentPattern> result = new ArrayList<>(patternList.size());
         final StringBuilder builder = new StringBuilder();
+        int start = 0;
 
         firstElementIf:
         if (patternList.get(0) instanceof IntermediateTextElement) {
+            start = 1;
+
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
 
             if (textElement.getWhitespace() == -1) {
@@ -121,8 +130,16 @@ public class FluentContentParserGroup implements FluentContentParser {
             );
         }
 
-        for (int i = 1; i < patternList.size(); i++) {
-            if (!(patternList.get(i) instanceof IntermediateTextElement)) {
+        for (int i = start; i < patternList.size(); i++) {
+            final FluentPattern element = patternList.get(i);
+
+            if (!(element instanceof IntermediateTextElement)) {
+                if (element instanceof FluentTextElement) {
+                    builder.append(((FluentTextElement) element).getContent());
+
+                    continue;
+                }
+
                 result.add(new FluentTextElement(builder.toString()));
 
                 // clear the StringBuilder
