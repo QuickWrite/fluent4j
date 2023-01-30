@@ -134,12 +134,6 @@ public class FluentContentParserGroup implements FluentContentParser {
             final FluentPattern element = patternList.get(i);
 
             if (!(element instanceof IntermediateTextElement)) {
-                if (element instanceof FluentTextElement) {
-                    builder.append(((FluentTextElement) element).getContent());
-
-                    continue;
-                }
-
                 result.add(new FluentTextElement(builder.toString()));
 
                 // clear the StringBuilder
