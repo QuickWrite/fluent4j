@@ -25,6 +25,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         base.addParser(new FluentStringLiteralParser());
         base.addParser(new FluentNumberLiteralParser());
+        base.addParser(new FluentFunctionParser());
 
         base.addParser(new FluentVariableReferenceParser());
 
