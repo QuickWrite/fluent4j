@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentStringLiteralParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
@@ -18,6 +19,7 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
         final FluentPlaceableParser base = new FluentPlaceableParser();
 
         base.addParser(new FluentStringLiteralParser());
+        base.addParser(new FluentNumberLiteralParser());
 
         return base;
     }
