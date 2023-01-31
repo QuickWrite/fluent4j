@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.parser.base.entry;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
+import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 
@@ -24,14 +25,8 @@ public class FluentTermParser extends FluentEntryParser<FluentTerm> {
             return Optional.empty();
         }
 
-        if (!isFluentIdentifierStart(content.nextChar())) {
-            return Optional.empty();
-        }
+        content.nextChar();
 
-        final int position = content.position()[1];
-
-        while (isFluentIdentifierPart(content.nextChar()));
-
-        return Optional.of(content.line().substring(position, content.position()[1]));
+        return ParserUtil.getIdentifier(content);
     }
 }

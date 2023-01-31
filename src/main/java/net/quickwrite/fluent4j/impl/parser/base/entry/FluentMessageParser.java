@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.parser.base.entry;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessage;
+import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 
@@ -20,14 +21,6 @@ public final class FluentMessageParser extends FluentEntryParser<FluentMessage> 
 
     @Override
     protected Optional<String> getIdentifier(final ContentIterator content) {
-        if (!isFluentIdentifierStart(content.character())) {
-            return Optional.empty();
-        }
-
-        final int position = content.position()[1];
-
-        while (isFluentIdentifierPart(content.nextChar()));
-
-        return Optional.of(content.line().substring(position, content.position()[1]));
+        return ParserUtil.getIdentifier(content);
     }
 }
