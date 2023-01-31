@@ -1,16 +1,17 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
-import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.impl.parser.pattern.IntermediateTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
+import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.nio.CharBuffer;
 
-public class FluentStringLiteralParser implements PlaceableExpressionParser<FluentPattern> {
+public class FluentStringLiteralParser implements PlaceableExpressionParser<FluentPlaceable> {
     @Override
-    public ParseResult<FluentPattern> parse(final ContentIterator iterator) {
+    public ParseResult<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         if(iterator.character() != '"') {
             return ParseResult.failure();
         }
@@ -80,10 +81,5 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
         return character >= '0' && character <= '9'
                 || character >= 'a' && character <= 'f'
                 || character >= 'A' && character <= 'F';
-    }
-
-    @Override
-    public boolean canSelectExpression() {
-        return true;
     }
 }

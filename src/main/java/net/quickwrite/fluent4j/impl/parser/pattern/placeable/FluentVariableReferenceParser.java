@@ -4,13 +4,14 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentVariableReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
+import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.Optional;
 
 public class FluentVariableReferenceParser implements PlaceableExpressionParser<FluentVariableReference> {
     @Override
-    public ParseResult<FluentVariableReference> parse(final ContentIterator iterator) {
+    public ParseResult<FluentVariableReference> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         if (iterator.character() != '$') {
             return ParseResult.failure();
         }
@@ -24,10 +25,5 @@ public class FluentVariableReferenceParser implements PlaceableExpressionParser<
         }
 
         return ParseResult.success(new FluentVariableReference(identifier.get()));
-    }
-
-    @Override
-    public boolean canSelectExpression() {
-        return true;
     }
 }

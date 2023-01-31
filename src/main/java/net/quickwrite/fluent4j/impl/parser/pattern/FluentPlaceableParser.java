@@ -1,20 +1,23 @@
 package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
+import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentFunctionParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentStringLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentVariableReferenceParser;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
-import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
+import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class FluentPlaceableParser implements FluentPatternParser<FluentPattern> {
+public class FluentPlaceableParser implements PlaceableParser {
     private final List<PlaceableExpressionParser<? extends FluentPattern>> expressionParserList = new ArrayList<>();
 
     public static FluentPlaceableParser getBasicParser() {
@@ -43,28 +46,9 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
 
         ParserUtil.skipWhitespaceAndNL(iterator);
 
-        FluentPattern placeable = null;
+        final Optional<FluentPlaceable> placeable = parsePlaceable(iterator);
 
-        final int[] position = iterator.position();
-        boolean canSelect = false;
-
-        for (final PlaceableExpressionParser<? extends FluentPattern> expressionParser : expressionParserList) {
-            final ParseResult<? extends FluentPattern> parseResult = expressionParser.parse(iterator);
-
-            switch (parseResult.getType()) {
-                case FAILURE:
-                    iterator.setPosition(position);
-                    continue;
-                case SKIP:
-                    throw new RuntimeException("A PlaceableExpressionParser cannot return SKIP");
-            }
-
-            canSelect = expressionParser.canSelectExpression();
-            placeable = parseResult.getValue();
-            break;
-        }
-
-        if (placeable == null) {
+        if (placeable.isEmpty()) {
             throw new RuntimeException("All PlaceableExpressionParsers returned FAILURE");
         }
 
@@ -76,6 +60,27 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
 
         iterator.nextChar();
 
-        return ParseResult.success(placeable);
+        return ParseResult.success(placeable.get());
+    }
+
+    @Override
+    public Optional<FluentPlaceable> parsePlaceable(final ContentIterator iterator) {
+        final int[] position = iterator.position();
+
+        for (final PlaceableExpressionParser<? extends FluentPlaceable> expressionParser : expressionParserList) {
+            final ParseResult<? extends FluentPlaceable> parseResult = expressionParser.parse(iterator, this);
+
+            switch (parseResult.getType()) {
+                case FAILURE:
+                    iterator.setPosition(position);
+                    continue;
+                case SKIP:
+                    throw new RuntimeException("A PlaceableExpressionParser cannot return SKIP");
+            }
+
+            return Optional.of(parseResult.getValue());
+        }
+
+        return Optional.empty();
     }
 }
