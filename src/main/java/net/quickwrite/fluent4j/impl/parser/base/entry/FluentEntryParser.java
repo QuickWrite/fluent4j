@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.parser.base.entry;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentEntryBase;
+import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
@@ -25,7 +26,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
             return ParseResult.failure();
         }
 
-        skipWhitespace(content);
+        ParserUtil.skipWhitespace(content);
 
         if (content.character() != '=') {
             // TODO: Better exception
@@ -38,29 +39,6 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
         );
 
         return ParseResult.success(getInstance(identifier.get(), patterns));
-    }
-
-    private void skipWhitespace(final ContentIterator content) {
-        while (Character.isWhitespace(content.character())) {
-            if (content.character() == '\n') {
-                // TODO: Better exception
-                throw new RuntimeException("Expected token but got '\\n'");
-            }
-
-            content.nextChar();
-        }
-    }
-
-    protected boolean isFluentIdentifierStart(final int character) {
-        return character >= 'a' && character <= 'z'
-                || character >= 'A' && character <= 'Z';
-    }
-
-    protected boolean isFluentIdentifierPart(final int character) {
-        return isFluentIdentifierStart(character)
-                || character >= '0' && character <= '9'
-                || character == '-'
-                || character == '_';
     }
 
     protected abstract T getInstance(final String identifier, List<FluentPattern> patterns);

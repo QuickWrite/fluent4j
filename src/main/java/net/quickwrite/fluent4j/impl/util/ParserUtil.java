@@ -30,4 +30,21 @@ public final class ParserUtil {
 
         return Optional.of(content.line().substring(position, content.position()[1]));
     }
+
+    public static void skipWhitespace(final ContentIterator content) {
+        while (Character.isWhitespace(content.character())) {
+            if (content.character() == '\n') {
+                // TODO: Better exception
+                throw new RuntimeException("Expected token but got '\\n'");
+            }
+
+            content.nextChar();
+        }
+    }
+
+    public static void skipWhitespaceAndNL(final ContentIterator iterator) {
+        while (Character.isWhitespace(iterator.character())) {
+            iterator.nextChar();
+        }
+    }
 }

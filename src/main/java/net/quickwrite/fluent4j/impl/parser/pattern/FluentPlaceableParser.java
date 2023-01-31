@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentStringLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentVariableReferenceParser;
+import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
@@ -40,7 +41,7 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
     public ParseResult<FluentPattern> parse(final ContentIterator iterator, final FluentContentParser contentParser) {
         iterator.nextChar();
 
-        skipWhitespace(iterator);
+        ParserUtil.skipWhitespaceAndNL(iterator);
 
         FluentPattern placeable = null;
 
@@ -67,7 +68,7 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
             throw new RuntimeException("All PlaceableExpressionParsers returned FAILURE");
         }
 
-        skipWhitespace(iterator);
+        ParserUtil.skipWhitespaceAndNL(iterator);
 
         if (iterator.character() != '}') {
             throw new RuntimeException("Expected '}' but got '" + Character.toString(iterator.character()) + "'");
@@ -76,11 +77,5 @@ public class FluentPlaceableParser implements FluentPatternParser<FluentPattern>
         iterator.nextChar();
 
         return ParseResult.success(placeable);
-    }
-
-    private void skipWhitespace(final ContentIterator iterator) {
-        while (Character.isWhitespace(iterator.character())) {
-            iterator.nextChar();
-        }
     }
 }
