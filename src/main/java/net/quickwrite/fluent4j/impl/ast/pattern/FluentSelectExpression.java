@@ -28,4 +28,5 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
             this.key = key;
             this.content = content;
         }
+    }
 }
