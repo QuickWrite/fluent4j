@@ -12,7 +12,7 @@ import java.util.Optional;
 public class FluentStringLiteralParser implements PlaceableExpressionParser<FluentPlaceable> {
     @Override
     public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
-        if(iterator.character() != '"') {
+        if (iterator.character() != '"') {
             return Optional.empty();
         }
 
@@ -35,9 +35,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
                     case 'U' -> builder.appendCodePoint(parseCharacters(iterator, 6));
 
                     default -> throw new RuntimeException(
-                            "Unknown escape character: '" +
-                            Character.toString(character) +
-                            "'"
+                            "Unknown escape character: '" + Character.toString(character) + "'"
                     );
                 }
 
@@ -71,7 +69,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
                 throw new RuntimeException("Invalid unicode escape character '" + Character.toString(character) + "'");
             }
 
-            chars[i] = (char)character;
+            chars[i] = (char) character;
         }
 
         return Integer.parseInt(String.valueOf(chars), 16);

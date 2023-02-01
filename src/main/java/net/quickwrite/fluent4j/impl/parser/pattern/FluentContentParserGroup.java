@@ -70,7 +70,7 @@ public class FluentContentParserGroup implements FluentContentParser {
             }
 
             if (iterator.character() == '\n') {
-                if(textStart != position[1]) {
+                if (textStart != position[1]) {
                     patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
                 }
 

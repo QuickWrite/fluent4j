@@ -8,7 +8,6 @@ import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
-import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.AbstractMap;
 import java.util.Map;

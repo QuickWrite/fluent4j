@@ -8,13 +8,6 @@ import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import java.util.Optional;
 
 public class FluentNumberLiteralParser implements PlaceableExpressionParser<FluentNumberLiteral> {
-    @Override
-    public Optional<FluentNumberLiteral> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
-        final Optional<String> number = parseNumberLiteral(iterator);
-
-        return number.map(FluentNumberLiteral::new);
-    }
-
     public static Optional<String> parseNumberLiteral(final ContentIterator iterator) {
         if (!isDigit(iterator.character()) && iterator.character() != '-') {
             return Optional.empty();
@@ -35,5 +28,12 @@ public class FluentNumberLiteralParser implements PlaceableExpressionParser<Flue
 
     private static boolean isDigit(final int character) {
         return '0' <= character && character <= '9';
+    }
+
+    @Override
+    public Optional<FluentNumberLiteral> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+        final Optional<String> number = parseNumberLiteral(iterator);
+
+        return number.map(FluentNumberLiteral::new);
     }
 }
