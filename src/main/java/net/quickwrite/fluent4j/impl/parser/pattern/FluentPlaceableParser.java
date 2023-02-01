@@ -76,22 +76,20 @@ public class FluentPlaceableParser implements PlaceableParser {
         return ParseResult.success(placeable);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Optional<FluentPlaceable> parsePlaceable(final ContentIterator iterator) {
         final int[] position = iterator.position();
 
         for (final PlaceableExpressionParser<? extends FluentPlaceable> expressionParser : expressionParserList) {
-            final ParseResult<? extends FluentPlaceable> parseResult = expressionParser.parse(iterator, this);
+            final Optional<? extends FluentPlaceable> parseResult = expressionParser.parse(iterator, this);
 
-            switch (parseResult.getType()) {
-                case FAILURE:
-                    iterator.setPosition(position);
-                    continue;
-                case SKIP:
-                    throw new RuntimeException("A PlaceableExpressionParser cannot return SKIP");
+            if (parseResult.isEmpty()) {
+                iterator.setPosition(position);
+                continue;
             }
 
-            return Optional.of(parseResult.getValue());
+            return (Optional<FluentPlaceable>) parseResult;
         }
 
         return Optional.empty();
@@ -186,9 +184,9 @@ public class FluentPlaceableParser implements PlaceableParser {
     }
 
     private String getVariantKey(final ContentIterator iterator) {
-        final ParseResult<String> number = FluentNumberLiteralParser.parseNumberLiteral(iterator);
-        if (number.getType() == ParseResult.ParseResultType.SUCCESS) {
-            return number.getValue();
+        final Optional<String> number = FluentNumberLiteralParser.parseNumberLiteral(iterator);
+        if (number.isPresent()) {
+            return number.get();
         }
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 

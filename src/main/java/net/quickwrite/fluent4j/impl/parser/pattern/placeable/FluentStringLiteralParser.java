@@ -5,15 +5,15 @@ import net.quickwrite.fluent4j.impl.parser.pattern.IntermediateTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
-import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.nio.CharBuffer;
+import java.util.Optional;
 
 public class FluentStringLiteralParser implements PlaceableExpressionParser<FluentPlaceable> {
     @Override
-    public ParseResult<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         if(iterator.character() != '"') {
-            return ParseResult.failure();
+            return Optional.empty();
         }
 
         iterator.nextChar();
@@ -52,7 +52,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
 
         iterator.nextChar();
 
-        return ParseResult.success(
+        return Optional.of(
                 new IntermediateTextElement(
                         CharBuffer.wrap(builder.toString()),
                         0,

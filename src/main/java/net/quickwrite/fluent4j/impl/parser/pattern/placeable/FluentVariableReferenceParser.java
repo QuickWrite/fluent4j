@@ -5,15 +5,14 @@ import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
-import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 import java.util.Optional;
 
 public class FluentVariableReferenceParser implements PlaceableExpressionParser<FluentVariableReference> {
     @Override
-    public ParseResult<FluentVariableReference> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    public Optional<FluentVariableReference> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         if (iterator.character() != '$') {
-            return ParseResult.failure();
+            return Optional.empty();
         }
 
         iterator.nextChar();
@@ -24,6 +23,6 @@ public class FluentVariableReferenceParser implements PlaceableExpressionParser<
             throw new RuntimeException("Expected identifier, but got '" + Character.toString(iterator.character()) + "'");
         }
 
-        return ParseResult.success(new FluentVariableReference(identifier.get()));
+        return Optional.of(new FluentVariableReference(identifier.get()));
     }
 }

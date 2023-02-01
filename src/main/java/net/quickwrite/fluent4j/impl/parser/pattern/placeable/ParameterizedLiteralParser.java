@@ -16,20 +16,20 @@ import java.util.Optional;
 
 public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<I>, I> implements PlaceableExpressionParser<T> {
     @Override
-    public ParseResult<T> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    public Optional<T> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<I> identifier = parseIdentifier(iterator);
         if (identifier.isEmpty()) {
-            return ParseResult.failure();
+            return Optional.empty();
         }
 
         ParserUtil.skipWhitespaceAndNL(iterator);
 
         if (iterator.character() != '(') {
-            if (optionalArguments()) {
-                return ParseResult.success(getInstance(identifier.get()));
+            if (!optionalArguments()) {
+                return Optional.empty();
             }
 
-            return ParseResult.failure();
+            return Optional.of(getInstance(identifier.get()));
         }
 
         iterator.nextChar();
@@ -37,7 +37,7 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
 
         final AttributeList attributes = getAttributes(iterator, placeableParser);
 
-        return ParseResult.success(getInstance(identifier.get(), attributes));
+        return Optional.of(getInstance(identifier.get(), attributes));
     }
 
     private AttributeList getAttributes(final ContentIterator iterator, final PlaceableParser placeableParser) {
