@@ -2,6 +2,8 @@ package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentFunctionParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentStringLiteralParser;
@@ -47,10 +49,20 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         ParserUtil.skipWhitespaceAndNL(iterator);
 
-        final Optional<FluentPlaceable> placeable = parsePlaceable(iterator);
+        final FluentPlaceable placeable = parsePlaceable(iterator)
+                .orElseThrow(() -> new RuntimeException("All PlaceableExpressionParsers returned FAILURE"));
 
-        if (placeable.isEmpty()) {
-            throw new RuntimeException("All PlaceableExpressionParsers returned FAILURE");
+        select:
+        if (placeable.canSelect()) {
+            ParserUtil.skipWhitespace(iterator);
+
+            final Optional<FluentSelect> selectExpression = parseSelector(iterator, contentParser, placeable);
+
+            if (selectExpression.isEmpty()) {
+                break select;
+            }
+
+            return ParseResult.success(selectExpression.get());
         }
 
         ParserUtil.skipWhitespaceAndNL(iterator);
@@ -61,7 +73,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         iterator.nextChar();
 
-        return ParseResult.success(placeable.get());
+        return ParseResult.success(placeable);
     }
 
     @Override
@@ -84,4 +96,107 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         return Optional.empty();
     }
+
+    private Optional<FluentSelect> parseSelector(
+            final ContentIterator iterator,
+            final FluentContentParser contentParser,
+            final FluentPlaceable placeable
+    ) {
+        if (iterator.character() != '-') {
+            return Optional.empty();
+        }
+
+        if (iterator.nextChar() != '>') {
+            throw new RuntimeException("Expected '->' but got '-" + Character.toString(iterator.character()) + "'");
+        }
+
+        iterator.nextChar();
+
+        ParserUtil.skipWhitespace(iterator);
+
+        if (iterator.character() != '\n') {
+            throw new RuntimeException("Expected '\\n' but got '" + Character.toString(iterator.character()) + "'");
+        }
+
+        ParserUtil.skipWhitespaceAndNL(iterator);
+
+        final List<FluentSelect.FluentVariant> variantList = new ArrayList<>();
+        FluentSelect.FluentVariant defaultVariant = null;
+
+        while (true) {
+            boolean isDefault = false;
+
+            if (iterator.character() == '*') {
+                if (defaultVariant != null) {
+                    throw new RuntimeException("Only one default variant can exist.");
+                }
+
+                isDefault = true;
+
+                iterator.nextChar();
+            }
+
+            final Optional<FluentSelect.FluentVariant> variant = parseVariant(iterator, contentParser);
+
+            if (variant.isEmpty()) {
+                break;
+            }
+
+            variantList.add(variant.get());
+
+            if (isDefault) {
+                defaultVariant = variant.get();
+            }
+        }
+
+        if (defaultVariant == null) {
+            throw new RuntimeException("There needs to be at lease one default variant");
+        }
+
+        return Optional.of(new FluentSelectExpression(placeable, variantList));
+    }
+
+    private Optional<FluentSelect.FluentVariant> parseVariant(final ContentIterator iterator, final FluentContentParser contentParser) {
+        if (iterator.character() != '[') {
+            return Optional.empty();
+        }
+
+        iterator.nextChar();
+
+        ParserUtil.skipWhitespace(iterator);
+
+        final String variantKey = getVariantKey(iterator);
+
+        ParserUtil.skipWhitespace(iterator);
+
+        if (iterator.character() != ']') {
+            throw new RuntimeException("Expected ']' but got '" + Character.toString(iterator.character()) + "'");
+        }
+
+        iterator.nextChar();
+
+        final List<FluentPattern> content = contentParser.parse(iterator, contentIterator -> {
+            ParserUtil.skipWhitespace(contentIterator);
+
+            final int character = contentIterator.character();
+            return character == '[' || character == '*' || character == '}';
+        });
+
+        return Optional.of(new FluentSelectExpression.FluentVariant(variantKey, content));
+    }
+
+    private String getVariantKey(final ContentIterator iterator) {
+        final ParseResult<String> number = FluentNumberLiteralParser.parseNumberLiteral(iterator);
+        if (number.getType() == ParseResult.ParseResultType.SUCCESS) {
+            return number.getValue();
+        }
+        final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
+
+        if (identifier.isEmpty()) {
+            throw new RuntimeException("Expected identifier");
+        }
+
+        return identifier.get();
+    }
+
 }

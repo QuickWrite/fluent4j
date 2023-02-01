@@ -34,8 +34,7 @@ public final class ParserUtil {
     public static void skipWhitespace(final ContentIterator content) {
         while (Character.isWhitespace(content.character())) {
             if (content.character() == '\n') {
-                // TODO: Better exception
-                throw new RuntimeException("Expected token but got '\\n'");
+                return;
             }
 
             content.nextChar();
