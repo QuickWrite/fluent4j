@@ -5,12 +5,12 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 
 import java.util.List;
 
-public abstract class FluentEntryBase implements FluentEntry {
-    private final String identifier;
-    private final List<FluentPattern> patterns;
+public abstract class FluentEntryBase extends FluentBaseElement implements FluentEntry {
+    protected final List<FluentEntry.Attribute> attributes;
 
-    public FluentEntryBase(final String identifier, final List<FluentPattern> patterns) {
-        this.identifier = identifier;
-        this.patterns = patterns;
+    public FluentEntryBase(final String identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
+        super(identifier, patterns);
+
+        this.attributes = attributes;
     }
 }

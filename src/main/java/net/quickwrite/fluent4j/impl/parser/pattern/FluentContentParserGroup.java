@@ -37,7 +37,7 @@ public class FluentContentParserGroup implements FluentContentParser {
     private List<FluentPattern> generatePatternList(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
         final List<FluentPattern> patternList = new ArrayList<>();
 
-        int textStart = iterator.position()[1] + 1;
+        int textStart = iterator.position()[1];
         boolean isAfterNL = false;
 
         outer:
