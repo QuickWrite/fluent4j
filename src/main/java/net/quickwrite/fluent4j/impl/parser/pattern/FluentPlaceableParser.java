@@ -159,6 +159,8 @@ public class FluentPlaceableParser implements PlaceableParser {
             throw new RuntimeException("There needs to be at lease one default variant");
         }
 
+        iterator.nextChar();
+
         return Optional.of(new FluentSelectExpression(placeable, variantList));
     }
 

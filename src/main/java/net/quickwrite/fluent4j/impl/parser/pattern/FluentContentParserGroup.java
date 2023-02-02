@@ -134,10 +134,12 @@ public class FluentContentParserGroup implements FluentContentParser {
             final FluentPattern element = patternList.get(i);
 
             if (!(element instanceof IntermediateTextElement)) {
-                result.add(new FluentTextElement(builder.toString()));
+                 if (builder.length() != 0) {
+                    result.add(new FluentTextElement(builder.toString()));
 
-                // clear the StringBuilder
-                builder.setLength(0);
+                    // clear the StringBuilder
+                    builder.setLength(0);
+                }
 
                 result.add(patternList.get(i));
 
@@ -145,11 +147,6 @@ public class FluentContentParserGroup implements FluentContentParser {
             }
 
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
-
-            if (textElement.getWhitespace() == -1) {
-                builder.append('\n');
-                continue;
-            }
 
             if (textElement.isAfterNL()) {
                 builder.append('\n');
