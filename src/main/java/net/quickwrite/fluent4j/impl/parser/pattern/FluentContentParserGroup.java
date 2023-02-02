@@ -15,6 +15,8 @@ import java.util.function.Function;
 public class FluentContentParserGroup implements FluentContentParser {
     private final List<FluentPatternParser<? extends FluentPattern>> patternParserList = new ArrayList<>();
 
+    private static IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);
+
     public static FluentContentParserGroup getBasicParser() {
         final FluentContentParserGroup group = new FluentContentParserGroup();
 
@@ -72,6 +74,8 @@ public class FluentContentParserGroup implements FluentContentParser {
             if (iterator.character() == '\n') {
                 if (textStart != position[1]) {
                     patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+                } else if (isAfterNL) {
+                    patternList.add(NEWLINE_INTERMEDIATE);
                 }
 
                 iterator.nextChar();
@@ -113,10 +117,10 @@ public class FluentContentParserGroup implements FluentContentParser {
 
         final List<FluentPattern> result = new ArrayList<>(patternList.size());
         final StringBuilder builder = new StringBuilder();
-        int start = 0;
+        int start = skipLeadingNL(patternList);
 
         firstElementIf:
-        if (patternList.get(0) instanceof IntermediateTextElement) {
+        if (start == 0 && patternList.get(0) instanceof IntermediateTextElement) {
             start = 1;
 
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
@@ -149,7 +153,10 @@ public class FluentContentParserGroup implements FluentContentParser {
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
 
             if (textElement.isAfterNL()) {
-                builder.append('\n');
+                if (i != start) {
+                    builder.append('\n');
+                }
+
                 builder.append(
                         slice(textElement.getContent(), minWhitespace, textElement.getContent().length())
                 );
@@ -178,8 +185,26 @@ public class FluentContentParserGroup implements FluentContentParser {
         return -1;
     }
 
-    private CharBuffer slice(final CharBuffer base, final int start, final int end) {
+    private CharBuffer slice(final CharBuffer base, int start, final int end) {
+        if (base.length() < start || start == -1) {
+            start = 0;
+        }
+
         return base.subSequence(start, end);
+    }
+
+    private int skipLeadingNL(final List<FluentPattern> patternList) {
+        for (int i = 0; i < patternList.size(); i++) {
+            if (!(patternList.get(i) instanceof IntermediateTextElement)) {
+                return i;
+            }
+
+            if (patternList.get(i) != NEWLINE_INTERMEDIATE) {
+                return i;
+            }
+        }
+
+        return patternList.size() - 1;
     }
 
     private void removeTrailingWhitespace(final StringBuilder builder) {
