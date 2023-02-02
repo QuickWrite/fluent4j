@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
-import net.quickwrite.fluent4j.ast.pattern.AttributeList;
+import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
-import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentAttributeContainer;
+import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContainer;
 import net.quickwrite.fluent4j.impl.ast.pattern.ParameterizedLiteral;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
@@ -34,13 +34,13 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
         iterator.nextChar();
         ParserUtil.skipWhitespace(iterator);
 
-        final AttributeList attributes = getAttributes(iterator, placeableParser);
+        final ArgumentList attributes = getAttributes(iterator, placeableParser);
 
         return Optional.of(getInstance(identifier.get(), attributes));
     }
 
-    private AttributeList getAttributes(final ContentIterator iterator, final PlaceableParser placeableParser) {
-        final FluentAttributeContainer attributesContainer = new FluentAttributeContainer();
+    private ArgumentList getAttributes(final ContentIterator iterator, final PlaceableParser placeableParser) {
+        final FluentArgumentContainer attributesContainer = new FluentArgumentContainer();
 
         boolean isFirst = true;
         boolean isNamed = false;
@@ -57,10 +57,10 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
 
             final int[] position = iterator.position();
 
-            final Optional<Map.Entry<String, AttributeList.NamedAttribute>> namedEntry = tryParseNamed(iterator, placeableParser);
+            final Optional<Map.Entry<String, ArgumentList.NamedArgument>> namedEntry = tryParseNamed(iterator, placeableParser);
 
             if (namedEntry.isPresent()) {
-                final Map.Entry<String, AttributeList.NamedAttribute> entry = namedEntry.get();
+                final Map.Entry<String, ArgumentList.NamedArgument> entry = namedEntry.get();
 
                 attributesContainer.addAttribute(entry.getKey(), entry.getValue());
 
@@ -88,7 +88,7 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
         return attributesContainer;
     }
 
-    private Optional<Map.Entry<String, AttributeList.NamedAttribute>> tryParseNamed(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    private Optional<Map.Entry<String, ArgumentList.NamedArgument>> tryParseNamed(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 
         if (identifier.isEmpty()) {
@@ -109,18 +109,18 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
             throw new RuntimeException("Expected attribute");
         }
 
-        if (!(placeable.get() instanceof AttributeList.NamedAttribute)) {
+        if (!(placeable.get() instanceof ArgumentList.NamedArgument)) {
             throw new RuntimeException("Expected literal");
         }
 
-        return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), (AttributeList.NamedAttribute) placeable.get()));
+        return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), (ArgumentList.NamedArgument) placeable.get()));
     }
 
     protected abstract Optional<I> parseIdentifier(final ContentIterator iterator);
 
     protected abstract T getInstance(final I identifier);
 
-    protected abstract T getInstance(final I identifier, final AttributeList attributes);
+    protected abstract T getInstance(final I identifier, final ArgumentList attributes);
 
     protected abstract boolean optionalArguments();
 }

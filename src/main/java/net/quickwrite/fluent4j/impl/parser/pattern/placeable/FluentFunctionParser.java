@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
-import net.quickwrite.fluent4j.ast.pattern.AttributeList;
+import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentFunction;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 
@@ -33,11 +33,11 @@ public class FluentFunctionParser extends ParameterizedLiteralParser<FluentFunct
 
     @Override
     protected FluentFunction getInstance(final String identifier) {
-        return getInstance(identifier, AttributeList.EMPTY);
+        return getInstance(identifier, ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentFunction getInstance(final String identifier, final AttributeList attributes) {
+    protected FluentFunction getInstance(final String identifier, final ArgumentList attributes) {
         return new FluentFunction(identifier, attributes);
     }
 

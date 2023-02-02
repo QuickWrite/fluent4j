@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
-import net.quickwrite.fluent4j.ast.pattern.AttributeList;
+import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTermReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
@@ -41,11 +41,11 @@ public class FluentTermReferenceParser extends ParameterizedLiteralParser<Fluent
 
     @Override
     protected FluentTermReference getInstance(final Map.Entry<String, String> identifier) {
-        return getInstance(identifier, AttributeList.EMPTY);
+        return getInstance(identifier, ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentTermReference getInstance(final Map.Entry<String, String> identifier, final AttributeList attributes) {
+    protected FluentTermReference getInstance(final Map.Entry<String, String> identifier, final ArgumentList attributes) {
         if (identifier.getValue() != null) {
             return new FluentTermReference.AttributeReference(identifier.getKey(), identifier.getValue(), attributes);
         }
