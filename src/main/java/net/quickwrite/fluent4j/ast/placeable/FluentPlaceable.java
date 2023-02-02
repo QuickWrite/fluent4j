@@ -3,5 +3,7 @@ package net.quickwrite.fluent4j.ast.placeable;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 
 public interface FluentPlaceable extends FluentPattern {
-    boolean canSelect();
+    interface CannotPlaceable {
+        String getName();
+    }
 }

@@ -2,10 +2,11 @@ package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
+import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 
 import java.nio.CharBuffer;
 
-public class IntermediateTextElement implements FluentPattern, FluentPlaceable {
+public class IntermediateTextElement implements FluentPattern, FluentPlaceable, FluentSelect.Selectable {
     private final CharBuffer content;
     private final boolean isAfterNL;
 
@@ -30,7 +31,5 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable {
     }
 
     @Override
-    public boolean canSelect() {
-        return true;
     }
 }

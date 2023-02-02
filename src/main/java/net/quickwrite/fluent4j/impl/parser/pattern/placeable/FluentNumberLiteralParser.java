@@ -9,7 +9,11 @@ import java.util.Optional;
 
 public class FluentNumberLiteralParser implements PlaceableExpressionParser<FluentNumberLiteral> {
     public static Optional<String> parseNumberLiteral(final ContentIterator iterator) {
-        if (!isDigit(iterator.character()) && iterator.character() != '-') {
+        if (iterator.character() == '-' && !isDigit(iterator.nextChar())) {
+            return Optional.empty();
+        }
+
+        if (!isDigit(iterator.character())) {
             return Optional.empty();
         }
 

@@ -13,7 +13,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<I>, I> implements PlaceableExpressionParser<T> {
+public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<?>, I> implements PlaceableExpressionParser<T> {
     @Override
     public Optional<T> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<I> identifier = parseIdentifier(iterator);

@@ -4,4 +4,8 @@ public interface FluentSelect extends FluentPlaceable {
     interface FluentVariant {
 
     }
+
+    interface Selectable {
+
+    }
 }

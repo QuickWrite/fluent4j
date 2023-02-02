@@ -4,10 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
-import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentFunctionParser;
-import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
-import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentStringLiteralParser;
-import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentVariableReferenceParser;
+import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
@@ -28,6 +25,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         base.addParser(new FluentStringLiteralParser());
         base.addParser(new FluentNumberLiteralParser());
         base.addParser(new FluentFunctionParser());
+        base.addParser(new FluentTermReferenceParser());
 
         base.addParser(new FluentVariableReferenceParser());
 
@@ -53,7 +51,7 @@ public class FluentPlaceableParser implements PlaceableParser {
                 .orElseThrow(() -> new RuntimeException("All PlaceableExpressionParsers returned FAILURE"));
 
         select:
-        if (placeable.canSelect()) {
+        if (placeable instanceof FluentSelect.Selectable) {
             ParserUtil.skipWhitespace(iterator);
 
             final Optional<FluentSelect> selectExpression = parseSelector(iterator, contentParser, placeable);
@@ -69,6 +67,14 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         if (iterator.character() != '}') {
             throw new RuntimeException("Expected '}' but got '" + Character.toString(iterator.character()) + "'");
+        }
+
+        if (placeable instanceof FluentPlaceable.CannotPlaceable) {
+            throw new RuntimeException(
+                    "A " +
+                    ((FluentPlaceable.CannotPlaceable) placeable).getName() +
+                    " cannot be used as a placeable."
+            );
         }
 
         iterator.nextChar();
