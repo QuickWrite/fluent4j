@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.AttributeList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
-import net.quickwrite.fluent4j.impl.ast.pattern.FluentAttributeContainer;
+import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentAttributeContainer;
 import net.quickwrite.fluent4j.impl.ast.pattern.ParameterizedLiteral;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;

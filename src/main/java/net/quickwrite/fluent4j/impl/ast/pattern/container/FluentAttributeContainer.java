@@ -1,4 +1,4 @@
-package net.quickwrite.fluent4j.impl.ast.pattern;
+package net.quickwrite.fluent4j.impl.ast.pattern.container;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.AttributeList;
