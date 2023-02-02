@@ -15,7 +15,4 @@ public class FluentTextElement implements FluentPattern, FluentPlaceable, Attrib
     public String getContent() {
         return content;
     }
-
-    @Override
-    }
 }

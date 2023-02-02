@@ -29,7 +29,4 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
     public boolean isAfterNL() {
         return this.isAfterNL;
     }
-
-    @Override
-    }
 }

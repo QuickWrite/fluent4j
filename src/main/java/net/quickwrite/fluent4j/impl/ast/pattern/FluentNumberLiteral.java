@@ -11,7 +11,4 @@ public class FluentNumberLiteral implements FluentPlaceable, AttributeList.Named
     public FluentNumberLiteral(final String number) {
         this.number = number;
     }
-
-    @Override
-    }
 }

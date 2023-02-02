@@ -15,11 +15,6 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
         this.variantList = variantList;
     }
 
-    @Override
-    public boolean canSelect() {
-        return false;
-    }
-
     public static class FluentVariant implements FluentSelect.FluentVariant {
         private final String key;
         private final List<FluentPattern> content;

@@ -9,7 +9,4 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
     public FluentVariableReference(final String identifier) {
         this.identifier = identifier;
     }
-
-    @Override
-    }
 }

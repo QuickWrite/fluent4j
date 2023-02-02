@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.ast.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
-import net.quickwrite.fluent4j.impl.ast.pattern.FluentAttributeContainer;
+import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentAttributeContainer;
 
 public interface AttributeList {
     AttributeList EMPTY = new FluentAttributeContainer();
