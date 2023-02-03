@@ -115,6 +115,10 @@ public class FluentContentParserGroup implements FluentContentParser {
             }
         }
 
+        if (patternList.size() == 0) {
+            return List.of();
+        }
+
         final List<FluentPattern> result = new ArrayList<>(patternList.size());
         final StringBuilder builder = new StringBuilder();
         int start = skipLeadingNL(patternList);
