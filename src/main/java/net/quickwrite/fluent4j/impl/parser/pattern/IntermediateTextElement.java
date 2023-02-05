@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
@@ -8,7 +9,7 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import java.io.IOException;
 import java.nio.CharBuffer;
 
-public class IntermediateTextElement implements FluentPattern, FluentPlaceable, FluentSelect.Selectable {
+public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final CharBuffer content;
     private final boolean isAfterNL;
 
