@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.container;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
@@ -14,9 +15,13 @@ public class FluentResourceBundle implements FluentBundle {
     private final ULocale locale;
     private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
 
+    private final Map<String, FluentFunction> functions;
+
     public FluentResourceBundle(final ULocale locale) {
         this.locale = locale;
         this.entries = new HashMap<>();
+
+        this.functions = new HashMap<>();
     }
 
     @Override
@@ -99,5 +104,15 @@ public class FluentResourceBundle implements FluentBundle {
     @Override
     public ULocale getLocale() {
         return this.locale;
+    }
+
+    @Override
+    public FluentFunction getFunction(String key) {
+        return null;
+    }
+
+    @Override
+    public Set<FluentFunction> getFunctions() {
+        return null;
     }
 }

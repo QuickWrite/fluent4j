@@ -10,6 +10,7 @@ import net.quickwrite.fluent4j.impl.ast.entry.FluentBaseElement;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
     private final FluentSelect.Selectable selectable;
@@ -27,8 +28,10 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
+        final Function<FluentSelect.FluentVariant, Boolean> selectChecker = selectable.selectChecker(scope);
+
         for (final FluentSelect.FluentVariant variant : variantList) {
-            if (!selectable.selectCheck(scope, variant)) {
+            if (!selectChecker.apply(variant)) {
                 continue;
             }
 

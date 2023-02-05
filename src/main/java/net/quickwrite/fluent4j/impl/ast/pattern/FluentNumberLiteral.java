@@ -12,6 +12,7 @@ import net.quickwrite.fluent4j.container.FluentScope;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.function.Function;
 
 public class FluentNumberLiteral implements FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final String stringNumber;
@@ -35,13 +36,15 @@ public class FluentNumberLiteral implements FluentPlaceable, ArgumentList.NamedA
     }
 
     @Override
-    public boolean selectCheck(final FluentScope scope, final FluentSelect.FluentVariant variant) {
-        final String identifier = variant.getIdentifier().getSimpleIdentifier();
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
+        return (variant) -> {
+            final String identifier = variant.getIdentifier().getSimpleIdentifier();
 
-        if (stringNumber.equals(identifier)) {
-            return true;
-        }
+            if (stringNumber.equals(identifier)) {
+                return true;
+            }
 
-        return PluralRules.forLocale(scope.getBundle().getLocale()).select(formattedNumber).equals(identifier);
+            return PluralRules.forLocale(scope.getBundle().getLocale()).select(formattedNumber).equals(identifier);
+        };
     }
 }

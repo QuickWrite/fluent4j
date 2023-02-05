@@ -6,11 +6,13 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
+import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
 
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class FluentTermReference extends ParameterizedLiteral<String> {
     public FluentTermReference(final String identifier, final ArgumentList argumentList) {
@@ -56,31 +58,13 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
         }
 
         @Override
-        public synchronized boolean selectCheck(final FluentScope scope, final FluentSelect.FluentVariant variant) {
+        public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
             final FluentEntry.Attribute attribute = getAttribute(scope);
             if (attribute.getPatterns().size() != 1) {
-                return false;
+                return (variant) -> false;
             }
 
-            if (resolveCache != null && resolveCache.getKey() == scope) {
-                return resolveCache.getValue().equals(variant.getIdentifier().getSimpleIdentifier());
-            }
-
-            final StringBuilder builder = new StringBuilder();
-            try {
-                attribute.resolve(scope, builder);
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            this.resolveCache = new AbstractMap.SimpleImmutableEntry<>(scope, builder.toString());
-
-            return this.resolveCache.getValue().equals(variant.getIdentifier().getSimpleIdentifier());
-        }
-
-        @Override
-        public void endSelect() {
-            resolveCache = null;
+            return new FluentCachedChecker(scope, attribute);
         }
     }
 }

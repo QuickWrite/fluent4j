@@ -8,6 +8,7 @@ import net.quickwrite.fluent4j.container.FluentScope;
 
 import java.io.IOException;
 import java.nio.CharBuffer;
+import java.util.function.Function;
 
 public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final CharBuffer content;
@@ -48,7 +49,7 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
     }
 
     @Override
-    public boolean selectCheck(final FluentScope scope, final FluentSelect.FluentVariant variant) {
-        return slice().toString().equals(variant.getIdentifier().getSimpleIdentifier());
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
+        return (variant) -> slice().toString().equals(variant.getIdentifier().getSimpleIdentifier());
     }
 }

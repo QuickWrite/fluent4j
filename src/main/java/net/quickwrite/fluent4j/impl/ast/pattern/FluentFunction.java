@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 public class FluentFunction extends ParameterizedLiteral<String> implements FluentSelect.Selectable {
 
@@ -18,7 +19,7 @@ public class FluentFunction extends ParameterizedLiteral<String> implements Flue
     }
 
     @Override
-    public boolean selectCheck(final FluentScope scope, final FluentSelect.FluentVariant variant) {
-        return false;
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(FluentScope scope) {
+        return (variant) -> false;
     }
 }

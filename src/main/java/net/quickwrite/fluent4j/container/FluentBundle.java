@@ -2,11 +2,13 @@ package net.quickwrite.fluent4j.container;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public interface FluentBundle {
     void addResource(final FluentResource resource);
@@ -26,4 +28,8 @@ public interface FluentBundle {
     <T extends FluentEntry> Optional<T> getEntry(final String key, final Class<T> clazz);
 
     ULocale getLocale();
+
+    FluentFunction getFunction(final String key);
+
+    Set<FluentFunction> getFunctions();
 }

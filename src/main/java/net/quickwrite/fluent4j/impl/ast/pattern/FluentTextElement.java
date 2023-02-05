@@ -7,6 +7,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 public class FluentTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final String content;
@@ -21,7 +22,7 @@ public class FluentTextElement implements FluentPattern, FluentPlaceable, Argume
     }
 
     @Override
-    public boolean selectCheck(final FluentScope scope, final FluentSelect.FluentVariant variant) {
-        return variant.getIdentifier().getSimpleIdentifier().equals(content);
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
+        return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier());
     }
 }
