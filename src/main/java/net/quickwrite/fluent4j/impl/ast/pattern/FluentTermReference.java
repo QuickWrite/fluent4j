@@ -6,11 +6,11 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
+import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
 
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class FluentTermReference extends ParameterizedLiteral<String> {
     public FluentTermReference(final String identifier, final ArgumentList argumentList) {
@@ -22,7 +22,7 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
         // TODO: Don't just throw
         final FluentTerm term = scope.getBundle().getEntry(identifier, FluentTerm.class).orElseThrow();
 
-        term.resolve(scope, appendable);
+        term.resolve(new FluentResolverScope(scope.getBundle(), argumentList, scope.getTraversed()), appendable);
     }
 
     public static class AttributeReference extends FluentTermReference implements FluentPlaceable.CannotPlaceable, FluentSelect.Selectable {

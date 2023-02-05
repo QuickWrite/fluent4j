@@ -15,10 +15,12 @@ public class FluentResolverScope implements FluentScope {
     private final ArgumentList argumentList;
 
     public FluentResolverScope(final FluentBundle bundle, final ArgumentList argumentList) {
+        this(bundle, argumentList, new HashSet<>());
+    }
+
+    public FluentResolverScope(final FluentBundle bundle, final ArgumentList argumentList, final Set<FluentIdentifier> traversed) {
         this.bundle = bundle;
-
-        this.traversed = new HashSet<>();
-
+        this.traversed = traversed;
         this.argumentList = argumentList;
     }
 

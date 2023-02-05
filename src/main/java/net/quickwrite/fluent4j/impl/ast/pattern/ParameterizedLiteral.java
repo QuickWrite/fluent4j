@@ -5,10 +5,10 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 
 public abstract class ParameterizedLiteral<I> implements FluentPlaceable {
     protected final I identifier;
-    protected final ArgumentList attributes;
+    protected final ArgumentList argumentList;
 
-    public ParameterizedLiteral(final I identifier, final ArgumentList attributes) {
+    public ParameterizedLiteral(final I identifier, final ArgumentList argumentList) {
         this.identifier = identifier;
-        this.attributes = attributes;
+        this.argumentList = argumentList;
     }
 }
