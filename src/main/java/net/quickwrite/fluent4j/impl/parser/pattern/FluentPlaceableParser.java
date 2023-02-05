@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
@@ -56,7 +57,11 @@ public class FluentPlaceableParser implements PlaceableParser {
         if (placeable instanceof FluentSelect.Selectable) {
             ParserUtil.skipWhitespace(iterator);
 
-            final Optional<FluentSelect> selectExpression = parseSelector(iterator, contentParser, placeable);
+            final Optional<FluentSelect> selectExpression = parseSelector(
+                    iterator,
+                    contentParser,
+                    (FluentSelect.Selectable) placeable
+            );
 
             if (selectExpression.isEmpty()) {
                 break select;
@@ -106,7 +111,7 @@ public class FluentPlaceableParser implements PlaceableParser {
     private Optional<FluentSelect> parseSelector(
             final ContentIterator iterator,
             final FluentContentParser contentParser,
-            final FluentPlaceable placeable
+            FluentSelect.Selectable selectable
     ) {
         if (iterator.character() != '-') {
             return Optional.empty();
@@ -161,7 +166,11 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         iterator.nextChar();
 
-        return Optional.of(new FluentSelectExpression(placeable, variantList));
+        if (selectable instanceof IntermediateTextElement) {
+            selectable = new FluentTextElement(((IntermediateTextElement) selectable).getContent().toString());
+        }
+
+        return Optional.of(new FluentSelectExpression(selectable, variantList, defaultVariant));
     }
 
     private Optional<FluentSelect.FluentVariant> parseVariant(final ContentIterator iterator, final FluentContentParser contentParser) {

@@ -17,8 +17,8 @@ public class FluentArgumentContainer implements ArgumentList {
         return this.named.get(name);
     }
 
-    public void addAttribute(final String name, final NamedArgument attribute) {
-        this.named.put(name, attribute);
+    public void addArgument(final String name, final NamedArgument argument) {
+        this.named.put(name, argument);
     }
 
     @Override

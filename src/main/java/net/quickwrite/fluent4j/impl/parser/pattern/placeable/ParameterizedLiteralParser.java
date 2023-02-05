@@ -62,7 +62,7 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
             if (namedEntry.isPresent()) {
                 final Map.Entry<String, ArgumentList.NamedArgument> entry = namedEntry.get();
 
-                attributesContainer.addAttribute(entry.getKey(), entry.getValue());
+                attributesContainer.addArgument(entry.getKey(), entry.getValue());
 
                 isNamed = true;
             }

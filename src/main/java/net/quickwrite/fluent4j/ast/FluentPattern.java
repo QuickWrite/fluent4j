@@ -1,4 +1,5 @@
 package net.quickwrite.fluent4j.ast;
 
-public interface FluentPattern {
+public interface FluentPattern extends FluentResolvable {
+
 }

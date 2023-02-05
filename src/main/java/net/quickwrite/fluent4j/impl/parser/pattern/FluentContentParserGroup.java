@@ -133,9 +133,7 @@ public class FluentContentParserGroup implements FluentContentParser {
                 break firstElementIf;
             }
 
-            builder.append(
-                    slice(textElement.getContent(), textElement.getWhitespace(), textElement.getContent().length())
-            );
+            builder.append(textElement.slice());
         }
 
         for (int i = start; i < patternList.size(); i++) {
@@ -161,9 +159,7 @@ public class FluentContentParserGroup implements FluentContentParser {
                     builder.append('\n');
                 }
 
-                builder.append(
-                        slice(textElement.getContent(), minWhitespace, textElement.getContent().length())
-                );
+                builder.append(textElement.slice());
                 continue;
             }
 
@@ -187,14 +183,6 @@ public class FluentContentParserGroup implements FluentContentParser {
         }
 
         return -1;
-    }
-
-    private CharBuffer slice(final CharBuffer base, int start, final int end) {
-        if (base.length() < start || start == -1) {
-            start = 0;
-        }
-
-        return base.subSequence(start, end);
     }
 
     private int skipLeadingNL(final List<FluentPattern> patternList) {
