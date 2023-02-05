@@ -107,12 +107,12 @@ public class FluentResourceBundle implements FluentBundle {
     }
 
     @Override
-    public FluentFunction getFunction(String key) {
-        return null;
+    public Optional<FluentFunction> getFunction(final String key) {
+        return Optional.ofNullable(this.functions.get(key));
     }
 
     @Override
     public Set<FluentFunction> getFunctions() {
-        return null;
+        return new HashSet<>(this.functions.values());
     }
 }

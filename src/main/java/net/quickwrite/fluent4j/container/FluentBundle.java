@@ -29,7 +29,7 @@ public interface FluentBundle {
 
     ULocale getLocale();
 
-    FluentFunction getFunction(final String key);
+    Optional<FluentFunction> getFunction(final String key);
 
     Set<FluentFunction> getFunctions();
 }

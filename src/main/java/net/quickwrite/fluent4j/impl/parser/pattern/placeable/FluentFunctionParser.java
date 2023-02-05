@@ -1,12 +1,12 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
-import net.quickwrite.fluent4j.impl.ast.pattern.FluentFunction;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentFunctionReference;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 
 import java.util.Optional;
 
-public class FluentFunctionParser extends ParameterizedLiteralParser<FluentFunction, String> {
+public class FluentFunctionParser extends ParameterizedLiteralParser<FluentFunctionReference, String> {
     @Override
     protected Optional<String> parseIdentifier(final ContentIterator iterator) {
         if (!isFunctionIdentifierStart(iterator.character())) {
@@ -32,13 +32,13 @@ public class FluentFunctionParser extends ParameterizedLiteralParser<FluentFunct
     }
 
     @Override
-    protected FluentFunction getInstance(final String identifier) {
+    protected FluentFunctionReference getInstance(final String identifier) {
         return getInstance(identifier, ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentFunction getInstance(final String identifier, final ArgumentList attributes) {
-        return new FluentFunction(identifier, attributes);
+    protected FluentFunctionReference getInstance(final String identifier, final ArgumentList attributes) {
+        return new FluentFunctionReference(identifier, attributes);
     }
 
     @Override
