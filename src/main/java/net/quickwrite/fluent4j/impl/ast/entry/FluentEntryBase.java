@@ -6,17 +6,17 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 
 import java.util.List;
 
-public abstract class FluentEntryBase extends FluentBaseElement implements FluentEntry {
+public abstract class FluentEntryBase extends FluentBaseElement<String> implements FluentEntry {
     protected final List<FluentEntry.Attribute> attributes;
 
-    public FluentEntryBase(final FluentIdentifier identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
+    public FluentEntryBase(final FluentIdentifier<String> identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
         super(identifier, patterns);
 
         this.attributes = attributes;
     }
 
     @Override
-    public FluentIdentifier getIdentifier() {
+    public FluentIdentifier<String> getIdentifier() {
         return this.identifier;
     }
 

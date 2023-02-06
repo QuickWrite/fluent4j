@@ -3,6 +3,7 @@ package net.quickwrite.fluent4j.impl.parser.pattern;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
@@ -182,7 +183,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         ParserUtil.skipWhitespace(iterator);
 
-        final String variantKey = getVariantKey(iterator);
+        final FluentSelect.FluentVariant.FluentVariantKey variantKey = getVariantKey(iterator);
 
         ParserUtil.skipWhitespace(iterator);
 
@@ -202,10 +203,10 @@ public class FluentPlaceableParser implements PlaceableParser {
         return Optional.of(new FluentSelectExpression.FluentVariant(variantKey, content));
     }
 
-    private String getVariantKey(final ContentIterator iterator) {
+    private FluentSelect.FluentVariant.FluentVariantKey getVariantKey(final ContentIterator iterator) {
         final Optional<String> number = FluentNumberLiteralParser.parseNumberLiteral(iterator);
         if (number.isPresent()) {
-            return number.get();
+            return new FluentNumberLiteral(number.get());
         }
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 
@@ -213,7 +214,7 @@ public class FluentPlaceableParser implements PlaceableParser {
             throw new RuntimeException("Expected identifier");
         }
 
-        return identifier.get();
+        return new FluentTextElement(identifier.get());
     }
 
 }

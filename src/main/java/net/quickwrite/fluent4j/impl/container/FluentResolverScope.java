@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class FluentResolverScope implements FluentScope {
     private final FluentBundle bundle;
-    private final Set<FluentIdentifier> traversed;
+    private final Set<FluentIdentifier<?>> traversed;
 
     private final ArgumentList argumentList;
 
@@ -18,7 +18,7 @@ public class FluentResolverScope implements FluentScope {
         this(bundle, argumentList, new HashSet<>());
     }
 
-    public FluentResolverScope(final FluentBundle bundle, final ArgumentList argumentList, final Set<FluentIdentifier> traversed) {
+    public FluentResolverScope(final FluentBundle bundle, final ArgumentList argumentList, final Set<FluentIdentifier<?>> traversed) {
         this.bundle = bundle;
         this.traversed = traversed;
         this.argumentList = argumentList;
@@ -30,12 +30,12 @@ public class FluentResolverScope implements FluentScope {
     }
 
     @Override
-    public Set<FluentIdentifier> getTraversed() {
+    public Set<FluentIdentifier<?>> getTraversed() {
         return this.traversed;
     }
 
     @Override
-    public boolean addTraversed(final FluentIdentifier key) {
+    public boolean addTraversed(final FluentIdentifier<?> key) {
         return this.traversed.add(key);
     }
 

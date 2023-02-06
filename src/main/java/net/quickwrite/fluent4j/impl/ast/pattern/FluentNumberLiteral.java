@@ -15,9 +15,15 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-public class FluentNumberLiteral implements FluentPlaceable, FluentPattern.Stringable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+public class FluentNumberLiteral implements
+        FluentPlaceable,
+        FluentPattern.Stringable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey
+{
     protected final String stringNumber;
-    protected final Number number;
+    protected final BigDecimal number;
     protected final FormattedNumber formattedNumber;
 
     private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(ULocale.ENGLISH);
@@ -49,13 +55,19 @@ public class FluentNumberLiteral implements FluentPlaceable, FluentPattern.Strin
     @Override
     public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
         return (variant) -> {
-            final String identifier = variant.getIdentifier().getSimpleIdentifier();
+            FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
 
-            if (stringNumber.equals(identifier)) {
-                return true;
+            if (variantKey instanceof FluentNumberLiteral) {
+                return ((FluentNumberLiteral) variantKey).number.compareTo(number) == 0;
             }
 
-            return PluralRules.forLocale(scope.getBundle().getLocale()).select(formattedNumber).equals(identifier);
+            try {
+                final String identifier = variantKey.toSimpleString(scope);
+
+                return PluralRules.forLocale(scope.getBundle().getLocale()).select(formattedNumber).equals(identifier);
+            } catch (final IOException exception) {
+                throw new RuntimeException(exception);
+            }
         };
     }
 }

@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FluentEntry extends FluentResolvable {
-
-    FluentIdentifier getIdentifier();
+    FluentIdentifier<String> getIdentifier();
     List<FluentEntry.Attribute> getAttributes();
 
     default Optional<FluentEntry.Attribute> getAttribute(final String identifier) {
@@ -21,7 +20,7 @@ public interface FluentEntry extends FluentResolvable {
     }
 
     interface Attribute extends FluentResolvable {
-        FluentIdentifier getIdentifier();
+        FluentIdentifier<String> getIdentifier();
 
         List<FluentPattern> getPatterns();
     }

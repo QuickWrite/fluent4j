@@ -9,7 +9,14 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import java.io.IOException;
 import java.util.function.Function;
 
-public class FluentTextElement implements FluentPattern, FluentPattern.Stringable, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+public class FluentTextElement implements
+        FluentPattern,
+        FluentPattern.Stringable,
+        FluentPlaceable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey
+{
     private final String content;
 
     public FluentTextElement(final String content) {
@@ -33,6 +40,12 @@ public class FluentTextElement implements FluentPattern, FluentPattern.Stringabl
 
     @Override
     public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
-        return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier());
+        return variant -> {
+            try {
+                return content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+            } catch (final IOException exception) {
+                throw new RuntimeException(exception);
+            }
+        };
     }
 }

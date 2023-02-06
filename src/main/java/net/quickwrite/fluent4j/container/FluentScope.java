@@ -8,9 +8,9 @@ import java.util.Set;
 public interface FluentScope {
     FluentBundle getBundle();
 
-    Set<FluentIdentifier> getTraversed();
+    Set<FluentIdentifier<?>> getTraversed();
 
-    boolean addTraversed(final FluentIdentifier key);
+    boolean addTraversed(final FluentIdentifier<?> key);
 
     ArgumentList getArguments();
 }

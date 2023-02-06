@@ -7,13 +7,13 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import java.util.List;
 import java.util.Objects;
 
-public class FluentAttribute extends FluentBaseElement implements FluentEntry.Attribute {
+public class FluentAttribute extends FluentBaseElement<String> implements FluentEntry.Attribute {
     public FluentAttribute(final String identifier, final List<FluentPattern> patterns) {
         super(new FluentAttributeIdentifier(identifier), patterns);
     }
 
     @Override
-    public FluentIdentifier getIdentifier() {
+    public FluentIdentifier<String> getIdentifier() {
         return this.identifier;
     }
 
@@ -22,7 +22,7 @@ public class FluentAttribute extends FluentBaseElement implements FluentEntry.At
         return this.patterns;
     }
 
-    private static class FluentAttributeIdentifier implements FluentIdentifier {
+    private static class FluentAttributeIdentifier implements FluentIdentifier<String> {
         private final String identifier;
 
         public FluentAttributeIdentifier(final String identifier) {

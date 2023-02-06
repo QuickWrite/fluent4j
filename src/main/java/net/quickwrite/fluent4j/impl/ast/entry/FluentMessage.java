@@ -12,7 +12,7 @@ public final class FluentMessage extends FluentEntryBase implements FluentEntry 
         super(new FluentMessageIdentifier(identifier), patterns, attributes);
     }
 
-    private static class FluentMessageIdentifier implements FluentIdentifier {
+    private static class FluentMessageIdentifier implements FluentIdentifier<String> {
         private final String identifier;
 
         public FluentMessageIdentifier(final String identifier) {

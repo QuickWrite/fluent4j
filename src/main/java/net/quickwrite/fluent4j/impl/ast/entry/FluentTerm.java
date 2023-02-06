@@ -12,7 +12,7 @@ public final class FluentTerm extends FluentEntryBase implements FluentEntry {
         super(new FluentTermIdentifier(identifier), patterns, attributes);
     }
 
-    private static class FluentTermIdentifier implements FluentIdentifier {
+    private static class FluentTermIdentifier implements FluentIdentifier<String> {
         private final String identifier;
 
         public FluentTermIdentifier(final String identifier) {

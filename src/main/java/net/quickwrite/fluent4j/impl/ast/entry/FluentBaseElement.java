@@ -8,11 +8,11 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class FluentBaseElement implements FluentResolvable {
-    protected final FluentIdentifier identifier;
+public abstract class FluentBaseElement<I> implements FluentResolvable {
+    protected final FluentIdentifier<I> identifier;
     protected final List<FluentPattern> patterns;
 
-    protected FluentBaseElement(final FluentIdentifier identifier, final List<FluentPattern> patterns) {
+    protected FluentBaseElement(final FluentIdentifier<I> identifier, final List<FluentPattern> patterns) {
         this.identifier = identifier;
         this.patterns = patterns;
     }

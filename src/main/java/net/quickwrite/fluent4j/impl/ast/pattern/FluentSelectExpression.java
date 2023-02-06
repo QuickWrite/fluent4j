@@ -47,30 +47,30 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
         return this;
     }
 
-    public static class FluentVariant extends FluentBaseElement implements FluentSelect.FluentVariant {
-        public FluentVariant(final String identifier, final List<FluentPattern> content) {
+    public static class FluentVariant extends FluentBaseElement<FluentSelect.FluentVariant.FluentVariantKey> implements FluentSelect.FluentVariant {
+        public FluentVariant(final FluentSelect.FluentVariant.FluentVariantKey identifier, final List<FluentPattern> content) {
             super(new FluentVariantIdentifier(identifier), content);
         }
 
         @Override
-        public FluentIdentifier getIdentifier() {
+        public FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey> getIdentifier() {
             return this.identifier;
         }
 
-        private static class FluentVariantIdentifier implements FluentIdentifier {
-            private final String identifier;
+        private static class FluentVariantIdentifier implements FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey> {
+            private final FluentSelect.FluentVariant.FluentVariantKey identifier;
 
-            public FluentVariantIdentifier(final String identifier) {
+            public FluentVariantIdentifier(final FluentSelect.FluentVariant.FluentVariantKey identifier) {
                 this.identifier = identifier;
             }
 
             @Override
-            public String getSimpleIdentifier() {
+            public FluentSelect.FluentVariant.FluentVariantKey getSimpleIdentifier() {
                 return this.identifier;
             }
 
             @Override
-            public String getFullIdentifier() {
+            public FluentSelect.FluentVariant.FluentVariantKey getFullIdentifier() {
                 return this.identifier;
             }
 

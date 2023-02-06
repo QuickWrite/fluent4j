@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.ast.identifier;
 
-public interface FluentIdentifier {
-    String getSimpleIdentifier();
-    String getFullIdentifier();
+public interface FluentIdentifier<I> {
+    I getSimpleIdentifier();
+    I getFullIdentifier();
 
     int hashCode();
 
