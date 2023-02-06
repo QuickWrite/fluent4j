@@ -5,6 +5,7 @@ import com.ibm.icu.number.LocalizedNumberFormatter;
 import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.util.ULocale;
+import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
@@ -14,10 +15,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-public class FluentNumberLiteral implements FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
-    private final String stringNumber;
-    private final Number number;
-    private final FormattedNumber formattedNumber;
+public class FluentNumberLiteral implements FluentPlaceable, FluentPattern.Stringable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+    protected final String stringNumber;
+    protected final Number number;
+    protected final FormattedNumber formattedNumber;
 
     private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(ULocale.ENGLISH);
 
@@ -33,6 +34,16 @@ public class FluentNumberLiteral implements FluentPlaceable, ArgumentList.NamedA
         final String formattedNumber = NumberFormatter.withLocale(scope.getBundle().getLocale()).format(number).toString();
 
         appendable.append(formattedNumber);
+    }
+
+    @Override
+    public String getAsString() {
+        return this.stringNumber;
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return this;
     }
 
     @Override

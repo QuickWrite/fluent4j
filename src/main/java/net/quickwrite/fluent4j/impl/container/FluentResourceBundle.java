@@ -7,6 +7,7 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessage;
+import net.quickwrite.fluent4j.impl.function.NumberFunction;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,6 +23,7 @@ public class FluentResourceBundle implements FluentBundle {
         this.entries = new HashMap<>();
 
         this.functions = new HashMap<>();
+        functions.put("NUMBER", new NumberFunction());
     }
 
     @Override

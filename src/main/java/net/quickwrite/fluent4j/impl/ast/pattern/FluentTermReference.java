@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
@@ -25,6 +26,11 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
         final FluentTerm term = scope.getBundle().getEntry(identifier, FluentTerm.class).orElseThrow();
 
         term.resolve(new FluentResolverScope(scope.getBundle(), argumentList, scope.getTraversed()), appendable);
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return this;
     }
 
     public static class AttributeReference extends FluentTermReference implements FluentPlaceable.CannotPlaceable, FluentSelect.Selectable {

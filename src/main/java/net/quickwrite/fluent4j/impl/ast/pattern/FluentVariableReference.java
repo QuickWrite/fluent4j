@@ -18,7 +18,12 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        scope.getArguments().getArgument(identifier).resolve(scope, appendable);
+        unwrap(scope).resolve(scope, appendable);
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return scope.getArguments().getArgument(identifier);
     }
 
     @Override

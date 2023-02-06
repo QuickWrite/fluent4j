@@ -9,7 +9,7 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import java.io.IOException;
 import java.util.function.Function;
 
-public class FluentTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+public class FluentTextElement implements FluentPattern, FluentPattern.Stringable, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final String content;
 
     public FluentTextElement(final String content) {
@@ -19,6 +19,16 @@ public class FluentTextElement implements FluentPattern, FluentPlaceable, Argume
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
         appendable.append(content);
+    }
+
+    @Override
+    public String getAsString() {
+        return this.content;
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return this;
     }
 
     @Override

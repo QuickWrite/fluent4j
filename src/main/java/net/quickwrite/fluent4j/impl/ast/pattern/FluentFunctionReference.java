@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
+import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
@@ -17,8 +18,14 @@ public class FluentFunctionReference extends ParameterizedLiteral<String> implem
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
+        unwrap(scope).resolve(scope, appendable);
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
         // TODO: Better exceptions
-        scope.getBundle().getFunction(this.identifier).orElseThrow().parseFunction(scope, this.argumentList);
+        return scope.getBundle().getFunction(this.identifier).orElseThrow()
+                .parseFunction(scope, this.argumentList);
     }
 
     @Override

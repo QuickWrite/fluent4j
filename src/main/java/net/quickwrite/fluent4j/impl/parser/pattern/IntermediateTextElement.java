@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.function.Function;
 
-public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+public class IntermediateTextElement implements FluentPattern, FluentPattern.Stringable, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final CharBuffer content;
     private final boolean isAfterNL;
 
@@ -46,6 +46,16 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
         appendable.append(slice());
+    }
+
+    @Override
+    public String getAsString() {
+        return slice().toString();
+    }
+
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return this;
     }
 
     @Override

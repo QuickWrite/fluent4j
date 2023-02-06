@@ -42,6 +42,11 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
         defaultVariant.resolve(scope, appendable);
     }
 
+    @Override
+    public FluentPattern unwrap(final FluentScope scope) {
+        return this;
+    }
+
     public static class FluentVariant extends FluentBaseElement implements FluentSelect.FluentVariant {
         public FluentVariant(final String identifier, final List<FluentPattern> content) {
             super(new FluentVariantIdentifier(identifier), content);
