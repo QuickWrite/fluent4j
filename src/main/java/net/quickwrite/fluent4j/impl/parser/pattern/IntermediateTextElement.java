@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.function.Function;
 
-public class IntermediateTextElement implements FluentPattern, FluentPattern.Stringable, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
+public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final CharBuffer content;
     private final boolean isAfterNL;
 
@@ -49,7 +49,7 @@ public class IntermediateTextElement implements FluentPattern, FluentPattern.Str
     }
 
     @Override
-    public String getAsString() {
+    public String toSimpleString(final FluentScope scope) {
         return slice().toString();
     }
 
@@ -60,6 +60,12 @@ public class IntermediateTextElement implements FluentPattern, FluentPattern.Str
 
     @Override
     public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
-        return (variant) -> slice().toString().equals(variant.getIdentifier().getSimpleIdentifier());
+        return (variant) -> {
+            try {
+                return slice().toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 }

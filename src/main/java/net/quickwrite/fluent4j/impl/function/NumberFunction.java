@@ -22,9 +22,7 @@ public class NumberFunction implements FluentFunction {
         try {
             final FluentPattern pattern = argumentList.getArgument(0).unwrap(scope);
 
-            final String stringValue = pattern instanceof FluentPattern.Stringable ?
-                    ((FluentPattern.Stringable) pattern).getAsString() :
-                    argumentList.getArgumentAsString(0, scope);
+            final String stringValue = pattern.toSimpleString(scope);
 
             numberLiteral = new FormattedNumberLiteral(stringValue);
         } catch (final IOException e) {

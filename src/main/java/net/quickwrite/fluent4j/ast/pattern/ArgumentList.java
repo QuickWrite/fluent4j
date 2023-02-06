@@ -12,14 +12,6 @@ public interface ArgumentList {
     NamedArgument getArgument(final String name);
     FluentPattern getArgument(final int index);
 
-    default String getArgumentAsString(int index, final FluentScope scope) throws IOException {
-        return getArgument(index).toSimpleString(scope);
-    }
-
-    default String getArgumentAsString(final String name, final FluentScope scope) throws IOException {
-        return getArgument(name).toSimpleString(scope);
-    }
-
     interface NamedArgument extends FluentPattern {
 
     }

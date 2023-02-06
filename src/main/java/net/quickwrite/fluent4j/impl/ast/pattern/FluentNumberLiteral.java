@@ -17,7 +17,6 @@ import java.util.function.Function;
 
 public class FluentNumberLiteral implements
         FluentPlaceable,
-        FluentPattern.Stringable,
         ArgumentList.NamedArgument,
         FluentSelect.Selectable,
         FluentSelect.FluentVariant.FluentVariantKey
@@ -43,7 +42,7 @@ public class FluentNumberLiteral implements
     }
 
     @Override
-    public String getAsString() {
+    public String toSimpleString(final FluentScope scope) {
         return this.stringNumber;
     }
 

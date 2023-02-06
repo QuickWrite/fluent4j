@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 public class FluentTextElement implements
         FluentPattern,
-        FluentPattern.Stringable,
         FluentPlaceable,
         ArgumentList.NamedArgument,
         FluentSelect.Selectable,
@@ -29,7 +28,7 @@ public class FluentTextElement implements
     }
 
     @Override
-    public String getAsString() {
+    public String toSimpleString(final FluentScope scope) {
         return this.content;
     }
 
