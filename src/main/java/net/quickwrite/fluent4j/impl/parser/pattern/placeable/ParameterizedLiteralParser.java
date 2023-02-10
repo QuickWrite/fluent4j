@@ -2,6 +2,8 @@ package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
+import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContainer;
 import net.quickwrite.fluent4j.impl.ast.pattern.ParameterizedLiteral;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -47,7 +49,7 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
         while (iterator.character() != ')') {
             if (!isFirst) {
                 if (iterator.character() != ',') {
-                    throw new RuntimeException("Expected ',' but got '" + Character.toString(iterator.character()) + "'");
+                    throw new FluentExpectedException(',', iterator);
                 }
                 iterator.nextChar();
 
@@ -76,7 +78,7 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
 
             final Optional<FluentPlaceable> placeable = placeableParser.parsePlaceable(iterator);
             if (placeable.isEmpty()) {
-                throw new RuntimeException("Expected an inline expression");
+                throw new FluentBuilderException("Expected an inline expression", iterator);
             }
             attributesContainer.addAttribute(placeable.get());
 
@@ -106,11 +108,11 @@ public abstract class ParameterizedLiteralParser<T extends ParameterizedLiteral<
 
         final Optional<FluentPlaceable> placeable = placeableParser.parsePlaceable(iterator);
         if (placeable.isEmpty()) {
-            throw new RuntimeException("Expected attribute");
+            throw new FluentBuilderException("Expected attribute", iterator);
         }
 
         if (!(placeable.get() instanceof ArgumentList.NamedArgument)) {
-            throw new RuntimeException("Expected literal");
+            throw new FluentBuilderException("Expected literal", iterator);
         }
 
         return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), (ArgumentList.NamedArgument) placeable.get()));

@@ -14,6 +14,11 @@ public final class StringContentIterator implements ContentIterator {
     }
 
     @Override
+    public String inputName() {
+        return "String";
+    }
+
+    @Override
     public int character() {
         if (line() == null || line().length() < this.characterIndex) {
             return 0;

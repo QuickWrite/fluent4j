@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.parser;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.container.FluentResource;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.container.FluentEntryResource;
 import net.quickwrite.fluent4j.impl.parser.base.CommentSkipper;
 import net.quickwrite.fluent4j.impl.parser.base.WhitespaceSkipper;
@@ -57,7 +58,7 @@ public final class FluentParserGroup implements FluentParser<FluentResource> {
             }
 
             // TODO: Something went wrong and it must be handled
-            throw new RuntimeException("Every parser returned FAILURE.");
+            throw new FluentBuilderException("Every parser returned FAILURE.", iterator);
         }
 
         return new FluentEntryResource(elements);

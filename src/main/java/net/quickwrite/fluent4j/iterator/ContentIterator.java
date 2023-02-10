@@ -1,6 +1,8 @@
 package net.quickwrite.fluent4j.iterator;
 
 public interface ContentIterator {
+    String inputName();
+
     int character();
     int nextChar();
 

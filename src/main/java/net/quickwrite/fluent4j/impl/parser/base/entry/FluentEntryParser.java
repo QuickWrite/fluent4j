@@ -2,6 +2,8 @@ package net.quickwrite.fluent4j.impl.parser.base.entry;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
+import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentAttribute;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentEntryBase;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -44,8 +46,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
         ParserUtil.skipWhitespace(content);
 
         if (content.character() != '=') {
-            // TODO: Better exception
-            throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) + "'");
+            throw new FluentExpectedException('=', content);
         }
 
         content.nextChar();
@@ -70,12 +71,13 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
         while (content.character() == '.') {
             content.nextChar();
 
-            final String identifier = ParserUtil.getIdentifier(content).orElseThrow(() -> new RuntimeException("Expected identifier"));
+            final String identifier = ParserUtil.getIdentifier(content)
+                    .orElseThrow(() -> new FluentBuilderException("Expected identifier", content));
 
             ParserUtil.skipWhitespace(content);
 
             if (content.character() != '=') {
-                throw new RuntimeException("Expected '=', but got '" + Character.toString(content.character()) + "'");
+                throw new FluentExpectedException('=', content);
             }
 
             content.nextChar();

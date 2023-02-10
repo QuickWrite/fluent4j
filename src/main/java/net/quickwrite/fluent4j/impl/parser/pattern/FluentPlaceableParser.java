@@ -3,6 +3,8 @@ package net.quickwrite.fluent4j.impl.parser.pattern;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
+import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
@@ -52,7 +54,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         ParserUtil.skipWhitespaceAndNL(iterator);
 
         final FluentPlaceable placeable = parsePlaceable(iterator)
-                .orElseThrow(() -> new RuntimeException("All PlaceableExpressionParsers returned FAILURE"));
+                .orElseThrow(() -> new FluentBuilderException("All PlaceableExpressionParsers returned FAILURE", iterator));
 
         select:
         if (placeable instanceof FluentSelect.Selectable) {
@@ -74,7 +76,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         ParserUtil.skipWhitespaceAndNL(iterator);
 
         if (iterator.character() != '}') {
-            throw new RuntimeException("Expected '}' but got '" + Character.toString(iterator.character()) + "'");
+            throw new FluentExpectedException('}', iterator);
         }
 
         if (placeable instanceof FluentPlaceable.CannotPlaceable) {
@@ -119,7 +121,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         }
 
         if (iterator.nextChar() != '>') {
-            throw new RuntimeException("Expected '->' but got '-" + Character.toString(iterator.character()) + "'");
+            throw new FluentExpectedException("->", "-" + iterator.character(), iterator);
         }
 
         iterator.nextChar();
@@ -127,7 +129,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         ParserUtil.skipWhitespace(iterator);
 
         if (iterator.character() != '\n') {
-            throw new RuntimeException("Expected '\\n' but got '" + Character.toString(iterator.character()) + "'");
+            throw new FluentExpectedException('\n', iterator);
         }
 
         ParserUtil.skipWhitespaceAndNL(iterator);
@@ -140,7 +142,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
             if (iterator.character() == '*') {
                 if (defaultVariant != null) {
-                    throw new RuntimeException("Only one default variant can exist.");
+                    throw new FluentBuilderException("Only one default variant can exist.", iterator);
                 }
 
                 isDefault = true;
@@ -162,7 +164,8 @@ public class FluentPlaceableParser implements PlaceableParser {
         }
 
         if (defaultVariant == null) {
-            throw new RuntimeException("There needs to be at lease one default variant");
+            // TODO: Better error position
+            throw new FluentBuilderException("Expected at least one variant to be marked as default (*)", iterator);
         }
 
         iterator.nextChar();
@@ -188,7 +191,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         ParserUtil.skipWhitespace(iterator);
 
         if (iterator.character() != ']') {
-            throw new RuntimeException("Expected ']' but got '" + Character.toString(iterator.character()) + "'");
+            throw new FluentExpectedException(']', iterator);
         }
 
         iterator.nextChar();
@@ -211,7 +214,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 
         if (identifier.isEmpty()) {
-            throw new RuntimeException("Expected identifier");
+            throw new FluentBuilderException("Expected identifier", iterator);
         }
 
         return new FluentTextElement(identifier.get());

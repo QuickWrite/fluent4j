@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTermReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
@@ -30,7 +31,7 @@ public class FluentTermReferenceParser extends ParameterizedLiteralParser<Fluent
                     new AbstractMap.SimpleImmutableEntry<>(
                             identifier.get(),
                             ParserUtil.getIdentifier(iterator).orElseThrow(
-                                    () -> new RuntimeException("Expected attribute name")
+                                    () -> new FluentBuilderException("Expected attribute name", iterator)
                             )
                     )
             );

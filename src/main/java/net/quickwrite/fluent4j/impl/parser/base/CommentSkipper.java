@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.base;
 
 import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
@@ -22,7 +23,7 @@ public final class CommentSkipper implements FluentElementParser<FluentEntry> {
 
         if (!Character.isWhitespace(content.character())) {
             // TODO: better exception
-            throw new RuntimeException();
+            throw new FluentExpectedException(' ', content);
         }
 
         content.nextLine();

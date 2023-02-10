@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
+import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.parser.pattern.IntermediateTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
@@ -22,7 +23,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
 
         while (iterator.character() != '"') {
             if (iterator.character() == '\n') {
-                throw new RuntimeException("StringLiteral cannot have a \\n");
+                throw new FluentBuilderException("Unterminated string expression", iterator);
             }
 
             if (iterator.character() == '\\') {
@@ -34,8 +35,9 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
                     case 'u' -> builder.appendCodePoint(parseCharacters(iterator, 4));
                     case 'U' -> builder.appendCodePoint(parseCharacters(iterator, 6));
 
-                    default -> throw new RuntimeException(
-                            "Unknown escape character: '" + Character.toString(character) + "'"
+                    default -> throw new FluentBuilderException(
+                            "Unknown escape character: '" + Character.toString(character) + "'",
+                            iterator
                     );
                 }
 
@@ -66,7 +68,10 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
             final int character = iterator.nextChar();
 
             if (!isHexChar(character)) {
-                throw new RuntimeException("Invalid unicode escape character '" + Character.toString(character) + "'");
+                throw new FluentBuilderException(
+                        "Invalid unicode escape character '" + Character.toString(character) + "'",
+                        iterator
+                );
             }
 
             chars[i] = (char) character;
