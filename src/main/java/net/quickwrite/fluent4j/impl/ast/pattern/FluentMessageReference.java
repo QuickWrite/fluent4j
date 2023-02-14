@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentPatternException;
 
 import java.io.IOException;
 
@@ -16,8 +17,11 @@ public class FluentMessageReference implements FluentPlaceable {
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        // TODO: Don't just throw
-        final FluentEntry message = scope.getBundle().getMessage(identifier).orElseThrow();
+
+        final FluentEntry message = scope.getBundle().getMessage(identifier)
+                .orElseThrow(
+                        () -> FluentPatternException.getPlaceable(appender -> appender.append(identifier))
+                );
 
         message.resolve(scope, appendable);
     }
@@ -39,11 +43,17 @@ public class FluentMessageReference implements FluentPlaceable {
         @Override
         public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
             // TODO: Don't just throw
-            final FluentEntry message = scope.getBundle().getMessage(identifier).orElseThrow();
+            final FluentEntry message = scope.getBundle().getMessage(identifier).orElseThrow(this::getException);
 
-            final FluentEntry.Attribute attribute = message.getAttribute(attributeIdentifier).orElseThrow();
+            final FluentEntry.Attribute attribute = message.getAttribute(attributeIdentifier).orElseThrow(this::getException);
 
             attribute.resolve(scope, appendable);
+        }
+
+        private FluentPatternException getException() {
+            return FluentPatternException.getPlaceable(
+                    appender -> appender.append(identifier).append('.').append(attributeIdentifier)
+            );
         }
     }
 }

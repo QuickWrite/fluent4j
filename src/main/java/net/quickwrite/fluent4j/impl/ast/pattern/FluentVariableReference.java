@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 
 import java.io.IOException;
@@ -18,7 +19,12 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        unwrap(scope).resolve(scope, appendable);
+        final FluentPattern pattern = unwrap(scope);
+        if (pattern == null) {
+            throw FluentPatternException.getPlaceable(appender -> appender.append('$').append(identifier));
+        }
+
+        pattern.resolve(scope, appendable);
     }
 
     @Override

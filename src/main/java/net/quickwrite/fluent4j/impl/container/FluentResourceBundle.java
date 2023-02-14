@@ -16,6 +16,8 @@ public class FluentResourceBundle implements FluentBundle {
     private final ULocale locale;
     private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
 
+    private static final Map<String, FluentEntry> EMPTY_MAP = Map.of();
+
     private final Map<String, FluentFunction> functions;
 
     public FluentResourceBundle(final ULocale locale) {
@@ -60,7 +62,7 @@ public class FluentResourceBundle implements FluentBundle {
 
     @Override
     public boolean hasMessage(final String key) {
-        return this.entries.get(FluentMessage.class).containsKey(key);
+        return getEntryMap(FluentMessage.class).orElse(EMPTY_MAP).containsKey(key);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class FluentResourceBundle implements FluentBundle {
 
     @Override
     public Optional<FluentEntry> getMessage(final String key) {
-        return Optional.ofNullable(this.entries.get(FluentMessage.class).get(key));
+        return Optional.ofNullable(getEntryMap(FluentMessage.class).orElse(EMPTY_MAP).get(key));
     }
 
     @Override
@@ -94,13 +96,17 @@ public class FluentResourceBundle implements FluentBundle {
 
     @Override
     public <T extends FluentEntry> Set<Map.Entry<String, FluentEntry>> getEntries(final Class<T> clazz) {
-        return entries.get(clazz).entrySet();
+        return getEntryMap(clazz).orElse(EMPTY_MAP).entrySet();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T extends FluentEntry> Optional<T> getEntry(final String key, final Class<T> clazz) {
-        return Optional.ofNullable((T) this.entries.get(clazz).get(key));
+        return Optional.ofNullable((T) getEntryMap(clazz).orElse(EMPTY_MAP).get(key));
+    }
+
+    private <T> Optional<Map<String, FluentEntry>> getEntryMap(final Class<T> clazz) {
+        return Optional.ofNullable(this.entries.get(clazz));
     }
 
     @Override

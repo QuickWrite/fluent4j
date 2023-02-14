@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentPatternException;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +26,11 @@ public abstract class FluentBaseElement<I> implements FluentResolvable {
         }
 
         for (final FluentPattern pattern : patterns) {
-            pattern.resolve(scope, appendable);
+            try {
+                pattern.resolve(scope, appendable);
+            } catch (final FluentPatternException exception) {
+                exception.getDefaultDataWriter().write(appendable);
+            }
         }
     }
 }
