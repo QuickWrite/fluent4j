@@ -1,14 +1,15 @@
 package net.quickwrite.fluent4j.impl.ast.entry;
 
-import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 
 import java.util.List;
 import java.util.Objects;
 
-public final class FluentMessage extends FluentEntryBase implements FluentEntry {
-    public FluentMessage(final String identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
+public final class FluentMessageElement extends FluentEntryBase implements FluentMessage {
+    public FluentMessageElement(final String identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
         super(new FluentMessageIdentifier(identifier), patterns, attributes);
     }
 

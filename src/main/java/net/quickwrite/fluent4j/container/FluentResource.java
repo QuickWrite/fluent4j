@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.container;
 
-import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 
 import java.util.List;
 

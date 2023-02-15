@@ -1,12 +1,13 @@
 package net.quickwrite.fluent4j.impl.container;
 
 import com.ibm.icu.util.ULocale;
-import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.impl.ast.entry.FluentMessage;
+import net.quickwrite.fluent4j.impl.ast.entry.FluentMessageElement;
 import net.quickwrite.fluent4j.impl.function.NumberFunction;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class FluentResourceBundle implements FluentBundle {
     @Override
     public void addResource(final FluentResource resource) {
         for (final FluentEntry entry : resource.entries()) {
-            final Class<? extends FluentEntry> clazz = entry.getClass();
+            final Class<? extends FluentEntry> clazz = getClass(entry);
 
             if (!entries.containsKey(clazz)) {
                 entries.put(clazz, new HashMap<>());
@@ -50,7 +51,7 @@ public class FluentResourceBundle implements FluentBundle {
     @Override
     public void addResourceOverriding(final FluentResource resource) {
         for (final FluentEntry entry : resource.entries()) {
-            final Class<? extends FluentEntry> clazz = entry.getClass();
+            final Class<? extends FluentEntry> clazz = getClass(entry);
 
             if (!entries.containsKey(clazz)) {
                 entries.put(clazz, new HashMap<>());
@@ -60,9 +61,17 @@ public class FluentResourceBundle implements FluentBundle {
         }
     }
 
+    private static Class<? extends FluentEntry> getClass(final FluentEntry entry) {
+        if (entry instanceof FluentMessage) {
+            return FluentMessage.class;
+        }
+
+        return entry.getClass();
+    }
+
     @Override
     public boolean hasMessage(final String key) {
-        return getEntryMap(FluentMessage.class).orElse(EMPTY_MAP).containsKey(key);
+        return getEntryMap(FluentMessageElement.class).orElse(EMPTY_MAP).containsKey(key);
     }
 
     @Override

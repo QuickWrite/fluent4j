@@ -1,5 +1,7 @@
-package net.quickwrite.fluent4j.ast;
+package net.quickwrite.fluent4j.ast.entry;
 
+import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 
 import java.util.List;

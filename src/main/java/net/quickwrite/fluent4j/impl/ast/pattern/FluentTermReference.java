@@ -1,13 +1,13 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
-import net.quickwrite.fluent4j.ast.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
-import net.quickwrite.fluent4j.impl.ast.entry.FluentTerm;
+import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
 
@@ -22,7 +22,7 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
         // TODO: Don't just throw
-        final FluentTerm term = scope.getBundle().getEntry(identifier, FluentTerm.class)
+        final FluentTermElement term = scope.getBundle().getEntry(identifier, FluentTermElement.class)
                 .orElseThrow(
                         () -> FluentPatternException.getPlaceable(appender -> appender.append('-').append(identifier))
                 );
@@ -58,7 +58,7 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
 
         private FluentEntry.Attribute getAttribute(final FluentScope scope) {
             // TODO: Don't just throw
-            final FluentTerm term = scope.getBundle().getEntry(identifier, FluentTerm.class).orElseThrow(this::getException);
+            final FluentTermElement term = scope.getBundle().getEntry(identifier, FluentTermElement.class).orElseThrow(this::getException);
 
             return term.getAttribute(attributeIdentifier).orElseThrow(this::getException);
         }
