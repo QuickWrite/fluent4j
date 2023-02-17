@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentBaseElement;
 
 import java.io.IOException;
@@ -28,7 +29,13 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        final Function<FluentSelect.FluentVariant, Boolean> selectChecker = selectable.selectChecker(scope);
+        final Function<FluentSelect.FluentVariant, Boolean> selectChecker;
+        try {
+            selectChecker = selectable.selectChecker(scope);
+        } catch (final FluentSelectException ignored) {
+            defaultVariant.resolve(scope, appendable);
+            return;
+        }
 
         for (final FluentSelect.FluentVariant variant : variantList) {
             if (!selectChecker.apply(variant)) {

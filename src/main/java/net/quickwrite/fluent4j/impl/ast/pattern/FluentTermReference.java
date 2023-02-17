@@ -1,12 +1,13 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
@@ -70,10 +71,11 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
         }
 
         @Override
-        public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
+        public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
             final FluentEntry.Attribute attribute = getAttribute(scope);
             if (attribute.getPatterns().size() != 1) {
-                return (variant) -> false;
+                // Throw this exception as it jumps to the default value directly
+                throw new FluentSelectException();
             }
 
             return new FluentCachedChecker(scope, attribute);

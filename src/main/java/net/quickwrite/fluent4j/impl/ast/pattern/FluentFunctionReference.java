@@ -6,6 +6,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 
 import java.io.IOException;
@@ -30,9 +31,10 @@ public class FluentFunctionReference extends ParameterizedLiteral<String> implem
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
-        // TODO: Better exceptions
-        final FluentPlaceable placeable = scope.getBundle().getFunction(this.identifier).orElseThrow().parseFunction(scope, this.argumentList);
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
+        final FluentPlaceable placeable = scope.getBundle().getFunction(this.identifier)
+                .orElseThrow(FluentSelectException::new)
+                .parseFunction(scope, this.argumentList);
 
         if (placeable instanceof FluentSelect.Selectable) {
             return ((FluentSelect.Selectable) placeable).selectChecker(scope);

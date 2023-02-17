@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 
 import java.util.function.Function;
 
@@ -17,6 +18,6 @@ public interface FluentSelect extends FluentPlaceable {
     }
 
     interface Selectable {
-        Function<FluentVariant, Boolean> selectChecker(final FluentScope scope);
+        Function<FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException;
     }
 }

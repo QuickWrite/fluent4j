@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) {
+    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
         final FluentPattern argument = scope.getArguments().getArgument(identifier);
 
         if (argument instanceof FluentSelect.Selectable) {
