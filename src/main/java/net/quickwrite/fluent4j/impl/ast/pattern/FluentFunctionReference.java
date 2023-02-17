@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.container.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 
 import java.io.IOException;
@@ -23,8 +24,8 @@ public class FluentFunctionReference extends ParameterizedLiteral<String> implem
 
     @Override
     public FluentPattern unwrap(final FluentScope scope) {
-        // TODO: Better exceptions
-        return scope.getBundle().getFunction(this.identifier).orElseThrow()
+        return scope.getBundle().getFunction(this.identifier)
+                .orElseThrow(() -> FluentPatternException.getPlaceable(writer -> writer.append(this.identifier)))
                 .parseFunction(scope, this.argumentList);
     }
 
