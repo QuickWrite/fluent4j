@@ -37,6 +37,10 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
     public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
         final FluentPattern argument = scope.getArguments().getArgument(identifier);
 
+        if (argument == null) {
+            throw new FluentSelectException();
+        }
+
         if (argument instanceof FluentSelect.Selectable) {
             return ((FluentSelect.Selectable) argument).selectChecker(scope);
         }
