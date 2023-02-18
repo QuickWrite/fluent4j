@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 public class FluentCachedChecker implements Function<FluentSelect.FluentVariant, Boolean> {
     private final Map.Entry<FluentScope, String> resolveCache;
+    private final FluentScope scope;
 
     public FluentCachedChecker(final FluentScope scope, final FluentResolvable argument) {
         final StringBuilder builder = new StringBuilder();
@@ -22,10 +23,15 @@ public class FluentCachedChecker implements Function<FluentSelect.FluentVariant,
         }
 
         this.resolveCache = new AbstractMap.SimpleImmutableEntry<>(scope, builder.toString());
+        this.scope = scope;
     }
 
     @Override
     public Boolean apply(final FluentSelect.FluentVariant variant) {
-        return this.resolveCache.getValue().equals(variant.getIdentifier().getSimpleIdentifier());
+        try {
+            return this.resolveCache.getValue().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+        } catch (final IOException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 }
