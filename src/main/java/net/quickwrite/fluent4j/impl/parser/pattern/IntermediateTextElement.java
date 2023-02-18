@@ -35,8 +35,8 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
         return this.isAfterNL;
     }
 
-    public CharBuffer slice() {
-        int start = this.whitespace;
+    public CharBuffer slice(final int whitespace) {
+        int start = whitespace;
         if (content.length() < this.whitespace || this.whitespace == -1) {
             start = 0;
         }
@@ -46,12 +46,12 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
 
     @Override
     public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        appendable.append(slice());
+        appendable.append(slice(whitespace));
     }
 
     @Override
     public String toSimpleString(final FluentScope scope) {
-        return slice().toString();
+        return slice(whitespace).toString();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
     public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
         return (variant) -> {
             try {
-                return slice().toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+                return slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }

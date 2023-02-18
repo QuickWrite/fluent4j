@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class FluentContentParserGroup implements FluentContentParser {
     private final List<FluentPatternParser<? extends FluentPattern>> patternParserList = new ArrayList<>();
 
-    private static IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);
+    private static final IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);
 
     public static FluentContentParserGroup getBasicParser() {
         final FluentContentParserGroup group = new FluentContentParserGroup();
@@ -115,6 +115,10 @@ public class FluentContentParserGroup implements FluentContentParser {
             }
         }
 
+        if (minWhitespace == Integer.MAX_VALUE) {
+            minWhitespace = 0;
+        }
+
         if (patternList.size() == 0) {
             return List.of();
         }
@@ -133,7 +137,7 @@ public class FluentContentParserGroup implements FluentContentParser {
                 break firstElementIf;
             }
 
-            builder.append(textElement.slice());
+            builder.append(textElement.slice(textElement.getWhitespace()));
         }
 
         for (int i = start; i < patternList.size(); i++) {
@@ -155,11 +159,9 @@ public class FluentContentParserGroup implements FluentContentParser {
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
 
             if (textElement.isAfterNL()) {
-                if (i != start) {
-                    builder.append('\n');
-                }
+                builder.append('\n');
 
-                builder.append(textElement.slice());
+                builder.append(textElement.slice(minWhitespace));
                 continue;
             }
 
