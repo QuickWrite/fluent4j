@@ -37,7 +37,7 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
 
     public CharBuffer slice(final int whitespace) {
         int start = whitespace;
-        if (content.length() < this.whitespace || this.whitespace == -1) {
+        if (content.length() < whitespace || whitespace == -1) {
             start = 0;
         }
 
