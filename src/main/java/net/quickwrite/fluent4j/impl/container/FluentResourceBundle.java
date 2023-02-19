@@ -17,16 +17,15 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     private final ULocale locale;
     private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry<B>>> entries;
 
-    private static final Map<String, FluentEntry<?>> EMPTY_MAP = Map.of();
-
     private final Map<String, FluentFunction<B>> functions;
 
+    @SuppressWarnings("unchecked")
     public FluentResourceBundle(final ULocale locale) {
         this.locale = locale;
         this.entries = new HashMap<>();
 
         this.functions = new HashMap<>();
-        functions.put("NUMBER", new NumberFunction<>());
+        addFunction((FluentFunction<B>) NumberFunction.DEFAULT);
     }
 
     @Override
@@ -124,6 +123,10 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     @Override
     public ULocale getLocale() {
         return this.locale;
+    }
+
+    public void addFunction(final FluentFunction<B> function) {
+        functions.put(function.getIdentifier(), function);
     }
 
     @Override

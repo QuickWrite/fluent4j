@@ -9,10 +9,11 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
 public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B> {
+    public static NumberFunction<?> DEFAULT = new NumberFunction<>();
+
     @Override
     public String getIdentifier() {
         return "NUMBER";
