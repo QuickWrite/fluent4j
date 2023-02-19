@@ -6,25 +6,26 @@ import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentMessageReferenceParser implements PlaceableExpressionParser<FluentMessageReference>  {
+public class FluentMessageReferenceParser<B extends ResultBuilder> implements PlaceableExpressionParser<FluentMessageReference<B>, B>  {
     @Override
-    public Optional<FluentMessageReference> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    public Optional<FluentMessageReference<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
         if (identifier.isEmpty()) {
             return Optional.empty();
         }
 
         if (iterator.character() != '.') {
-            return Optional.of(new FluentMessageReference(identifier.get()));
+            return Optional.of(new FluentMessageReference<>(identifier.get()));
         }
 
         iterator.nextChar();
 
         return Optional.of(
-                new FluentMessageReference.AttributeReference(
+                new FluentMessageReference.AttributeReference<>(
                         identifier.get(),
                         ParserUtil.getIdentifier(iterator).orElseThrow(
                                 () -> new FluentBuilderException("Expected attribute name", iterator)

@@ -11,45 +11,51 @@ import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Function;
 
-public class FluentTermReference extends ParameterizedLiteral<String> {
-    public FluentTermReference(final String identifier, final ArgumentList argumentList) {
+public class FluentTermReference<B extends ResultBuilder> extends ParameterizedLiteral<String, B> {
+    public FluentTermReference(final String identifier, final ArgumentList<B> argumentList) {
         super(identifier, argumentList);
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        // TODO: Don't just throw
-        final FluentTermElement term = scope.getBundle().getEntry(identifier, FluentTermElement.class)
-                .orElseThrow(
-                        () -> FluentPatternException.getPlaceable(appender -> appender.append('-').append(identifier))
-                );
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        unwrap(scope).resolve(new FluentResolverScope<>(scope.bundle(), argumentList, scope.traversed(), scope.builder()), builder);
+    }
 
-        term.resolve(new FluentResolverScope(scope.getBundle(), argumentList, scope.getTraversed()), appendable);
+    @SuppressWarnings("unchecked")
+    @Override
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+        final Optional<FluentTermElement> entry = scope.bundle().getEntry(identifier, FluentTermElement.class);
+        if (entry.isEmpty()) {
+            throw FluentPatternException.getPlaceable(appender -> appender.append('-').append(identifier));
+        }
+
+        return entry.get();
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
-        return this;
+    public String toSimpleString(final FluentScope<B> scope) {
+        return unwrap(scope).toSimpleString(scope);
     }
 
-    public static class AttributeReference extends FluentTermReference implements FluentPlaceable.CannotPlaceable, FluentSelect.Selectable {
+    public static class AttributeReference<B extends ResultBuilder> extends FluentTermReference<B> implements FluentPlaceable.CannotPlaceable, FluentSelect.Selectable<B> {
         private final String attributeIdentifier;
 
-        public AttributeReference(final String identifier, final String attributeIdentifier, final ArgumentList argumentList) {
+        public AttributeReference(final String identifier, final String attributeIdentifier, final ArgumentList<B> argumentList) {
             super(identifier, argumentList);
 
             this.attributeIdentifier = attributeIdentifier;
         }
 
         @Override
-        public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-            final FluentEntry.Attribute attribute = getAttribute(scope);
+        public void resolve(final FluentScope<B> scope, final B builder) {
+            final FluentEntry.Attribute<B> attribute = getAttribute(scope);
 
-            attribute.resolve(scope, appendable);
+            attribute.resolve(scope, builder);
         }
 
         @Override
@@ -57,28 +63,40 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
             return "Term Attribute";
         }
 
-        private FluentEntry.Attribute getAttribute(final FluentScope scope) {
+        @SuppressWarnings("unchecked")
+        private FluentEntry.Attribute<B> getAttribute(final FluentScope<B> scope) {
             // TODO: Don't just throw
-            final FluentTermElement term = scope.getBundle().getEntry(identifier, FluentTermElement.class).orElseThrow(this::getException);
+            final Optional<FluentTermElement> termElement = scope.bundle()
+                    .getEntry(identifier, FluentTermElement.class);
 
-            return term.getAttribute(attributeIdentifier).orElseThrow(this::getException);
+            if (termElement.isEmpty()) {
+                throw getException();
+            }
+
+            final Optional<AttributeReference> attribute = termElement.get().getAttribute(attributeIdentifier);
+
+            if (attribute.isEmpty()) {
+                throw getException();
+            }
+
+            return (FluentEntry.Attribute<B>) attribute.get();
         }
 
         private FluentPatternException getException() {
             return FluentPatternException.getPlaceable(
-                    appender -> appender.append('-').append(identifier).append('.').append(attributeIdentifier)
+                    builder -> builder.append('-').append(identifier).append('.').append(attributeIdentifier)
             );
         }
 
         @Override
-        public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
-            final FluentEntry.Attribute attribute = getAttribute(scope);
+        public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+            final FluentEntry.Attribute<B> attribute = getAttribute(scope);
             if (attribute.getPatterns().size() != 1) {
                 // Throw this exception as it jumps to the default value directly
                 throw new FluentSelectException();
             }
 
-            return new FluentCachedChecker(scope, attribute);
+            return new FluentCachedChecker<>(scope, attribute);
         }
     }
 }

@@ -4,10 +4,11 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentNumberLiteralParser implements PlaceableExpressionParser<FluentNumberLiteral> {
+public class FluentNumberLiteralParser<B extends ResultBuilder> implements PlaceableExpressionParser<FluentNumberLiteral<B>, B> {
     public static Optional<String> parseNumberLiteral(final ContentIterator iterator) {
         if (iterator.character() == '-' && !isDigit(iterator.nextChar())) {
             return Optional.empty();

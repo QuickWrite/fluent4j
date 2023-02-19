@@ -1,4 +1,6 @@
 package net.quickwrite.fluent4j.ast.entry;
 
-public interface FluentMessage extends FluentEntry {
+import net.quickwrite.fluent4j.result.ResultBuilder;
+
+public interface FluentMessage<B extends ResultBuilder> extends FluentEntry<B> {
 }

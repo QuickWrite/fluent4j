@@ -15,30 +15,31 @@ import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FluentPlaceableParser implements PlaceableParser {
-    private final List<PlaceableExpressionParser<? extends FluentPattern>> expressionParserList = new ArrayList<>();
+public class FluentPlaceableParser<B extends ResultBuilder> implements PlaceableParser<B> {
+    private final List<PlaceableExpressionParser<?, B>> expressionParserList = new ArrayList<>();
 
-    public static FluentPlaceableParser getBasicParser() {
-        final FluentPlaceableParser base = new FluentPlaceableParser();
+    public static FluentPlaceableParser<ResultBuilder> getBasicParser() {
+        final FluentPlaceableParser<ResultBuilder> base = new FluentPlaceableParser<>();
 
-        base.addParser(new FluentStringLiteralParser());
-        base.addParser(new FluentNumberLiteralParser());
-        base.addParser(new FluentFunctionParser());
+        base.addParser(new FluentStringLiteralParser<>());
+        base.addParser(new FluentNumberLiteralParser<>());
+        base.addParser(new FluentFunctionParser<>());
 
-        base.addParser(new FluentTermReferenceParser());
-        base.addParser(new FluentMessageReferenceParser());
+        base.addParser(new FluentTermReferenceParser<>());
+        base.addParser(new FluentMessageReferenceParser<>());
 
-        base.addParser(new FluentVariableReferenceParser());
+        base.addParser(new FluentVariableReferenceParser<>());
 
         return base;
     }
 
-    public void addParser(final PlaceableExpressionParser<? extends FluentPattern> parser) {
+    public void addParser(final PlaceableExpressionParser<?, B> parser) {
         this.expressionParserList.add(parser);
     }
 
@@ -48,22 +49,22 @@ public class FluentPlaceableParser implements PlaceableParser {
     }
 
     @Override
-    public ParseResult<FluentPattern> parse(final ContentIterator iterator, final FluentContentParser contentParser) {
+    public ParseResult<FluentPattern<B>> parse(final ContentIterator iterator, final FluentContentParser<B> contentParser) {
         iterator.nextChar();
 
         ParserUtil.skipWhitespaceAndNL(iterator);
 
-        final FluentPlaceable placeable = parsePlaceable(iterator)
+        final FluentPlaceable<B> placeable = parsePlaceable(iterator)
                 .orElseThrow(() -> new FluentBuilderException("All PlaceableExpressionParsers returned FAILURE", iterator));
 
         select:
         if (placeable instanceof FluentSelect.Selectable) {
             ParserUtil.skipWhitespace(iterator);
 
-            final Optional<FluentSelect> selectExpression = parseSelector(
+            final Optional<FluentSelect<B>> selectExpression = parseSelector(
                     iterator,
                     contentParser,
-                    (FluentSelect.Selectable) placeable
+                    (FluentSelect.Selectable<B>) placeable
             );
 
             if (selectExpression.isEmpty()) {
@@ -94,27 +95,27 @@ public class FluentPlaceableParser implements PlaceableParser {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<FluentPlaceable> parsePlaceable(final ContentIterator iterator) {
+    public Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator) {
         final int[] position = iterator.position();
 
-        for (final PlaceableExpressionParser<? extends FluentPlaceable> expressionParser : expressionParserList) {
-            final Optional<? extends FluentPlaceable> parseResult = expressionParser.parse(iterator, this);
+        for (final PlaceableExpressionParser<?, B> expressionParser : expressionParserList) {
+            final Optional<?> parseResult = expressionParser.parse(iterator, this);
 
             if (parseResult.isEmpty()) {
                 iterator.setPosition(position);
                 continue;
             }
 
-            return (Optional<FluentPlaceable>) parseResult;
+            return (Optional<FluentPlaceable<B>>) parseResult;
         }
 
         return Optional.empty();
     }
 
-    private Optional<FluentSelect> parseSelector(
+    private Optional<FluentSelect<B>> parseSelector(
             final ContentIterator iterator,
-            final FluentContentParser contentParser,
-            FluentSelect.Selectable selectable
+            final FluentContentParser<B> contentParser,
+            FluentSelect.Selectable<B> selectable
     ) {
         if (iterator.character() != '-') {
             return Optional.empty();
@@ -134,8 +135,8 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         ParserUtil.skipWhitespaceAndNL(iterator);
 
-        final List<FluentSelect.FluentVariant> variantList = new ArrayList<>();
-        FluentSelect.FluentVariant defaultVariant = null;
+        final List<FluentSelect.FluentVariant<B>> variantList = new ArrayList<>();
+        FluentSelect.FluentVariant<B> defaultVariant = null;
 
         while (true) {
             boolean isDefault = false;
@@ -150,7 +151,7 @@ public class FluentPlaceableParser implements PlaceableParser {
                 iterator.nextChar();
             }
 
-            final Optional<FluentSelect.FluentVariant> variant = parseVariant(iterator, contentParser);
+            final Optional<FluentSelect.FluentVariant<B>> variant = parseVariant(iterator, contentParser);
 
             if (variant.isEmpty()) {
                 break;
@@ -171,13 +172,13 @@ public class FluentPlaceableParser implements PlaceableParser {
         iterator.nextChar();
 
         if (selectable instanceof IntermediateTextElement) {
-            selectable = new FluentTextElement(((IntermediateTextElement) selectable).getContent().toString());
+            selectable = new FluentTextElement<>(((IntermediateTextElement<B>) selectable).getContent().toString());
         }
 
-        return Optional.of(new FluentSelectExpression(selectable, variantList, defaultVariant));
+        return Optional.of(new FluentSelectExpression<>(selectable, variantList, defaultVariant));
     }
 
-    private Optional<FluentSelect.FluentVariant> parseVariant(final ContentIterator iterator, final FluentContentParser contentParser) {
+    private Optional<FluentSelect.FluentVariant<B>> parseVariant(final ContentIterator iterator, final FluentContentParser<B> contentParser) {
         if (iterator.character() != '[') {
             return Optional.empty();
         }
@@ -186,7 +187,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         ParserUtil.skipWhitespace(iterator);
 
-        final FluentSelect.FluentVariant.FluentVariantKey variantKey = getVariantKey(iterator);
+        final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = getVariantKey(iterator);
 
         ParserUtil.skipWhitespace(iterator);
 
@@ -196,20 +197,20 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         iterator.nextChar();
 
-        final List<FluentPattern> content = contentParser.parse(iterator, contentIterator -> {
+        final List<FluentPattern<B>> content = contentParser.parse(iterator, contentIterator -> {
             ParserUtil.skipWhitespace(contentIterator);
 
             final int character = contentIterator.character();
             return character == '[' || character == '*' || character == '}';
         });
 
-        return Optional.of(new FluentSelectExpression.FluentVariant(variantKey, content));
+        return Optional.of(new FluentSelectExpression.FluentVariant<>(variantKey, content));
     }
 
-    private FluentSelect.FluentVariant.FluentVariantKey getVariantKey(final ContentIterator iterator) {
+    private FluentSelect.FluentVariant.FluentVariantKey<B> getVariantKey(final ContentIterator iterator) {
         final Optional<String> number = FluentNumberLiteralParser.parseNumberLiteral(iterator);
         if (number.isPresent()) {
-            return new FluentNumberLiteral(number.get());
+            return new FluentNumberLiteral<>(number.get());
         }
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 
@@ -217,7 +218,7 @@ public class FluentPlaceableParser implements PlaceableParser {
             throw new FluentBuilderException("Expected identifier", iterator);
         }
 
-        return new FluentTextElement(identifier.get());
+        return new FluentTextElement<>(identifier.get());
     }
 
 }

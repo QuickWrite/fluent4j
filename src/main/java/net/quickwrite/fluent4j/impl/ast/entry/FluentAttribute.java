@@ -3,12 +3,13 @@ package net.quickwrite.fluent4j.impl.ast.entry;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Objects;
 
-public class FluentAttribute extends FluentBaseElement<String> implements FluentEntry.Attribute {
-    public FluentAttribute(final String identifier, final List<FluentPattern> patterns) {
+public class FluentAttribute<B extends ResultBuilder> extends FluentBaseElement<String, B> implements FluentEntry.Attribute<B> {
+    public FluentAttribute(final String identifier, final List<FluentPattern<B>> patterns) {
         super(new FluentAttributeIdentifier(identifier), patterns);
     }
 
@@ -18,7 +19,7 @@ public class FluentAttribute extends FluentBaseElement<String> implements Fluent
     }
 
     @Override
-    public List<FluentPattern> getPatterns() {
+    public List<FluentPattern<B>> getPatterns() {
         return this.patterns;
     }
 

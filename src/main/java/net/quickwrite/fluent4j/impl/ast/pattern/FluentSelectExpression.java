@@ -7,20 +7,21 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentBaseElement;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
-    private final FluentSelect.Selectable selectable;
-    private final List<FluentSelect.FluentVariant> variantList;
-    private final FluentSelect.FluentVariant defaultVariant;
+public class FluentSelectExpression<B extends ResultBuilder> implements FluentSelect<B>, FluentPlaceable<B> {
+    private final FluentSelect.Selectable<B> selectable;
+    private final List<FluentSelect.FluentVariant<B>> variantList;
+    private final FluentSelect.FluentVariant<B> defaultVariant;
 
-    public FluentSelectExpression(final FluentSelect.Selectable selectable,
-                                  final List<FluentSelect.FluentVariant> variantList,
-                                  final FluentSelect.FluentVariant defaultVariant
+    public FluentSelectExpression(final FluentSelect.Selectable<B> selectable,
+                                  final List<FluentSelect.FluentVariant<B>> variantList,
+                                  final FluentSelect.FluentVariant<B> defaultVariant
     ) {
         this.selectable = selectable;
         this.variantList = variantList;
@@ -28,56 +29,61 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        final Function<FluentSelect.FluentVariant, Boolean> selectChecker;
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        final Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker;
         try {
             selectChecker = selectable.selectChecker(scope);
         } catch (final FluentSelectException ignored) {
-            defaultVariant.resolve(scope, appendable);
+            defaultVariant.resolve(scope, builder);
             return;
         }
 
-        for (final FluentSelect.FluentVariant variant : variantList) {
+        for (final FluentSelect.FluentVariant<B> variant : variantList) {
             if (!selectChecker.apply(variant)) {
                 continue;
             }
 
-            variant.resolve(scope, appendable);
+            variant.resolve(scope, builder);
             return;
         }
 
-        defaultVariant.resolve(scope, appendable);
+        defaultVariant.resolve(scope, builder);
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
         return this;
     }
 
-    public static class FluentVariant extends FluentBaseElement<FluentSelect.FluentVariant.FluentVariantKey> implements FluentSelect.FluentVariant {
-        public FluentVariant(final FluentSelect.FluentVariant.FluentVariantKey identifier, final List<FluentPattern> content) {
-            super(new FluentVariantIdentifier(identifier), content);
+    @Override
+    public String toSimpleString(final FluentScope<B> scope) {
+        return toString();
+    }
+
+    public static class FluentVariant<B extends ResultBuilder> extends FluentBaseElement<FluentSelect.FluentVariant.FluentVariantKey<B>, B> implements FluentSelect.FluentVariant<B> {
+        public FluentVariant(final FluentSelect.FluentVariant.FluentVariantKey<B> identifier, final List<FluentPattern<B>> content) {
+            super(new FluentVariantIdentifier<>(identifier), content);
         }
 
         @Override
-        public FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey> getIdentifier() {
+        public FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey<B>> getIdentifier() {
             return this.identifier;
         }
 
-        private static class FluentVariantIdentifier implements FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey> {
-            private final FluentSelect.FluentVariant.FluentVariantKey identifier;
+        private static class FluentVariantIdentifier<B extends ResultBuilder> implements FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey<B>> {
+            private final FluentSelect.FluentVariant.FluentVariantKey<B> identifier;
 
-            public FluentVariantIdentifier(final FluentSelect.FluentVariant.FluentVariantKey identifier) {
+            public FluentVariantIdentifier(final FluentSelect.FluentVariant.FluentVariantKey<B> identifier) {
                 this.identifier = identifier;
             }
 
             @Override
-            public FluentSelect.FluentVariant.FluentVariantKey getSimpleIdentifier() {
+            public FluentSelect.FluentVariant.FluentVariantKey<B> getSimpleIdentifier() {
                 return this.identifier;
             }
 
             @Override
-            public FluentSelect.FluentVariant.FluentVariantKey getFullIdentifier() {
+            public FluentSelect.FluentVariant.FluentVariantKey<B> getFullIdentifier() {
                 return this.identifier;
             }
 
@@ -85,7 +91,7 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
             public boolean equals(final Object o) {
                 if (this == o) return true;
                 if (o == null || getClass() != o.getClass()) return false;
-                final FluentVariantIdentifier that = (FluentVariantIdentifier) o;
+                final FluentVariantIdentifier<?> that = (FluentVariantIdentifier<?>) o;
                 return Objects.equals(identifier, that.identifier);
             }
 

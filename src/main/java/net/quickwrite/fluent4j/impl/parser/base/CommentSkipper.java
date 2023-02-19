@@ -5,10 +5,11 @@ import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-public final class CommentSkipper implements FluentElementParser<FluentEntry> {
+public final class CommentSkipper<B extends ResultBuilder> implements FluentElementParser<FluentEntry<B>> {
     @Override
-    public ParseResult<FluentEntry> parse(final ContentIterator content) {
+    public ParseResult<FluentEntry<B>> parse(final ContentIterator content) {
         for (int i = 0; i < 3; i++) {
             if (content.character() != '#') {
                 if (i == 0) {

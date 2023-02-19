@@ -5,10 +5,11 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
 
-public class FluentMessageReference implements FluentPlaceable {
+public class FluentMessageReference<B extends ResultBuilder> implements FluentPlaceable<B> {
     protected final String identifier;
 
     public FluentMessageReference(final String identifier) {
@@ -16,22 +17,24 @@ public class FluentMessageReference implements FluentPlaceable {
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-
-        final FluentEntry message = scope.getBundle().getMessage(identifier)
-                .orElseThrow(
-                        () -> FluentPatternException.getPlaceable(appender -> appender.append(identifier))
-                );
-
-        message.resolve(scope, appendable);
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        unwrap(scope).resolve(scope, builder);
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
-        return this;
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+        return scope.bundle().getMessage(identifier)
+                .orElseThrow(
+                        () -> FluentPatternException.getPlaceable(appender -> appender.append(identifier))
+                );
     }
 
-    public static class AttributeReference extends FluentMessageReference {
+    @Override
+    public String toSimpleString(final FluentScope<B> scope) {
+        return unwrap(scope).toSimpleString(scope);
+    }
+
+    public static class AttributeReference<B extends ResultBuilder> extends FluentMessageReference<B> {
         private final String attributeIdentifier;
 
         public AttributeReference(final String identifier, final String attributeIdentifier) {
@@ -41,13 +44,13 @@ public class FluentMessageReference implements FluentPlaceable {
         }
 
         @Override
-        public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
+        public void resolve(final FluentScope<B> scope, final B builder) {
             // TODO: Don't just throw
-            final FluentEntry message = scope.getBundle().getMessage(identifier).orElseThrow(this::getException);
+            final FluentEntry<B> message = scope.bundle().getMessage(identifier).orElseThrow(this::getException);
 
-            final FluentEntry.Attribute attribute = message.getAttribute(attributeIdentifier).orElseThrow(this::getException);
+            final FluentEntry.Attribute<B> attribute = message.getAttribute(attributeIdentifier).orElseThrow(this::getException);
 
-            attribute.resolve(scope, appendable);
+            attribute.resolve(scope, builder);
         }
 
         private FluentPatternException getException() {

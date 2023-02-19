@@ -6,18 +6,22 @@ import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
-public class FluentTermParser extends FluentEntryParser<FluentTermElement> {
-    public FluentTermParser(final FluentContentParser patternParser) {
+public class FluentTermParser<B extends ResultBuilder> extends FluentEntryParser<FluentTermElement<B>, B> {
+    public FluentTermParser(final FluentContentParser<B> patternParser) {
         super(patternParser);
     }
 
     @Override
-    protected FluentTermElement getInstance(final String identifier, List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
-        return new FluentTermElement(identifier, patterns, attributes);
+    protected FluentTermElement<B> getInstance(final String identifier,
+                                               final List<FluentPattern<B>> patterns,
+                                               final List<FluentEntry.Attribute<B>> attributes
+    ) {
+        return new FluentTermElement<B>(identifier, patterns, attributes);
     }
 
     @Override

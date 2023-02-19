@@ -7,35 +7,31 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
-public class NumberFunction implements FluentFunction {
+public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B> {
     @Override
     public String getIdentifier() {
         return "NUMBER";
     }
 
     @Override
-    public FluentPlaceable parseFunction(final FluentScope scope, final ArgumentList argumentList) {
-        final FormattedNumberLiteral numberLiteral;
-        try {
-            final FluentPattern pattern = argumentList.getArgument(0).unwrap(scope);
+    public FluentPlaceable<B> parseFunction(final FluentScope<B> scope, final ArgumentList<B> argumentList) {
+        final FluentPattern<B> pattern = argumentList.getArgument(0).unwrap(scope);
 
-            final String stringValue = pattern.toSimpleString(scope);
-
-            numberLiteral = new FormattedNumberLiteral(stringValue);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
+        final FormattedNumberLiteral<B> numberLiteral;
+        if (pattern instanceof FluentNumberLiteral) {
+            numberLiteral = new FormattedNumberLiteral<>((FluentNumberLiteral<B>) pattern);
+        } else {
+            numberLiteral = new FormattedNumberLiteral<>(pattern.toSimpleString(scope));
         }
 
-        final FluentPattern useGrouping = argumentList.getArgument("useGrouping");
+        final FluentPattern<B> useGrouping = argumentList.getArgument("useGrouping");
         if (useGrouping != null) {
-            try {
-                numberLiteral.useGrouping = useGrouping.toSimpleString(scope).toUpperCase();
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
+            numberLiteral.useGrouping = useGrouping.toSimpleString(scope).toUpperCase();
         }
 
         numberLiteral.minimumFractionDigits = getIntegerValue(
@@ -59,12 +55,10 @@ public class NumberFunction implements FluentFunction {
         return numberLiteral;
     }
 
-    private int getIntegerValue(final FluentPattern argument, final FluentScope scope, final int defaultValue) {
+    private int getIntegerValue(final FluentPattern<B> argument, final FluentScope<B> scope, final int defaultValue) {
         if (argument != null) {
             try {
-                 return Integer.parseInt(argument.toSimpleString(scope));
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
+                return Integer.parseInt(argument.toSimpleString(scope));
             } catch (final NumberFormatException ignored) {
 
             }
@@ -73,7 +67,7 @@ public class NumberFunction implements FluentFunction {
         return defaultValue;
     }
 
-    private static class FormattedNumberLiteral extends FluentNumberLiteral {
+    private static class FormattedNumberLiteral<B extends ResultBuilder> extends FluentNumberLiteral<B> {
         private String useGrouping = "OFF";
         private int minimumFractionDigits;
         private int maximumFractionDigits;
@@ -83,9 +77,17 @@ public class NumberFunction implements FluentFunction {
             super(number);
         }
 
+        public FormattedNumberLiteral(final BigDecimal number) {
+            super(number);
+        }
+
+        public FormattedNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
+            super(numberLiteral);
+        }
+
         @Override
-        public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-            LocalizedNumberFormatter numberFormatter = NumberFormatter.with().locale(scope.getBundle().getLocale()).precision(Precision.minMaxFraction(minimumFractionDigits, maximumFractionDigits))
+        public void resolve(final FluentScope<B> scope, final B builder) {
+            LocalizedNumberFormatter numberFormatter = NumberFormatter.with().locale(scope.bundle().getLocale()).precision(Precision.minMaxFraction(minimumFractionDigits, maximumFractionDigits))
                     .integerWidth(IntegerWidth.zeroFillTo(minimumIntegerDigits));
 
             try {
@@ -94,7 +96,7 @@ public class NumberFunction implements FluentFunction {
 
             }
 
-            numberFormatter.format(number).appendTo(appendable);
+            builder.append(numberFormatter.format(number));
         }
     }
 }

@@ -2,15 +2,18 @@ package net.quickwrite.fluent4j.container;
 
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Set;
 
-public interface FluentScope {
-    FluentBundle getBundle();
+public interface FluentScope<B extends ResultBuilder> {
+    FluentBundle<B> bundle();
 
-    Set<FluentIdentifier<?>> getTraversed();
+    Set<FluentIdentifier<?>> traversed();
 
     boolean addTraversed(final FluentIdentifier<?> key);
 
-    ArgumentList getArguments();
+    ArgumentList<B> arguments();
+
+    B builder();
 }

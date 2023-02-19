@@ -7,11 +7,12 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
 import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
 import java.util.function.Function;
 
-public class FluentVariableReference implements FluentPlaceable, FluentSelect.Selectable {
+public class FluentVariableReference<B extends ResultBuilder> implements FluentPlaceable<B>, FluentSelect.Selectable<B> {
     private final String identifier;
 
     public FluentVariableReference(final String identifier) {
@@ -19,32 +20,38 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        final FluentPattern pattern = unwrap(scope);
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        final FluentPattern<B> pattern = unwrap(scope);
         if (pattern == null) {
             throw FluentPatternException.getPlaceable(appender -> appender.append('$').append(identifier));
         }
 
-        pattern.resolve(scope, appendable);
+        pattern.resolve(scope, builder);
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
-        return scope.getArguments().getArgument(identifier);
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+        return scope.arguments().getArgument(identifier);
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
-        final FluentPattern argument = scope.getArguments().getArgument(identifier);
+    public String toSimpleString(final FluentScope<B> scope) {
+        return unwrap(scope).toSimpleString(scope);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+        final FluentPattern<B> argument = scope.arguments().getArgument(identifier);
 
         if (argument == null) {
             throw new FluentSelectException();
         }
 
         if (argument instanceof FluentSelect.Selectable) {
-            return ((FluentSelect.Selectable) argument).selectChecker(scope);
+            return ((FluentSelect.Selectable<B>) argument).selectChecker(scope);
         }
 
-        return new FluentCachedChecker(scope, argument);
+        return new FluentCachedChecker<>(scope, argument);
     }
 }

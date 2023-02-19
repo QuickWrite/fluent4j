@@ -6,16 +6,17 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentSelectException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
 import java.util.function.Function;
 
-public class FluentTextElement implements
-        FluentPattern,
-        FluentPlaceable,
-        ArgumentList.NamedArgument,
-        FluentSelect.Selectable,
-        FluentSelect.FluentVariant.FluentVariantKey
+public class FluentTextElement<B extends ResultBuilder> implements
+        FluentPattern<B>,
+        FluentPlaceable<B>,
+        ArgumentList.NamedArgument<B>,
+        FluentSelect.Selectable<B>,
+        FluentSelect.FluentVariant.FluentVariantKey<B>
 {
     private final String content;
 
@@ -24,28 +25,22 @@ public class FluentTextElement implements
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        appendable.append(content);
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        builder.append(content);
     }
 
     @Override
-    public String toSimpleString(final FluentScope scope) {
+    public String toSimpleString(final FluentScope<B> scope) {
         return this.content;
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
         return this;
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
-        return variant -> {
-            try {
-                return content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
-            } catch (final IOException exception) {
-                throw new RuntimeException(exception);
-            }
-        };
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+        return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }

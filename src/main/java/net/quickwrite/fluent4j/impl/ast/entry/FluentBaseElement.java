@@ -5,31 +5,31 @@ import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
 import java.util.List;
 
-public abstract class FluentBaseElement<I> implements FluentResolvable {
+public abstract class FluentBaseElement<I, B extends ResultBuilder> implements FluentResolvable<B> {
     protected final FluentIdentifier<I> identifier;
-    protected final List<FluentPattern> patterns;
+    protected final List<FluentPattern<B>> patterns;
 
-    protected FluentBaseElement(final FluentIdentifier<I> identifier, final List<FluentPattern> patterns) {
+    protected FluentBaseElement(final FluentIdentifier<I> identifier, final List<FluentPattern<B>> patterns) {
         this.identifier = identifier;
         this.patterns = patterns;
     }
 
     @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
+    public void resolve(final FluentScope<B> scope, final B builder) {
         if(!scope.addTraversed(identifier)) {
             // TODO: Better exception handling
             throw new RuntimeException("Recursive element found: '" + identifier.getFullIdentifier() + "'");
         }
 
-        for (final FluentPattern pattern : patterns) {
+        for (final FluentPattern<B> pattern : patterns) {
             try {
-                pattern.resolve(scope, appendable);
+                pattern.resolve(scope, builder);
             } catch (final FluentPatternException exception) {
-                exception.getDefaultDataWriter().write(appendable);
+                exception.getDefaultDataWriter().write(builder);
             }
         }
     }

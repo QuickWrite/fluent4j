@@ -11,14 +11,15 @@ import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class FluentEntryParser<T extends FluentEntryBase> implements FluentElementParser<T> {
-    private final FluentContentParser patternParser;
+public abstract class FluentEntryParser<T extends FluentEntryBase, B extends ResultBuilder> implements FluentElementParser<T> {
+    private final FluentContentParser<B> patternParser;
     private static final Function<ContentIterator, Boolean> END_CHECKER = iterator -> {
         if (!Character.isWhitespace(iterator.character())) {
             return true;
@@ -29,9 +30,7 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
         return iterator.character() == '.';
     };
 
-    private static final List<FluentEntry.Attribute> UNMODIFIABLE_EMPTY_ATTRIBUTES = List.of();
-
-    public FluentEntryParser(final FluentContentParser patternParser) {
+    public FluentEntryParser(final FluentContentParser<B> patternParser) {
         this.patternParser = patternParser;
     }
 
@@ -51,22 +50,22 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
 
         content.nextChar();
 
-        final List<FluentPattern> patterns = patternParser.parse(
+        final List<FluentPattern<B>> patterns = patternParser.parse(
                 content,
                 END_CHECKER
         );
 
-        final List<FluentEntry.Attribute> attributes = getAttributes(content);
+        final List<FluentEntry.Attribute<B>> attributes = getAttributes(content);
 
         return ParseResult.success(getInstance(identifier.get(), patterns, attributes));
     }
 
-    private List<FluentEntry.Attribute> getAttributes(final ContentIterator content) {
+    private List<FluentEntry.Attribute<B>> getAttributes(final ContentIterator content) {
         if (content.character() != '.') {
-            return UNMODIFIABLE_EMPTY_ATTRIBUTES;
+            return List.of();
         }
 
-        final List<FluentEntry.Attribute> attributes = new ArrayList<>();
+        final List<FluentEntry.Attribute<B>> attributes = new ArrayList<>();
 
         while (content.character() == '.') {
             content.nextChar();
@@ -82,18 +81,18 @@ public abstract class FluentEntryParser<T extends FluentEntryBase> implements Fl
 
             content.nextChar();
 
-            final List<FluentPattern> patterns = patternParser.parse(
+            final List<FluentPattern<B>> patterns = patternParser.parse(
                     content,
                     END_CHECKER
             );
 
-            attributes.add(new FluentAttribute(identifier, patterns));
+            attributes.add(new FluentAttribute<>(identifier, patterns));
         }
 
         return attributes;
     }
 
-    protected abstract T getInstance(final String identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes);
+    protected abstract T getInstance(final String identifier, final List<FluentPattern<B>> patterns, final List<FluentEntry.Attribute<B>> attributes);
 
     protected abstract Optional<String> getIdentifier(final ContentIterator content);
 }

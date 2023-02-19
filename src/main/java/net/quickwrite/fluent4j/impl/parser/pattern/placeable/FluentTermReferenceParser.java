@@ -5,12 +5,13 @@ import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTermReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FluentTermReferenceParser extends ParameterizedLiteralParser<FluentTermReference, Map.Entry<String, String>> {
+public class FluentTermReferenceParser<B extends ResultBuilder> extends ParameterizedLiteralParser<FluentTermReference<B>, Map.Entry<String, String>, B> {
     @Override
     protected Optional<Map.Entry<String, String>> parseIdentifier(final ContentIterator iterator) {
         if (iterator.character() != '-') {
@@ -40,18 +41,19 @@ public class FluentTermReferenceParser extends ParameterizedLiteralParser<Fluent
         return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), null));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected FluentTermReference getInstance(final Map.Entry<String, String> identifier) {
-        return getInstance(identifier, ArgumentList.EMPTY);
+    protected FluentTermReference<B> getInstance(final Map.Entry<String, String> identifier) {
+        return getInstance(identifier, (ArgumentList<B>) ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentTermReference getInstance(final Map.Entry<String, String> identifier, final ArgumentList attributes) {
+    protected FluentTermReference<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> attributes) {
         if (identifier.getValue() != null) {
-            return new FluentTermReference.AttributeReference(identifier.getKey(), identifier.getValue(), attributes);
+            return new FluentTermReference.AttributeReference<>(identifier.getKey(), identifier.getValue(), attributes);
         }
 
-        return new FluentTermReference(identifier.getKey(), attributes);
+        return new FluentTermReference<>(identifier.getKey(), attributes);
     }
 
     @Override

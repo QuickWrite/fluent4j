@@ -9,36 +9,36 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessageElement;
 import net.quickwrite.fluent4j.impl.function.NumberFunction;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
 import java.util.*;
 
-public class FluentResourceBundle implements FluentBundle {
+public class FluentResourceBundle<B extends ResultBuilder> implements FluentBundle<B> {
     private final ULocale locale;
-    private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
+    private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry<B>>> entries;
 
-    private static final Map<String, FluentEntry> EMPTY_MAP = Map.of();
+    private static final Map<String, FluentEntry<?>> EMPTY_MAP = Map.of();
 
-    private final Map<String, FluentFunction> functions;
+    private final Map<String, FluentFunction<B>> functions;
 
     public FluentResourceBundle(final ULocale locale) {
         this.locale = locale;
         this.entries = new HashMap<>();
 
         this.functions = new HashMap<>();
-        functions.put("NUMBER", new NumberFunction());
+        functions.put("NUMBER", new NumberFunction<>());
     }
 
     @Override
-    public void addResource(final FluentResource resource) {
-        for (final FluentEntry entry : resource.entries()) {
+    public void addResource(final FluentResource<B> resource) {
+        for (final FluentEntry<B> entry : resource.entries()) {
             final Class<? extends FluentEntry> clazz = getClass(entry);
 
             if (!entries.containsKey(clazz)) {
                 entries.put(clazz, new HashMap<>());
             }
 
-            final Map<String, FluentEntry> innerEntryMap = entries.get(clazz);
+            final Map<String, FluentEntry<B>> innerEntryMap = entries.get(clazz);
 
             if (innerEntryMap.containsKey(entry.getIdentifier().getSimpleIdentifier())) {
                 throw new RuntimeException("Duplicate entries for key '" + entry.getIdentifier().getFullIdentifier() + "' in '" + clazz.getSimpleName() + "'");
@@ -49,8 +49,8 @@ public class FluentResourceBundle implements FluentBundle {
     }
 
     @Override
-    public void addResourceOverriding(final FluentResource resource) {
-        for (final FluentEntry entry : resource.entries()) {
+    public void addResourceOverriding(final FluentResource<B> resource) {
+        for (final FluentEntry<B> entry : resource.entries()) {
             final Class<? extends FluentEntry> clazz = getClass(entry);
 
             if (!entries.containsKey(clazz)) {
@@ -61,7 +61,7 @@ public class FluentResourceBundle implements FluentBundle {
         }
     }
 
-    private static Class<? extends FluentEntry> getClass(final FluentEntry entry) {
+    private Class<? extends FluentEntry> getClass(final FluentEntry<B> entry) {
         if (entry instanceof FluentMessage) {
             return FluentMessage.class;
         }
@@ -71,50 +71,53 @@ public class FluentResourceBundle implements FluentBundle {
 
     @Override
     public boolean hasMessage(final String key) {
-        return getEntryMap(FluentMessageElement.class).orElse(EMPTY_MAP).containsKey(key);
+        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(FluentMessageElement.class);
+
+        return entryMap.map(fluentEntryMap -> fluentEntryMap.containsKey(key)).orElse(false);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Set<Map.Entry<String, FluentEntry>> getMessages() {
+    public Set<Map.Entry<String, FluentEntry<B>>> getMessages() {
         return getEntries(FluentMessage.class);
     }
 
     @Override
-    public Optional<FluentEntry> getMessage(final String key) {
-        return Optional.ofNullable(getEntryMap(FluentMessage.class).orElse(EMPTY_MAP).get(key));
+    public Optional<FluentEntry<B>> getMessage(final String key) {
+        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(FluentMessage.class);
+
+        return entryMap.map(fluentEntryMap -> fluentEntryMap.get(key));
     }
 
     @Override
-    public Optional<String> resolveMessage(final String key, final ArgumentList argumentList) {
-        final Optional<FluentEntry> message = getMessage(key);
+    public Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder) {
+        final Optional<FluentEntry<B>> message = getMessage(key);
 
         if (message.isEmpty()) {
             return Optional.empty();
         }
 
-        final StringBuilder builder = new StringBuilder();
+        message.get().resolve(new FluentResolverScope<>(this, argumentList, builder), builder);
 
-        try {
-            message.get().resolve(new FluentResolverScope(this, argumentList), builder);
-        } catch (final IOException ignored) {
-            return Optional.empty();
-        }
-
-        return Optional.of(builder.toString());
+        return Optional.of(builder);
     }
 
     @Override
-    public <T extends FluentEntry> Set<Map.Entry<String, FluentEntry>> getEntries(final Class<T> clazz) {
-        return getEntryMap(clazz).orElse(EMPTY_MAP).entrySet();
+    public <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz) {
+        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
+
+        return entryMap.map(Map::entrySet).orElseGet(Set::of);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends FluentEntry> Optional<T> getEntry(final String key, final Class<T> clazz) {
-        return Optional.ofNullable((T) getEntryMap(clazz).orElse(EMPTY_MAP).get(key));
+    public <T extends FluentEntry<B>> Optional<T> getEntry(final String key, final Class<T> clazz) {
+        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
+
+        return entryMap.map(fluentEntryMap -> (T) fluentEntryMap.get(key));
     }
 
-    private <T> Optional<Map<String, FluentEntry>> getEntryMap(final Class<T> clazz) {
+    private <T> Optional<Map<String, FluentEntry<B>>> getEntryMap(final Class<T> clazz) {
         return Optional.ofNullable(this.entries.get(clazz));
     }
 
@@ -124,12 +127,12 @@ public class FluentResourceBundle implements FluentBundle {
     }
 
     @Override
-    public Optional<FluentFunction> getFunction(final String key) {
+    public Optional<FluentFunction<B>> getFunction(final String key) {
         return Optional.ofNullable(this.functions.get(key));
     }
 
     @Override
-    public Set<FluentFunction> getFunctions() {
+    public Set<FluentFunction<B>> getFunctions() {
         return new HashSet<>(this.functions.values());
     }
 }

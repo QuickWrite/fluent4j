@@ -4,12 +4,13 @@ import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Objects;
 
-public final class FluentMessageElement extends FluentEntryBase implements FluentMessage {
-    public FluentMessageElement(final String identifier, final List<FluentPattern> patterns, final List<FluentEntry.Attribute> attributes) {
+public final class FluentMessageElement<B extends ResultBuilder> extends FluentEntryBase<B> implements FluentMessage<B> {
+    public FluentMessageElement(final String identifier, final List<FluentPattern<B>> patterns, final List<FluentEntry.Attribute<B>> attributes) {
         super(new FluentMessageIdentifier(identifier), patterns, attributes);
     }
 

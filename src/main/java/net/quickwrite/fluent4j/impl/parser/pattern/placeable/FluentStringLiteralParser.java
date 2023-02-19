@@ -6,13 +6,14 @@ import net.quickwrite.fluent4j.impl.parser.pattern.IntermediateTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.nio.CharBuffer;
 import java.util.Optional;
 
-public class FluentStringLiteralParser implements PlaceableExpressionParser<FluentPlaceable> {
+public class FluentStringLiteralParser<B extends ResultBuilder> implements PlaceableExpressionParser<FluentPlaceable<B>, B> {
     @Override
-    public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
+    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
         if (iterator.character() != '"') {
             return Optional.empty();
         }
@@ -53,7 +54,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser<Flue
         iterator.nextChar();
 
         return Optional.of(
-                new IntermediateTextElement(
+                new IntermediateTextElement<>(
                         CharBuffer.wrap(builder.toString()),
                         0,
                         false

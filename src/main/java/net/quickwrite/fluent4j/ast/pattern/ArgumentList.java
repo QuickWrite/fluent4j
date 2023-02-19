@@ -1,18 +1,16 @@
 package net.quickwrite.fluent4j.ast.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
-import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContainer;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
+public interface ArgumentList<B extends ResultBuilder> {
+    ArgumentList<? extends ResultBuilder> EMPTY = new FluentArgumentContainer<>();
 
-public interface ArgumentList {
-    ArgumentList EMPTY = new FluentArgumentContainer();
+    NamedArgument<B> getArgument(final String name);
+    FluentPattern<B> getArgument(final int index);
 
-    NamedArgument getArgument(final String name);
-    FluentPattern getArgument(final int index);
-
-    interface NamedArgument extends FluentPattern {
+    interface NamedArgument<B extends ResultBuilder> extends FluentPattern<B> {
 
     }
 }

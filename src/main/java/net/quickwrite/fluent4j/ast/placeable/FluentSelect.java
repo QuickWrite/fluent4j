@@ -5,19 +5,19 @@ import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentSelectException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.function.Function;
 
-public interface FluentSelect extends FluentPlaceable {
-    interface FluentVariant extends FluentResolvable {
-        FluentIdentifier<FluentVariantKey> getIdentifier();
+public interface FluentSelect<B extends ResultBuilder> extends FluentPlaceable<B> {
+    interface FluentVariant<B extends ResultBuilder> extends FluentResolvable<B> {
+        FluentIdentifier<FluentVariantKey<B>> getIdentifier();
 
-        interface FluentVariantKey extends FluentPattern {
-
+        interface FluentVariantKey<B extends ResultBuilder> extends FluentPattern<B> {
         }
     }
 
-    interface Selectable {
-        Function<FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException;
+    interface Selectable<B extends ResultBuilder> {
+        Function<FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException;
     }
 }

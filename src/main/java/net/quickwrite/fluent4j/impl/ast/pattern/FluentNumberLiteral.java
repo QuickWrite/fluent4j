@@ -11,16 +11,16 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentSelectException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.function.Function;
 
-public class FluentNumberLiteral implements
-        FluentPlaceable,
-        ArgumentList.NamedArgument,
-        FluentSelect.Selectable,
-        FluentSelect.FluentVariant.FluentVariantKey
+public class FluentNumberLiteral<B extends ResultBuilder> implements
+        FluentPlaceable<B>,
+        ArgumentList.NamedArgument<B>,
+        FluentSelect.Selectable<B>,
+        FluentSelect.FluentVariant.FluentVariantKey<B>
 {
     protected final String stringNumber;
     protected final BigDecimal number;
@@ -35,39 +35,48 @@ public class FluentNumberLiteral implements
         this.formattedNumber = NUMBER_FORMATTER.format(this.number);
     }
 
-    @Override
-    public void resolve(final FluentScope scope, final Appendable appendable) throws IOException {
-        final String formattedNumber = NumberFormatter.withLocale(scope.getBundle().getLocale()).format(number).toString();
+    public FluentNumberLiteral(final BigDecimal number) {
+        this.stringNumber = number.toString();
 
-        appendable.append(formattedNumber);
+        this.number = number;
+        this.formattedNumber = NUMBER_FORMATTER.format(this.number);
+    }
+
+    public FluentNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
+        this.stringNumber = numberLiteral.stringNumber;
+
+        this.number = numberLiteral.number;
+        this.formattedNumber = numberLiteral.formattedNumber;;
     }
 
     @Override
-    public String toSimpleString(final FluentScope scope) {
+    public void resolve(final FluentScope<B> scope, final B builder) {
+        final String formattedNumber = NumberFormatter.withLocale(scope.bundle().getLocale()).format(number).toString();
+
+        builder.append(formattedNumber);
+    }
+
+    @Override
+    public String toSimpleString(final FluentScope<B> scope) {
         return this.stringNumber;
     }
 
     @Override
-    public FluentPattern unwrap(final FluentScope scope) {
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
         return this;
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant, Boolean> selectChecker(final FluentScope scope) throws FluentSelectException {
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
         return (variant) -> {
-            final FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
+            final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = variant.getIdentifier().getSimpleIdentifier();
 
             if (variantKey instanceof FluentNumberLiteral) {
-                return ((FluentNumberLiteral) variantKey).number.compareTo(number) == 0;
+                return ((FluentNumberLiteral<B>) variantKey).number.compareTo(number) == 0;
             }
 
-            try {
-                final String identifier = variantKey.toSimpleString(scope);
-
-                return PluralRules.forLocale(scope.getBundle().getLocale()).select(formattedNumber).equals(identifier);
-            } catch (final IOException exception) {
-                throw new RuntimeException(exception);
-            }
+            final String identifier = variantKey.toSimpleString(scope);
+            return PluralRules.forLocale(scope.bundle().getLocale()).select(formattedNumber).equals(identifier);
         };
     }
 }

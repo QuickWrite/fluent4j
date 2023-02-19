@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.container.exception;
 
-import java.io.IOException;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public class FluentPatternException extends RuntimeException {
     private final DefaultDataWriter defaultDataWriter;
@@ -22,16 +22,16 @@ public class FluentPatternException extends RuntimeException {
     }
 
     public interface DefaultDataWriter {
-        void write(final Appendable appendable) throws IOException;
+        void write(final ResultBuilder builder);
     }
 
     public interface PlaceableDataWriter extends DefaultDataWriter{
-        default void write(final Appendable appendable) throws IOException {
-            appendable.append('{');
-            writeDefault(appendable);
-            appendable.append('}');
+        default void write(final ResultBuilder builder) {
+            builder.append('{');
+            writeDefault(builder);
+            builder.append('}');
         }
 
-        void writeDefault(final Appendable appendable) throws IOException;
+        void writeDefault(final ResultBuilder appendable);
     }
 }

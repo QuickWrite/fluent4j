@@ -3,10 +3,11 @@ package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentFunctionReference;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentFunctionParser extends ParameterizedLiteralParser<FluentFunctionReference, String> {
+public class FluentFunctionParser<B extends ResultBuilder> extends ParameterizedLiteralParser<FluentFunctionReference<B>, String, B> {
     @Override
     protected Optional<String> parseIdentifier(final ContentIterator iterator) {
         if (!isFunctionIdentifierStart(iterator.character())) {
