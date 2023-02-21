@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
-import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -41,11 +40,11 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
 
     @SuppressWarnings("unchecked")
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
         final FluentPattern<B> argument = scope.arguments().getArgument(identifier);
 
         if (argument == null) {
-            throw new FluentSelectException();
+            return null;
         }
 
         if (argument instanceof FluentSelect.Selectable) {

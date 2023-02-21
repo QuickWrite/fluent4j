@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
-import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentBaseElement;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -30,10 +29,9 @@ public class FluentSelectExpression<B extends ResultBuilder> implements FluentSe
 
     @Override
     public void resolve(final FluentScope<B> scope, final B builder) {
-        final Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker;
-        try {
-            selectChecker = selectable.selectChecker(scope);
-        } catch (final FluentSelectException ignored) {
+        final Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker = selectable.selectChecker(scope);
+
+        if(selectChecker == null) {
             defaultVariant.resolve(scope, builder);
             return;
         }

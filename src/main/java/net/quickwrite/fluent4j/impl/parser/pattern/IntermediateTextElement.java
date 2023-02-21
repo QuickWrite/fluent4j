@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
-import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.IOException;
@@ -61,7 +60,7 @@ public class IntermediateTextElement<B extends ResultBuilder> implements FluentP
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
         return (variant) -> slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }

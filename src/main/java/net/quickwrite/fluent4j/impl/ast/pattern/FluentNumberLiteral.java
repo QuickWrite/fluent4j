@@ -10,7 +10,6 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
-import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
@@ -67,7 +66,7 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
         return (variant) -> {
             final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = variant.getIdentifier().getSimpleIdentifier();
 

@@ -7,7 +7,6 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.container.exception.FluentPatternException;
-import net.quickwrite.fluent4j.container.exception.FluentSelectException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
@@ -89,11 +88,11 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
         }
 
         @Override
-        public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) throws FluentSelectException {
+        public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
             final FluentEntry.Attribute<B> attribute = getAttribute(scope);
             if (attribute.getPatterns().size() != 1) {
-                // Throw this exception as it jumps to the default value directly
-                throw new FluentSelectException();
+                // Returns null to jump to the default directly
+                return null;
             }
 
             return new FluentCachedChecker<>(scope, attribute);
