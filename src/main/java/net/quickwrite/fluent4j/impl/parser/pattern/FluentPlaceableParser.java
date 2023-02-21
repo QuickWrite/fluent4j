@@ -182,9 +182,6 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
 
         iterator.nextChar();
 
-        System.out.println("Variants:" + variantList);
-        System.out.println("Default-Variant: " + defaultVariant);
-
         if (selectable instanceof IntermediateTextElement) {
             selectable = new FluentTextElement<>(((IntermediateTextElement<B>) selectable).getContent().toString());
         }
