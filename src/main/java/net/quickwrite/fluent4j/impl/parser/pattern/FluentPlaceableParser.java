@@ -157,6 +157,14 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
                 if (variantList.size() == 0) {
                     throw new FluentBuilderException("Expected at least one variant after \"->\"", iterator);
                 }
+
+                // If the default variant is the last variant it can easily be removed
+                // as it will always be checked last and so does not need to be in the list
+                // of the normal variants.
+                if (defaultVariant == variantList.get(variantList.size() - 1)) {
+                    variantList.remove(variantList.size() - 1);
+                }
+
                 break;
             }
 
