@@ -154,6 +154,9 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
             final Optional<FluentSelect.FluentVariant<B>> variant = parseVariant(iterator, contentParser);
 
             if (variant.isEmpty()) {
+                if (variantList.size() == 0) {
+                    throw new FluentBuilderException("Expected at least one variant after \"->\"", iterator);
+                }
                 break;
             }
 
@@ -170,6 +173,9 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
         }
 
         iterator.nextChar();
+
+        System.out.println("Variants:" + variantList);
+        System.out.println("Default-Variant: " + defaultVariant);
 
         if (selectable instanceof IntermediateTextElement) {
             selectable = new FluentTextElement<>(((IntermediateTextElement<B>) selectable).getContent().toString());
