@@ -10,6 +10,7 @@ import net.quickwrite.fluent4j.impl.parser.base.entry.FluentMessageParser;
 import net.quickwrite.fluent4j.impl.parser.base.entry.FluentTermParser;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.FluentParser;
+import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
@@ -18,23 +19,20 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class FluentParserGroup<B extends ResultBuilder> implements FluentParser<FluentResource<B>> {
-    private final List<FluentElementParser<? extends FluentEntry<B>>> baseParserList = new ArrayList<>();
-
-    public static FluentParserGroup<ResultBuilder> getBasicParser() {
-        final FluentParserGroup<ResultBuilder> group = new FluentParserGroup<>();
-
-        group.addParser(new WhitespaceSkipper<>());
-        group.addParser(new CommentSkipper<>());
-
-        group.addParser(new FluentTermParser<>(FluentContentParser.DEFAULT_PARSER));
-        group.addParser(new FluentMessageParser<>(FluentContentParser.DEFAULT_PARSER));
-
-        return group;
+public final class FluentParserGroup<B extends ResultBuilder> implements ResourceParser<B> {
+    private final List<FluentElementParser<? extends FluentEntry<B>>> parserList;
+    
+    public FluentParserGroup(final List<FluentElementParser<? extends FluentEntry<B>>> parserList) {
+        this.parserList = parserList;
     }
 
-    public void addParser(final FluentElementParser<? extends FluentEntry<B>> parser) {
-        this.baseParserList.add(parser);
+    public static ResourceParser<ResultBuilder> getBasicParser() {
+        return new FluentParserGroupBuilder<>()
+                .addParser(new WhitespaceSkipper<>())
+                .addParser(new CommentSkipper<>())
+                .addParser(new FluentTermParser<>(FluentContentParser.DEFAULT_PARSER))
+                .addParser(new FluentMessageParser<>(FluentContentParser.DEFAULT_PARSER))
+                .build();
     }
 
     @Override
@@ -45,7 +43,7 @@ public final class FluentParserGroup<B extends ResultBuilder> implements FluentP
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentElementParser<? extends FluentEntry<B>> parser : baseParserList) {
+            for (final FluentElementParser<? extends FluentEntry<B>> parser : parserList) {
                 final ParseResult<? extends FluentEntry<B>> result = parser.parse(iterator);
 
                 switch (result.getType()) {
@@ -63,5 +61,30 @@ public final class FluentParserGroup<B extends ResultBuilder> implements FluentP
         }
 
         return new FluentEntryResource<>(elements);
+    }
+
+
+    public static <B extends ResultBuilder> ResourceParser.Builder<B> builder() {
+        return new FluentParserGroupBuilder<>();
+    }
+
+    private static class FluentParserGroupBuilder<B extends ResultBuilder> implements ResourceParser.Builder<B> {
+        private final List<FluentElementParser<? extends FluentEntry<B>>> parserList;
+        
+        public FluentParserGroupBuilder() {
+            this.parserList = new ArrayList<>();
+        }
+        
+        @Override
+        public Builder<B> addParser(final FluentElementParser<? extends FluentEntry<B>> parser) {
+            this.parserList.add(parser);
+            
+            return this;
+        }
+
+        @Override
+        public ResourceParser<B> build() {
+            return new FluentParserGroup<>(this.parserList);
+        }
     }
 }
