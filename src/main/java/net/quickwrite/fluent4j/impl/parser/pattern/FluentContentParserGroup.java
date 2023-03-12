@@ -19,7 +19,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
 
     private static final IntermediateTextElement<?> NEWLINE_INTERMEDIATE = new IntermediateTextElement<>(CharBuffer.wrap("\n"), -1, false);
 
-    public FluentContentParserGroup(final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList) {
+    private FluentContentParserGroup(final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList) {
         this.parserList = parserList;
     }
 

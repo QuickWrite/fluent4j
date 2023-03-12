@@ -24,7 +24,7 @@ import java.util.Optional;
 public class FluentPlaceableParser<B extends ResultBuilder> implements PlaceableParser<B> {
     private final List<PlaceableExpressionParser<?, B>> parserList;
 
-    public FluentPlaceableParser(final List<PlaceableExpressionParser<?, B>> parserList) {
+    private FluentPlaceableParser(final List<PlaceableExpressionParser<?, B>> parserList) {
         this.parserList = parserList;
     }
 

@@ -18,7 +18,7 @@ import static net.quickwrite.fluent4j.parser.base.FluentElementParser.DefaultPar
 public final class FluentParserGroup<B extends ResultBuilder> implements ResourceParser<B> {
     private final List<FluentElementParser<? extends FluentEntry<B>>> parserList;
 
-    public FluentParserGroup(final List<FluentElementParser<? extends FluentEntry<B>>> parserList) {
+    private FluentParserGroup(final List<FluentElementParser<? extends FluentEntry<B>>> parserList) {
         this.parserList = parserList;
     }
 
