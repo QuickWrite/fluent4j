@@ -24,10 +24,10 @@ public final class FluentParserGroup<B extends ResultBuilder> implements Resourc
 
     public static ResourceParser<ResultBuilder> getBasicParser() {
         return builder()
-                .addParser(DefaultParser.WHITESPACE_SKIPPER.getParser())
-                .addParser(DefaultParser.COMMENT_SKIPPER.getParser())
-                .addParser(DefaultParser.TERM_PARSER.getParser())
-                .addParser(DefaultParser.MESSAGE_PARSER.getParser())
+                .addParser(DefaultParser.WHITESPACE_SKIPPER)
+                .addParser(DefaultParser.COMMENT_SKIPPER)
+                .addParser(DefaultParser.TERM_PARSER)
+                .addParser(DefaultParser.MESSAGE_PARSER)
                 .build();
     }
 
