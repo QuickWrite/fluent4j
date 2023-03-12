@@ -6,7 +6,7 @@ import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-public interface FluentPatternParser<T, B extends ResultBuilder> {
+public interface FluentPatternParser<T extends FluentPattern<B>, B extends ResultBuilder> {
     FluentPatternParser<FluentPattern<ResultBuilder>, ResultBuilder> DEFAULT_PLACEABLE_PARSER = FluentPlaceableParser.getBasicParser();
 
     int getStartingChar();

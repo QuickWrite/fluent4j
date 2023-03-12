@@ -14,20 +14,18 @@ import java.util.List;
 import java.util.function.Function;
 
 public class FluentContentParserGroup<B extends ResultBuilder> implements FluentContentParser<B> {
-    private final List<FluentPatternParser<? extends FluentPattern<B>, B>> patternParserList = new ArrayList<>();
+    private final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList;
 
     private static final IntermediateTextElement<?> NEWLINE_INTERMEDIATE = new IntermediateTextElement<>(CharBuffer.wrap("\n"), -1, false);
 
-    public static FluentContentParserGroup<ResultBuilder> getBasicParser() {
-        final FluentContentParserGroup<ResultBuilder> group = new FluentContentParserGroup<>();
-
-        group.addParser(FluentPatternParser.DEFAULT_PLACEABLE_PARSER);
-
-        return group;
+    public FluentContentParserGroup(final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList) {
+        this.parserList = parserList;
     }
 
-    public void addParser(final FluentPatternParser<? extends FluentPattern<B>, B> parser) {
-        this.patternParserList.add(parser);
+    public static FluentContentParser<ResultBuilder> getBasicParser() {
+        return builder()
+                .addParser(FluentPatternParser.DEFAULT_PLACEABLE_PARSER)
+                .build();
     }
 
     @Override
@@ -48,7 +46,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentPatternParser<? extends FluentPattern<B>, B> patternParser : patternParserList) {
+            for (final FluentPatternParser<? extends FluentPattern<B>, B> patternParser : parserList) {
                 if (iterator.character() != patternParser.getStartingChar()) {
                     continue;
                 }
@@ -234,5 +232,30 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         iterator.setPosition(currentPos);
 
         return textElement;
+    }
+
+
+    public static <B extends ResultBuilder> FluentContentParser.Builder<B> builder() {
+        return new FluentContentParserGroupBuilder<>();
+    }
+
+    private static class FluentContentParserGroupBuilder<B extends ResultBuilder> implements FluentContentParser.Builder<B> {
+        private final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList;
+
+        public FluentContentParserGroupBuilder() {
+            this.parserList = new ArrayList<>();
+        }
+
+        @Override
+        public Builder<B> addParser(final FluentPatternParser<? extends FluentPattern<B>, B> parser) {
+            parserList.add(parser);
+
+            return this;
+        }
+
+        @Override
+        public FluentContentParser<B> build() {
+            return new FluentContentParserGroup<>(parserList);
+        }
     }
 }
