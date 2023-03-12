@@ -1,6 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTermReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -11,7 +12,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FluentTermReferenceParser<B extends ResultBuilder> extends ParameterizedLiteralParser<FluentTermReference<B>, Map.Entry<String, String>, B> {
+public class FluentTermReferenceParser<B extends ResultBuilder> extends ParameterizedLiteralParser<Map.Entry<String, String>, B> {
     @Override
     protected Optional<Map.Entry<String, String>> parseIdentifier(final ContentIterator iterator) {
         if (iterator.character() != '-') {
@@ -43,12 +44,12 @@ public class FluentTermReferenceParser<B extends ResultBuilder> extends Paramete
 
     @SuppressWarnings("unchecked")
     @Override
-    protected FluentTermReference<B> getInstance(final Map.Entry<String, String> identifier) {
+    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier) {
         return getInstance(identifier, (ArgumentList<B>) ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentTermReference<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> attributes) {
+    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> attributes) {
         if (identifier.getValue() != null) {
             return new FluentTermReference.AttributeReference<>(identifier.getKey(), identifier.getValue(), attributes);
         }

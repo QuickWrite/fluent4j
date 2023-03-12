@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
+import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentVariableReference;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -10,9 +11,9 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentVariableReferenceParser<B extends ResultBuilder> implements PlaceableExpressionParser<FluentVariableReference<B>, B> {
+public class FluentVariableReferenceParser<B extends ResultBuilder> implements PlaceableExpressionParser<B> {
     @Override
-    public Optional<FluentVariableReference<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
         if (iterator.character() != '$') {
             return Optional.empty();
         }

@@ -1,13 +1,14 @@
 package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentFunctionReference;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentFunctionParser<B extends ResultBuilder> extends ParameterizedLiteralParser<FluentFunctionReference<B>, String, B> {
+public class FluentFunctionParser<B extends ResultBuilder> extends ParameterizedLiteralParser<String, B> {
     @Override
     protected Optional<String> parseIdentifier(final ContentIterator iterator) {
         if (!isFunctionIdentifierStart(iterator.character())) {
@@ -32,14 +33,15 @@ public class FluentFunctionParser<B extends ResultBuilder> extends Parameterized
                 || character == '_';
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected FluentFunctionReference getInstance(final String identifier) {
-        return getInstance(identifier, ArgumentList.EMPTY);
+    protected FluentPlaceable<B> getInstance(final String identifier) {
+        return getInstance(identifier, (ArgumentList<B>) ArgumentList.EMPTY);
     }
 
     @Override
-    protected FluentFunctionReference getInstance(final String identifier, final ArgumentList attributes) {
-        return new FluentFunctionReference(identifier, attributes);
+    protected FluentPlaceable<B> getInstance(final String identifier, final ArgumentList<B> attributes) {
+        return new FluentFunctionReference<>(identifier, attributes);
     }
 
     @Override

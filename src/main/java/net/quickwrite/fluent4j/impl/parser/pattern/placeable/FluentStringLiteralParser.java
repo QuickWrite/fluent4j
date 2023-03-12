@@ -11,7 +11,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.nio.CharBuffer;
 import java.util.Optional;
 
-public class FluentStringLiteralParser<B extends ResultBuilder> implements PlaceableExpressionParser<FluentPlaceable<B>, B> {
+public class FluentStringLiteralParser<B extends ResultBuilder> implements PlaceableExpressionParser<B> {
     @Override
     public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
         if (iterator.character() != '"') {

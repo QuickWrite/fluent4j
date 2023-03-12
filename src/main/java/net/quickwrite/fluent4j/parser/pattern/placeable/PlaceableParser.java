@@ -19,6 +19,6 @@ public interface PlaceableParser<B extends ResultBuilder> extends FluentPatternP
     Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator);
 
     interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<PlaceableParser<B>> {
-        Builder<B> addParser(final PlaceableExpressionParser<?, B> parser);
+        Builder<B> addParser(final PlaceableExpressionParser<B> parser);
     }
 }

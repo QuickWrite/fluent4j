@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluentPlaceableParser<B extends ResultBuilder> implements PlaceableParser<B> {
-    private final List<PlaceableExpressionParser<?, B>> parserList;
+    private final List<PlaceableExpressionParser<B>> parserList;
 
-    private FluentPlaceableParser(final List<PlaceableExpressionParser<?, B>> parserList) {
+    private FluentPlaceableParser(final List<PlaceableExpressionParser<B>> parserList) {
         this.parserList = parserList;
     }
 
@@ -89,20 +89,19 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
         return ParseResult.success(placeable);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator) {
         final int[] position = iterator.position();
 
-        for (final PlaceableExpressionParser<?, B> expressionParser : parserList) {
-            final Optional<?> parseResult = expressionParser.parse(iterator, this);
+        for (final PlaceableExpressionParser<B> expressionParser : parserList) {
+            final Optional<FluentPlaceable<B>> parseResult = expressionParser.parse(iterator, this);
 
             if (parseResult.isEmpty()) {
                 iterator.setPosition(position);
                 continue;
             }
 
-            return (Optional<FluentPlaceable<B>>) parseResult;
+            return parseResult;
         }
 
         return Optional.empty();
@@ -233,14 +232,14 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
     }
 
     private static final class FluentPlaceableParserBuilder<B extends ResultBuilder> implements PlaceableParser.Builder<B> {
-        private final List<PlaceableExpressionParser<?, B>> parserList;
+        private final List<PlaceableExpressionParser<B>> parserList;
 
         public FluentPlaceableParserBuilder() {
             this.parserList = new ArrayList<>();
         }
 
         @Override
-        public Builder<B> addParser(final PlaceableExpressionParser<?, B> parser) {
+        public Builder<B> addParser(final PlaceableExpressionParser<B> parser) {
             this.parserList.add(parser);
 
             return this;

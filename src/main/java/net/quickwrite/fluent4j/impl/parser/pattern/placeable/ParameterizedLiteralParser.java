@@ -16,9 +16,9 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class ParameterizedLiteralParser<T, I, B extends ResultBuilder> implements PlaceableExpressionParser<T, B> {
+public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> implements PlaceableExpressionParser<B> {
     @Override
-    public Optional<T> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
         final Optional<I> identifier = parseIdentifier(iterator);
         if (identifier.isEmpty()) {
             return Optional.empty();
@@ -122,9 +122,9 @@ public abstract class ParameterizedLiteralParser<T, I, B extends ResultBuilder> 
 
     protected abstract Optional<I> parseIdentifier(final ContentIterator iterator);
 
-    protected abstract T getInstance(final I identifier);
+    protected abstract FluentPlaceable<B> getInstance(final I identifier);
 
-    protected abstract T getInstance(final I identifier, final ArgumentList<B> attributes);
+    protected abstract FluentPlaceable<B> getInstance(final I identifier, final ArgumentList<B> attributes);
 
     protected abstract boolean optionalArguments();
 }
