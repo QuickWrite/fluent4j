@@ -39,10 +39,6 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
                 .build();
     }
 
-    public void addParser(final PlaceableExpressionParser<?, B> parser) {
-        this.parserList.add(parser);
-    }
-
     @Override
     public int getStartingChar() {
         return '{';
