@@ -102,6 +102,19 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     }
 
     @Override
+    public Optional<B> resolveMessage(final String key, final B builder) {
+        final Optional<FluentEntry<B>> message = getMessage(key);
+
+        if (message.isEmpty()) {
+            return Optional.empty();
+        }
+
+        message.get().resolve(new FluentResolverScope<>(this, ArgumentList.empty(), builder), builder);
+
+        return Optional.of(builder);
+    }
+
+    @Override
     public <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz) {
         final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
 

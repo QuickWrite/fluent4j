@@ -42,10 +42,9 @@ public class FluentTermReferenceParser<B extends ResultBuilder> extends Paramete
         return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), null));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier) {
-        return getInstance(identifier, (ArgumentList<B>) ArgumentList.EMPTY);
+        return getInstance(identifier, ArgumentList.empty());
     }
 
     @Override

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FluentArgumentContainer<B extends ResultBuilder> implements ArgumentList<B> {
+    public static ArgumentList<? extends ResultBuilder> EMPTY = new FluentArgumentContainer<>();
+
     private final Map<String, NamedArgument<B>> named = new HashMap<>();
     private final List<FluentPattern<B>> positional = new ArrayList<>();
 

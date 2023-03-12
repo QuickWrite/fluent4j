@@ -33,10 +33,9 @@ public class FluentFunctionParser<B extends ResultBuilder> extends Parameterized
                 || character == '_';
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected FluentPlaceable<B> getInstance(final String identifier) {
-        return getInstance(identifier, (ArgumentList<B>) ArgumentList.EMPTY);
+        return getInstance(identifier, ArgumentList.empty());
     }
 
     @Override

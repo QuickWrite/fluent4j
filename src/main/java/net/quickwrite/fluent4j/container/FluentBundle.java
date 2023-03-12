@@ -4,8 +4,10 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.impl.container.FluentResourceBundle;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +24,7 @@ public interface FluentBundle<B extends ResultBuilder> {
     Optional<FluentEntry<B>> getMessage(final String key);
 
     Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder);
+    Optional<B> resolveMessage(final String key, final B builder);
 
     <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz);
 
@@ -32,4 +35,14 @@ public interface FluentBundle<B extends ResultBuilder> {
     Optional<FluentFunction<B>> getFunction(final String key);
 
     Set<FluentFunction<B>> getFunctions();
+
+    static <B extends ResultBuilder> FluentBundle<B> forLocale(final Locale locale) {
+        return new FluentResourceBundle<>(ULocale.forLocale(locale));
+    }
+
+    static <B extends ResultBuilder> FluentBundle<B> forLocale(final ULocale locale) {
+        return new FluentResourceBundle<>(locale);
+    }
+
+
 }

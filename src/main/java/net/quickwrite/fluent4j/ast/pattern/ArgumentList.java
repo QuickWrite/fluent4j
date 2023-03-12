@@ -5,10 +5,13 @@ import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContaine
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public interface ArgumentList<B extends ResultBuilder> {
-    ArgumentList<? extends ResultBuilder> EMPTY = new FluentArgumentContainer<>();
-
     NamedArgument<B> getArgument(final String name);
     FluentPattern<B> getArgument(final int index);
+
+    @SuppressWarnings("unchecked")
+    static <B extends ResultBuilder> ArgumentList<B> empty() {
+        return (ArgumentList<B>) FluentArgumentContainer.EMPTY;
+    }
 
     interface NamedArgument<B extends ResultBuilder> extends FluentPattern<B> {
 

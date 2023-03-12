@@ -1,5 +1,7 @@
 package net.quickwrite.fluent4j.iterator;
 
+import net.quickwrite.fluent4j.impl.iterator.StringContentIterator;
+
 public interface ContentIterator {
     String inputName();
 
@@ -11,4 +13,8 @@ public interface ContentIterator {
 
     int[] position();
     void setPosition(final int[] position);
+
+    static ContentIterator from(final String input) {
+        return new StringContentIterator(input);
+    }
 }
