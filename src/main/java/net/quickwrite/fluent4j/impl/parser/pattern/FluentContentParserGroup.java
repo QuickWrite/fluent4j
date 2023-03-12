@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
+import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -24,7 +25,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
 
     public static FluentContentParser<ResultBuilder> getBasicParser() {
         return builder()
-                .addParser(FluentPatternParser.DEFAULT_PLACEABLE_PARSER)
+                .addParser(PlaceableParser.DEFAULT)
                 .build();
     }
 

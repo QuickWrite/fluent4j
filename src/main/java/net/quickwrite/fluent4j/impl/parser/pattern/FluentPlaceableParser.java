@@ -22,25 +22,25 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluentPlaceableParser<B extends ResultBuilder> implements PlaceableParser<B> {
-    private final List<PlaceableExpressionParser<?, B>> expressionParserList = new ArrayList<>();
+    private final List<PlaceableExpressionParser<?, B>> parserList;
 
-    public static FluentPlaceableParser<ResultBuilder> getBasicParser() {
-        final FluentPlaceableParser<ResultBuilder> base = new FluentPlaceableParser<>();
+    public FluentPlaceableParser(final List<PlaceableExpressionParser<?, B>> parserList) {
+        this.parserList = parserList;
+    }
 
-        base.addParser(new FluentStringLiteralParser<>());
-        base.addParser(new FluentNumberLiteralParser<>());
-        base.addParser(new FluentFunctionParser<>());
-
-        base.addParser(new FluentTermReferenceParser<>());
-        base.addParser(new FluentMessageReferenceParser<>());
-
-        base.addParser(new FluentVariableReferenceParser<>());
-
-        return base;
+    public static PlaceableParser<ResultBuilder> getBasicParser() {
+        return builder()
+                .addParser(new FluentStringLiteralParser<>())
+                .addParser(new FluentNumberLiteralParser<>())
+                .addParser(new FluentFunctionParser<>())
+                .addParser(new FluentTermReferenceParser<>())
+                .addParser(new FluentMessageReferenceParser<>())
+                .addParser(new FluentVariableReferenceParser<>())
+                .build();
     }
 
     public void addParser(final PlaceableExpressionParser<?, B> parser) {
-        this.expressionParserList.add(parser);
+        this.parserList.add(parser);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
     public Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator) {
         final int[] position = iterator.position();
 
-        for (final PlaceableExpressionParser<?, B> expressionParser : expressionParserList) {
+        for (final PlaceableExpressionParser<?, B> expressionParser : parserList) {
             final Optional<?> parseResult = expressionParser.parse(iterator, this);
 
             if (parseResult.isEmpty()) {
@@ -232,4 +232,27 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
         return new FluentTextElement<>(identifier.get());
     }
 
+    public static <B extends ResultBuilder> PlaceableParser.Builder<B> builder() {
+        return new FluentPlaceableParserBuilder<>();
+    }
+
+    private static final class FluentPlaceableParserBuilder<B extends ResultBuilder> implements PlaceableParser.Builder<B> {
+        private final List<PlaceableExpressionParser<?, B>> parserList;
+
+        public FluentPlaceableParserBuilder() {
+            this.parserList = new ArrayList<>();
+        }
+
+        @Override
+        public Builder<B> addParser(final PlaceableExpressionParser<?, B> parser) {
+            this.parserList.add(parser);
+
+            return this;
+        }
+
+        @Override
+        public PlaceableParser<B> build() {
+            return new FluentPlaceableParser<>(this.parserList);
+        }
+    }
 }
