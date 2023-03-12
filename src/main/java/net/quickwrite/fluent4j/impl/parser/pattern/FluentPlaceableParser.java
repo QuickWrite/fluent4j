@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser.DefaultParser;
+
 public class FluentPlaceableParser<B extends ResultBuilder> implements PlaceableParser<B> {
     private final List<PlaceableExpressionParser<B>> parserList;
 
@@ -30,12 +32,12 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
 
     public static PlaceableParser<ResultBuilder> getBasicParser() {
         return builder()
-                .addParser(new FluentStringLiteralParser<>())
-                .addParser(new FluentNumberLiteralParser<>())
-                .addParser(new FluentFunctionParser<>())
-                .addParser(new FluentTermReferenceParser<>())
-                .addParser(new FluentMessageReferenceParser<>())
-                .addParser(new FluentVariableReferenceParser<>())
+                .addParser(DefaultParser.STRING)
+                .addParser(DefaultParser.NUMBER)
+                .addParser(DefaultParser.FUNCTION)
+                .addParser(DefaultParser.TERM_REFERENCE)
+                .addParser(DefaultParser.MESSAGE_REFERENCE)
+                .addParser(DefaultParser.VARIABLE)
                 .build();
     }
 
