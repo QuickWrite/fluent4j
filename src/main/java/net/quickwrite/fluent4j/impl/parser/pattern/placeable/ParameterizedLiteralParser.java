@@ -4,8 +4,6 @@ import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
-import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContainer;
-import net.quickwrite.fluent4j.impl.ast.pattern.ParameterizedLiteral;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
@@ -43,7 +41,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
     }
 
     private ArgumentList<B> getAttributes(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
-        final FluentArgumentContainer<B> attributesContainer = new FluentArgumentContainer<>();
+        final ArgumentList.PlenaryBuilder<B> attributesContainer = ArgumentList.plenaryBuilder();
 
         boolean isFirst = true;
         boolean isNamed = false;
@@ -65,7 +63,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
             if (namedEntry.isPresent()) {
                 final Map.Entry<String, ArgumentList.NamedArgument<B>> entry = namedEntry.get();
 
-                attributesContainer.addArgument(entry.getKey(), entry.getValue());
+                attributesContainer.add(entry.getKey(), entry.getValue());
 
                 isNamed = true;
             }
@@ -81,14 +79,14 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
             if (placeable.isEmpty()) {
                 throw new FluentBuilderException("Expected an inline expression", iterator);
             }
-            attributesContainer.addAttribute(placeable.get());
+            attributesContainer.add(placeable.get());
 
             ParserUtil.skipWhitespaceAndNL(iterator);
         }
 
         iterator.nextChar();
 
-        return attributesContainer;
+        return attributesContainer.build();
     }
 
     @SuppressWarnings("unchecked")

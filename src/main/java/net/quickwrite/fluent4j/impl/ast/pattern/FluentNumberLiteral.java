@@ -41,6 +41,14 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
         this.formattedNumber = NUMBER_FORMATTER.format(this.number);
     }
 
+    public FluentNumberLiteral(final long number) {
+        this(new BigDecimal(number));
+    }
+
+    public FluentNumberLiteral(final double number) {
+        this(new BigDecimal(Double.toString(number)));
+    }
+
     public FluentNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
         this.stringNumber = numberLiteral.stringNumber;
 
