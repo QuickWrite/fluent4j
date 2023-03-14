@@ -48,12 +48,12 @@ public class FluentTermReferenceParser<B extends ResultBuilder> extends Paramete
     }
 
     @Override
-    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> attributes) {
+    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> argumentList) {
         if (identifier.getValue() != null) {
-            return new FluentTermReference.AttributeReference<>(identifier.getKey(), identifier.getValue(), attributes);
+            return new FluentTermReference.AttributeReference<>(identifier.getKey(), identifier.getValue(), argumentList);
         }
 
-        return new FluentTermReference<>(identifier.getKey(), attributes);
+        return new FluentTermReference<>(identifier.getKey(), argumentList);
     }
 
     @Override

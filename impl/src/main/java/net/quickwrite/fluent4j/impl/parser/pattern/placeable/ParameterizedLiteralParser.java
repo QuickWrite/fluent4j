@@ -123,7 +123,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
 
     protected abstract FluentPlaceable<B> getInstance(final I identifier);
 
-    protected abstract FluentPlaceable<B> getInstance(final I identifier, final ArgumentList<B> attributes);
+    protected abstract FluentPlaceable<B> getInstance(final I identifier, final ArgumentList<B> argumentList);
 
     protected abstract boolean optionalArguments();
 }
