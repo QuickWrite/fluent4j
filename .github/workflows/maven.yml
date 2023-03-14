@@ -31,4 +31,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: '${{ github.event.repository.name }}-${{ github.sha }}'
-          path: /**/*.jar
+          path: ./**/*.jar
