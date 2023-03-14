@@ -27,10 +27,8 @@ jobs:
           distribution: adopt
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - name: Create necessary directories
-        run: mkdir staging && cp target/*.jar staging
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ github.event.repository.name }}-${{ github.sha }}'
-          path: staging
+          path: /**/*.jar
