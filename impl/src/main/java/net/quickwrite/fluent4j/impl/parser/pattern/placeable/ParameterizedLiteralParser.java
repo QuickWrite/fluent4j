@@ -2,8 +2,8 @@ package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
-import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
-import net.quickwrite.fluent4j.container.exception.FluentExpectedException;
+import net.quickwrite.fluent4j.exception.FluentBuilderException;
+import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContainer;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;

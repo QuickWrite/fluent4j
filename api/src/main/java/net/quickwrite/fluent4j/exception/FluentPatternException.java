@@ -1,4 +1,4 @@
-package net.quickwrite.fluent4j.container.exception;
+package net.quickwrite.fluent4j.exception;
 
 import net.quickwrite.fluent4j.result.ResultBuilder;
 

@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
-import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public class FluentMessageReference<B extends ResultBuilder> implements FluentPlaceable<B> {

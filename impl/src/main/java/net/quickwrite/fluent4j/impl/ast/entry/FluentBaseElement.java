@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
-import net.quickwrite.fluent4j.container.exception.FluentPatternException;
+import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;

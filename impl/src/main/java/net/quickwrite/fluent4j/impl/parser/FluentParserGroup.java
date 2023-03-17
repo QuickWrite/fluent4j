@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.impl.parser;
 
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.container.exception.FluentBuilderException;
+import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.container.FluentEntryResource;
 import net.quickwrite.fluent4j.impl.parser.base.ElementParserList;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
