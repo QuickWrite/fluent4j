@@ -13,7 +13,7 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     private final FluentBundle<B> bundle;
     private final Set<FluentIdentifier<?>> traversed;
 
-    private final ArgumentList<B> argumentList;
+    private ArgumentList<B> argumentList;
 
     private final B builder;
 
@@ -52,7 +52,30 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
         return this.argumentList;
     }
 
+    @Override
+    public void setArguments(final ArgumentList<B> arguments) {
+        this.argumentList = arguments;
+    }
+
     public B builder() {
         return this.builder;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public FluentScope<B> clone() {
+        try {
+            return (FluentScope<B>) super.clone();
+        } catch (final CloneNotSupportedException ignored) {
+            // This should NEVER happen
+
+            // When it happens the exception will be thrown and when the application crashes
+            // this message will be shown.
+            // When this exception is being thrown something bad must have happened
+            // which couldn't have been anticipated.
+            throw new RuntimeException("For some reason the clone()-method of the FluentResolverScope class couldn't be" +
+                    "executed and didn't clone the object. This isn't some behaviour which is intended and an issue" +
+                    "should be created immediately.");
+        }
     }
 }

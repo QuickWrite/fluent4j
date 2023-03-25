@@ -22,7 +22,9 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
     @Override
     public void resolve(final FluentScope<B> scope, final B builder) {
-        unwrap(scope).resolve(new FluentResolverScope<>(scope.bundle(), argumentList, scope.traversed(), scope.builder()), builder);
+        final FluentScope<B> clonedScope = scope.clone();
+        clonedScope.setArguments(argumentList);
+        unwrap(scope).resolve(clonedScope, builder);
     }
 
     @SuppressWarnings("unchecked")

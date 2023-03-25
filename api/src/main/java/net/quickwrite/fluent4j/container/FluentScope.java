@@ -6,7 +6,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Set;
 
-public interface FluentScope<B extends ResultBuilder> {
+public interface FluentScope<B extends ResultBuilder> extends Cloneable {
     FluentBundle<B> bundle();
 
     Set<FluentIdentifier<?>> traversed();
@@ -15,5 +15,9 @@ public interface FluentScope<B extends ResultBuilder> {
 
     ArgumentList<B> arguments();
 
+    void setArguments(final ArgumentList<B> arguments);
+
     B builder();
+
+    FluentScope<B> clone();
 }
