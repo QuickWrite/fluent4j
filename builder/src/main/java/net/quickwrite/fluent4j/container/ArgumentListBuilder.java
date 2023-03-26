@@ -5,15 +5,17 @@ import net.quickwrite.fluent4j.impl.ast.pattern.container.FluentArgumentContaine
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public class ArgumentListBuilder {
-    static <B extends ResultBuilder> ArgumentList<B> empty() {
+    private ArgumentListBuilder() {}
+
+    public static <B extends ResultBuilder> ArgumentList<B> empty() {
         return ArgumentList.empty();
     }
 
-    static <B extends ResultBuilder> ArgumentList.Builder<B> builder() {
+    public static <B extends ResultBuilder> ArgumentList.Builder<B> builder() {
         return FluentArgumentContainer.builder();
     }
 
-    static <B extends ResultBuilder> ArgumentList.PlenaryBuilder<B> plenaryBuilder() {
+    public static <B extends ResultBuilder> ArgumentList.PlenaryBuilder<B> plenaryBuilder() {
         return FluentArgumentContainer.plenaryBuilder();
     }
 }
