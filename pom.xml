@@ -7,6 +7,12 @@
     <groupId>net.quickwrite</groupId>
     <artifactId>fluent4j</artifactId>
     <version>0.2.3-alpha</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>api</module>
+        <module>impl</module>
+        <module>builder</module>
+    </modules>
     <build>
         <plugins>
             <plugin>
