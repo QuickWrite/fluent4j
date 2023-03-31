@@ -4,7 +4,7 @@ import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-public enum DefaultPlaceableParser {
+public enum DefaultPlaceableParser implements PlaceableExpressionParser.PlaceableExpressionParserList {
     STRING(PlaceableParserList.STRING),
     NUMBER(PlaceableParserList.NUMBER),
     FUNCTION(PlaceableParserList.FUNCTION),

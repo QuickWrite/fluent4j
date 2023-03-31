@@ -3,6 +3,7 @@ package net.quickwrite.fluent4j.parser.pattern.placeable;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
+import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -13,5 +14,9 @@ public interface PlaceableParser<B extends ResultBuilder> extends FluentPatternP
 
     interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<PlaceableParser<B>> {
         Builder<B> addParser(final PlaceableExpressionParser<B> parser);
+
+        default Builder<B> addParser(final PlaceableExpressionParser.PlaceableExpressionParserList parser) {
+            return addParser(parser.getParser());
+        }
     }
 }

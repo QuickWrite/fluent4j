@@ -9,5 +9,9 @@ public interface ResourceParser<B extends ResultBuilder> extends FluentParser<Fl
 
     interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<ResourceParser<B>> {
         Builder<B> addParser(final FluentElementParser<? extends FluentEntry<B>> parser);
+
+        default Builder<B> addParser(final FluentElementParser.FluentElementParserList parser) {
+            return addParser(parser.getParser());
+        }
     }
 }

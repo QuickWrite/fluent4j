@@ -8,4 +8,8 @@ import java.util.Optional;
 
 public interface PlaceableExpressionParser<B extends ResultBuilder> {
     Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser);
+
+    interface PlaceableExpressionParserList {
+        <B extends ResultBuilder> PlaceableExpressionParser<B> getParser();
+    }
 }
