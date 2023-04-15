@@ -6,17 +6,15 @@ import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.container.ResourceBundleFactory;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnyCharTest {
-    private static FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle<ResultBuilder> bundle;
 
-    @BeforeAll
-    public static void init() {
+    static {
         final FluentResource<ResultBuilder> resource = getResourceFromResource("utf8/any_char.ftl");
         bundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
         bundle.addResource(resource);
