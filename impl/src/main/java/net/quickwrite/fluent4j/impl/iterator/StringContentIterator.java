@@ -42,9 +42,14 @@ public final class StringContentIterator implements ContentIterator {
             if (nextLine() == null) {
                 return 0;
             }
-        } else {
+
+            return character();
+        }
+
+        if(line().codePointAt(characterIndex) > Character.MAX_VALUE) {
             this.characterIndex++;
         }
+        this.characterIndex++;
 
         return character();
     }
