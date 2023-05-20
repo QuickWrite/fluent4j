@@ -184,7 +184,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
             }
         }
 
-        return -1;
+        return sequence.length();
     }
 
     private int skipLeadingNL(final List<FluentPattern<B>> patternList) {
