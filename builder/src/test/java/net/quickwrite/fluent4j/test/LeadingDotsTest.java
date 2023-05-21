@@ -4,12 +4,14 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.container.ResourceBundleFactory;
+import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LeadingDotsTest {
     private static final FluentBundle<ResultBuilder> bundle;
@@ -66,6 +68,21 @@ public class LeadingDotsTest {
                 ".Value\n.Continued",
                 bundle.resolveMessage("key06", StringResultFactory.construct()).get().toString()
         );
+    }
+
+    @Test
+    public void testKey07() {
+        assertThrows(FluentExpectedException.class, () -> getResourceFromResource("dots/attribute_value1.ftl"));
+    }
+
+    @Test
+    public void testKey08() {
+        assertThrows(FluentExpectedException.class, () -> getResourceFromResource("dots/attribute_value2.ftl"));
+    }
+
+    @Test
+    public void testKey09() {
+        assertThrows(FluentExpectedException.class, () -> getResourceFromResource("dots/attribute_value3.ftl"));
     }
 
     @Test
