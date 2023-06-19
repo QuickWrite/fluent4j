@@ -10,3 +10,8 @@ recursive-selector = { -recursive-selector }
     *[test] Test
  }
   .test = { -recursive-selector }
+
+-non-recursive = Value
+
+non-recursion = {-non-recursive}
+double-non-recursion = {-non-recursive} {-non-recursive}

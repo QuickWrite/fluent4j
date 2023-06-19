@@ -9,6 +9,7 @@ import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RecursionTest {
@@ -44,6 +45,28 @@ public class RecursionTest {
         assertThrows(
                 RuntimeException.class,
                 () -> bundle.resolveMessage("recursive-selector", StringResultFactory.construct())
+        );
+    }
+
+    @Test
+    public void testNonRecursion() {
+        assertEquals(
+                "Value",
+                bundle.resolveMessage(
+                        "non-recursion",
+                        StringResultFactory.construct()
+                ).get().toString()
+        );
+    }
+
+    @Test
+    public void testDoubleNonRecursion() {
+        assertEquals(
+                "Value Value",
+                bundle.resolveMessage(
+                        "double-non-recursion",
+                        StringResultFactory.construct()
+                ).get().toString()
         );
     }
 }
