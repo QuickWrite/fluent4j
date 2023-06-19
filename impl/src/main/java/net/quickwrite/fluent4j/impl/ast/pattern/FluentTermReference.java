@@ -12,6 +12,7 @@ import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChec
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -24,6 +25,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
     public void resolve(final FluentScope<B> scope, final B builder) {
         final FluentScope<B> clonedScope = scope.clone();
         clonedScope.setArguments(argumentList);
+        clonedScope.setTraversed(new HashSet<>(scope.traversed()));
         unwrap(scope).resolve(clonedScope, builder);
     }
 
