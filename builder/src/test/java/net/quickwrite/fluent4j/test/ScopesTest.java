@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ScopesTest {
     private static final FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle<ResultBuilder> termParamBundle;
     private static final ArgumentList<ResultBuilder> argument_list1 = ArgumentListBuilder.builder()
             .add("var1", "Test")
             .build();
@@ -32,6 +33,10 @@ public class ScopesTest {
         final FluentResource<ResultBuilder> resource = getResourceFromResource("scope/scopes.ftl");
         bundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
         bundle.addResource(resource);
+
+        final FluentResource<ResultBuilder> termParamResource = getResourceFromResource("scope/term_parameters.ftl");
+        termParamBundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
+        termParamBundle.addResource(termParamResource);
     }
 
     @Test
@@ -217,6 +222,53 @@ public class ScopesTest {
                 bundle.resolveMessage(
                         "term-scope1",
                         argument_list3,
+                        StringResultFactory.construct()
+                ).get().toString()
+        );
+    }
+
+    /*
+     * Test Term Parameters
+     */
+    @Test
+    public void testTermParametersKey01() {
+        assertEquals(
+                "Value",
+                termParamBundle.resolveMessage(
+                        "key01",
+                        StringResultFactory.construct()
+                ).get().toString()
+        );
+    }
+
+    @Test
+    public void testTermParametersKey02() {
+        assertEquals(
+                "Value",
+                termParamBundle.resolveMessage(
+                        "key02",
+                        StringResultFactory.construct()
+                ).get().toString()
+        );
+    }
+
+    @Test
+    public void testTermParametersKey03() {
+        assertEquals(
+                "Value",
+                termParamBundle.resolveMessage(
+                        "key03",
+                        StringResultFactory.construct()
+                ).get().toString()
+        );
+    }
+
+    @Test
+    public void testTermParametersKey04() {
+        assertEquals(
+                "Value",
+                termParamBundle.resolveMessage(
+                        "key04",
                         StringResultFactory.construct()
                 ).get().toString()
         );
