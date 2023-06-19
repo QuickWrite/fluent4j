@@ -50,8 +50,8 @@ public class SparseEntriesTest {
                 """
                         Value
                         Continued
-                        
-                        
+                                                
+                                                
                         Over multiple
                         Lines""",
                 bundle.resolveMessage("key03", StringResultFactory.construct()).get().toString()

@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.container.ResourceBundleFactory;
 import net.quickwrite.fluent4j.result.ResultBuilder;
-import net.quickwrite.fluent4j.result.ResultBuilderFactory;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -35,14 +34,14 @@ public class WhitespaceTest {
         bundle.addResource(resource);
 
         assertEquals("""
-                first line
-                
-                
-                
-                
-                
-                
-                last line""",
+                        first line
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                        last line""",
                 bundle.resolveMessage("key", StringResultFactory.construct())
                         .get()
                         .toString()

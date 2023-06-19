@@ -26,7 +26,7 @@ public class MultilineValuesTest {
                 """
                         A multiline value
                         continued on the next line
-                        
+                                                
                         and also down here.""",
                 bundle.resolveMessage("key01",
                         StringResultFactory.construct()
@@ -62,7 +62,7 @@ public class MultilineValuesTest {
                 """
                         A multiline attribute value
                         continued on the next line
-                        
+                                                
                         and also down here.""",
                 bundle.resolveMessage("key03-attribute",
                         StringResultFactory.construct()
@@ -97,7 +97,7 @@ public class MultilineValuesTest {
         assertEquals(
                 """
                         A multiline value with non-standard
-                        
+                                                
                             indentation.""",
                 bundle.resolveMessage("key05",
                         StringResultFactory.construct()
