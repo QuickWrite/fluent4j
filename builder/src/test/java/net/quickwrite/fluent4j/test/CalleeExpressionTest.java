@@ -23,28 +23,25 @@ public class CalleeExpressionTest {
 
     static {
         final FluentResource<ResultBuilder> resource = getResourceFromResource("expressions/callee/callee_expressions.ftl");
-        // TODO: Replace with builder
-        final FluentResourceBundle<ResultBuilder> resourceBundle = new FluentResourceBundle<>(ULocale.ENGLISH);
 
-        resourceBundle.addResource(resource);
-        resourceBundle.addFunction(new FluentFunction<>() {
-            @Override
-            public String getIdentifier() {
-                return "FUNCTION";
-            }
+        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH)
+                .addResource(resource)
+                .addFunction(new FluentFunction<>() {
+                    @Override
+                    public String getIdentifier() {
+                        return "FUNCTION";
+                    }
 
-            @Override
-            public FluentPlaceable<ResultBuilder> parseFunction(
-                    final FluentScope<ResultBuilder> scope,
-                    final ArgumentList<ResultBuilder> argumentList
-            ) {
-                return new FluentTextElement<>(FUNCTION_RESULT);
-            }
-        });
+                    @Override
+                    public FluentPlaceable<ResultBuilder> parseFunction(
+                            final FluentScope<ResultBuilder> scope,
+                            final ArgumentList<ResultBuilder> argumentList
+                    ) {
+                        return new FluentTextElement<>(FUNCTION_RESULT);
+                    }
+                }).build();
 
-        bundle = resourceBundle;
-        bundle2 = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
-        bundle2.addResource(resource);
+        bundle2 = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 
     @Test

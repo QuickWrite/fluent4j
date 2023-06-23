@@ -9,63 +9,27 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessageElement;
 import net.quickwrite.fluent4j.impl.function.NumberFunction;
+import net.quickwrite.fluent4j.impl.parser.FluentParserGroup;
+import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.*;
 
 public class FluentResourceBundle<B extends ResultBuilder> implements FluentBundle<B> {
     private final ULocale locale;
-    private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry<B>>> entries;
+    private final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries;
 
     private final Map<String, FluentFunction<B>> functions;
 
-    @SuppressWarnings("unchecked")
-    public FluentResourceBundle(final ULocale locale) {
+    private FluentResourceBundle(
+            final ULocale locale,
+            final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries,
+            final Map<String, FluentFunction<B>> functions
+    ) {
         this.locale = locale;
-        this.entries = new HashMap<>();
+        this.entries = entries;
 
-        this.functions = new HashMap<>();
-        addFunction((FluentFunction<B>) NumberFunction.DEFAULT);
-    }
-
-    @Override
-    public void addResource(final FluentResource<B> resource) {
-        for (final FluentEntry<B> entry : resource.entries()) {
-            final Class<? extends FluentEntry> clazz = getClass(entry);
-
-            if (!entries.containsKey(clazz)) {
-                entries.put(clazz, new HashMap<>());
-            }
-
-            final Map<String, FluentEntry<B>> innerEntryMap = entries.get(clazz);
-
-            if (innerEntryMap.containsKey(entry.getIdentifier().getSimpleIdentifier())) {
-                throw new RuntimeException("Duplicate entries for key '" + entry.getIdentifier().getFullIdentifier() + "' in '" + clazz.getSimpleName() + "'");
-            }
-
-            innerEntryMap.put(entry.getIdentifier().getSimpleIdentifier(), entry);
-        }
-    }
-
-    @Override
-    public void addResourceOverriding(final FluentResource<B> resource) {
-        for (final FluentEntry<B> entry : resource.entries()) {
-            final Class<? extends FluentEntry> clazz = getClass(entry);
-
-            if (!entries.containsKey(clazz)) {
-                entries.put(clazz, new HashMap<>());
-            }
-
-            entries.get(clazz).put(entry.getIdentifier().getSimpleIdentifier(), entry);
-        }
-    }
-
-    private Class<? extends FluentEntry> getClass(final FluentEntry<B> entry) {
-        if (entry instanceof FluentMessage) {
-            return FluentMessage.class;
-        }
-
-        return entry.getClass();
+        this.functions = functions;
     }
 
     @Override
@@ -138,10 +102,6 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
         return this.locale;
     }
 
-    public void addFunction(final FluentFunction<B> function) {
-        functions.put(function.getIdentifier(), function);
-    }
-
     @Override
     public Optional<FluentFunction<B>> getFunction(final String key) {
         return Optional.ofNullable(this.functions.get(key));
@@ -150,5 +110,85 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     @Override
     public Set<FluentFunction<B>> getFunctions() {
         return new HashSet<>(this.functions.values());
+    }
+
+    public static <B extends ResultBuilder> FluentBundle.Builder<B> builder(final ULocale locale) {
+        return new FluentResourceBundle.FluentResourceBundleBuilder<>(locale);
+    }
+
+    private static class FluentResourceBundleBuilder<B extends ResultBuilder> implements FluentBundle.Builder<B> {
+        private final ULocale locale;
+        private final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries;
+        private final Map<String, FluentFunction<B>> functions;
+
+        public FluentResourceBundleBuilder(final ULocale locale) {
+            this.locale = locale;
+            this.entries = new HashMap<>();
+            this.functions = new HashMap<>();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Builder<B> addResource(final FluentResource<B> resource) {
+            for (final FluentEntry<B> entry : resource.entries()) {
+                final Class<? extends FluentEntry<?>> clazz = (Class<? extends FluentEntry<?>>) getClass(entry);
+
+                if (!entries.containsKey(clazz)) {
+                    entries.put(clazz, new HashMap<>());
+                }
+
+                entries.get(clazz).put(entry.getIdentifier().getSimpleIdentifier(), entry);
+            }
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Builder<B> addResourceNoDup(final FluentResource<B> resource) {
+            for (final FluentEntry<B> entry : resource.entries()) {
+                final Class<? extends FluentEntry<?>> clazz = (Class<? extends FluentEntry<?>>) getClass(entry);
+
+                if (!entries.containsKey(clazz)) {
+                    entries.put(clazz, new HashMap<>());
+                }
+
+                final Map<String, FluentEntry<B>> innerEntryMap = entries.get(clazz);
+
+                if (innerEntryMap.containsKey(entry.getIdentifier().getSimpleIdentifier())) {
+                    throw new RuntimeException("Duplicate entries for key '" + entry.getIdentifier().getFullIdentifier() + "' in '" + clazz.getSimpleName() + "'");
+                }
+
+                innerEntryMap.put(entry.getIdentifier().getSimpleIdentifier(), entry);
+            }
+
+            return this;
+        }
+
+        @Override
+        public Builder<B> addFunction(final FluentFunction<B> function) {
+            this.functions.put(function.getIdentifier(), function);
+
+            return this;
+        }
+
+        @Override
+        public Builder<B> addDefaultFunctions() {
+            this.addFunction(NumberFunction.getDefault());
+
+            return this;
+        }
+
+        @Override
+        public FluentBundle<B> build() {
+            return new FluentResourceBundle<>(this.locale, this.entries, this.functions);
+        }
+
+        private Class<? extends FluentEntry> getClass(final FluentEntry<B> entry) {
+            if (entry instanceof FluentMessage) {
+                return FluentMessage.class;
+            }
+
+            return entry.getClass();
+        }
     }
 }

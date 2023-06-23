@@ -2,8 +2,8 @@ package net.quickwrite.fluent4j.test;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
+import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.container.ResourceBundleFactory;
 import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
@@ -18,8 +18,7 @@ public class EmojiTest {
 
     static {
         final FluentResource<ResultBuilder> resource = getResourceFromResource("utf8/emoji.ftl");
-        bundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
-        bundle.addResource(resource);
+        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 
     @Test

@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.test;
 
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
-import net.quickwrite.fluent4j.container.ResourceBundleFactory;
+import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
@@ -16,9 +16,10 @@ public class ExpressionsTest {
     private static final FluentBundle<ResultBuilder> bundle;
 
     static {
-        bundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
-        bundle.addResource(getResourceFromResource("expressions/literal_expressions.ftl"));
-        bundle.addResource(getResourceFromResource("expressions/member_expressions.ftl"));
+        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH)
+                .addResource(getResourceFromResource("expressions/literal_expressions.ftl"))
+                .addResource(getResourceFromResource("expressions/member_expressions.ftl"))
+                .build();
     }
 
     @Test

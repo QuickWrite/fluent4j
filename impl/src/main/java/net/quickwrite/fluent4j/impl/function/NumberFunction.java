@@ -12,7 +12,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.math.BigDecimal;
 
 public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B> {
-    public static NumberFunction<?> DEFAULT = new NumberFunction<>();
+    private static NumberFunction<?> DEFAULT = new NumberFunction<>();
 
     @Override
     public String getIdentifier() {
@@ -54,6 +54,11 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
         );
 
         return numberLiteral;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <B extends ResultBuilder> NumberFunction<B> getDefault() {
+        return (NumberFunction<B>) DEFAULT;
     }
 
     private int getIntegerValue(final FluentPattern<B> argument, final FluentScope<B> scope, final int defaultValue) {
