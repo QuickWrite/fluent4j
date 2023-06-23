@@ -4,8 +4,8 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.ArgumentListBuilder;
 import net.quickwrite.fluent4j.container.FluentBundle;
+import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.container.ResourceBundleFactory;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
@@ -28,8 +28,7 @@ public class VariableExpressionsTest {
 
     static {
         final FluentResource<ResultBuilder> resource = getResourceFromResource("expressions/variables/variable_expressions.ftl");
-        bundle = ResourceBundleFactory.forLocale(ULocale.ENGLISH);
-        bundle.addResource(resource);
+        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 
     @Test
