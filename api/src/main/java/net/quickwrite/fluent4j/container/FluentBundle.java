@@ -4,17 +4,15 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.result.ResultBuilder;
+import net.quickwrite.fluent4j.util.Builder;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 public interface FluentBundle<B extends ResultBuilder> {
-    void addResource(final FluentResource<B> resource);
-
-    void addResourceOverriding(final FluentResource<B> resource);
-
     boolean hasMessage(final String key);
 
     Set<Map.Entry<String, FluentEntry<B>>> getMessages();
@@ -33,4 +31,14 @@ public interface FluentBundle<B extends ResultBuilder> {
     Optional<FluentFunction<B>> getFunction(final String key);
 
     Set<FluentFunction<B>> getFunctions();
+
+    interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<FluentBundle<B>> {
+        Builder<B> addResource(final FluentResource<B> resource);
+
+        Builder<B> addResourceNoDup(final FluentResource<B> resource);
+
+        Builder<B> addFunction(final FluentFunction<B> function);
+
+        Builder<B> addDefaultFunctions();
+    }
 }
