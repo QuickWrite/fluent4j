@@ -103,4 +103,36 @@ public class NumberFunctionTest {
                 bundleGerman.resolveMessage("key05", StringResultFactory.construct()).get().toString()
         );
     }
+
+    @Test
+    public void testKey06English() {
+        assertEquals(
+                "00001.50000",
+                bundleEnglish.resolveMessage("key06", StringResultFactory.construct()).get().toString()
+        );
+    }
+
+    @Test
+    public void testKey06German() {
+        assertEquals(
+                "00001,50000",
+                bundleGerman.resolveMessage("key06", StringResultFactory.construct()).get().toString()
+        );
+    }
+
+    @Test
+    public void testKey07English() {
+        assertEquals(
+                "00001.11",
+                bundleEnglish.resolveMessage("key07", StringResultFactory.construct()).get().toString()
+        );
+    }
+
+    @Test
+    public void testKey07German() {
+        assertEquals(
+                "00001,11",
+                bundleGerman.resolveMessage("key07", StringResultFactory.construct()).get().toString()
+        );
+    }
 }
