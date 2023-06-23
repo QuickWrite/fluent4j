@@ -27,7 +27,7 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
     @Override
     public FluentPattern<B> unwrap(final FluentScope<B> scope) {
         return scope.bundle().getFunction(this.identifier)
-                .orElseThrow(() -> FluentPatternException.getPlaceable(writer -> writer.append(this.identifier)))
+                .orElseThrow(() -> FluentPatternException.getPlaceable(writer -> writer.append(this.identifier).append("()")))
                 .parseFunction(scope, this.argumentList);
     }
 

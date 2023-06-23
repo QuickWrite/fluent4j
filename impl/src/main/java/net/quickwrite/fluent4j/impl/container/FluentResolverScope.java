@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class FluentResolverScope<B extends ResultBuilder> implements FluentScope<B> {
     private final FluentBundle<B> bundle;
-    private final Set<FluentIdentifier<?>> traversed;
+    private Set<FluentIdentifier<?>> traversed;
 
     private ArgumentList<B> argumentList;
 
@@ -40,6 +40,11 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     @Override
     public Set<FluentIdentifier<?>> traversed() {
         return this.traversed;
+    }
+
+    @Override
+    public void setTraversed(final Set<FluentIdentifier<?>> traversed) {
+        this.traversed = traversed;
     }
 
     @Override

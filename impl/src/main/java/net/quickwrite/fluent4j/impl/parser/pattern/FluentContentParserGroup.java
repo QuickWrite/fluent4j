@@ -71,25 +71,24 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
                 continue outer;
             }
 
-            if (iterator.character() == '\n') {
-                if (textStart != position[1]) {
-                    patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
-                } else if (isAfterNL) {
-                    patternList.add((FluentPattern<B>) NEWLINE_INTERMEDIATE);
-                }
-
+            if (iterator.character() != '\n') {
                 iterator.nextChar();
-                if (endChecker.apply(iterator)) {
-                    break;
-                }
-
-                textStart = 0;
-                isAfterNL = true;
-
                 continue;
             }
 
+            if (textStart != position[1]) {
+                patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
+            } else if (isAfterNL && patternList.size() != 0) {
+                patternList.add((FluentPattern<B>) NEWLINE_INTERMEDIATE);
+            }
+
             iterator.nextChar();
+            if (endChecker.apply(iterator)) {
+                break;
+            }
+
+            textStart = 0;
+            isAfterNL = true;
         }
 
         return patternList;
@@ -137,7 +136,12 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
                 break firstElementIf;
             }
 
-            builder.append(textElement.slice(textElement.getWhitespace()));
+            builder.append(
+                    textElement.slice(
+                            // If there was something before this just use the calculated whitespace
+                            textElement.isAfterNL() ? minWhitespace : textElement.getWhitespace()
+                    )
+            );
         }
 
         for (int i = start; i < patternList.size(); i++) {
@@ -158,14 +162,15 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
 
             final IntermediateTextElement<?> textElement = (IntermediateTextElement<?>) patternList.get(i);
 
-            if (textElement.isAfterNL()) {
-                builder.append('\n');
+            if (!textElement.isAfterNL()) {
+                builder.append(textElement.getContent());
 
-                builder.append(textElement.slice(minWhitespace));
                 continue;
             }
 
-            builder.append(textElement.getContent());
+            builder.append('\n');
+
+            builder.append(textElement.slice(minWhitespace));
         }
 
         removeTrailingWhitespace(builder);
@@ -184,7 +189,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
             }
         }
 
-        return -1;
+        return sequence.length();
     }
 
     private int skipLeadingNL(final List<FluentPattern<B>> patternList) {

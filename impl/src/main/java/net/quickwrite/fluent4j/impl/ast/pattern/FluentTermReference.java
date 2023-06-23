@@ -12,6 +12,7 @@ import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChec
 import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -24,6 +25,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
     public void resolve(final FluentScope<B> scope, final B builder) {
         final FluentScope<B> clonedScope = scope.clone();
         clonedScope.setArguments(argumentList);
+        clonedScope.setTraversed(new HashSet<>(scope.traversed()));
         unwrap(scope).resolve(clonedScope, builder);
     }
 
@@ -54,7 +56,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
         @Override
         public void resolve(final FluentScope<B> scope, final B builder) {
-            final FluentEntry.Attribute<B> attribute = getAttribute(scope);
+            final FluentEntry.Attribute<B> attribute = getAttribute(scope).orElseThrow(this::getException);
 
             attribute.resolve(scope, builder);
         }
@@ -65,13 +67,12 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
         }
 
         @SuppressWarnings("unchecked")
-        private FluentEntry.Attribute<B> getAttribute(final FluentScope<B> scope) {
-            // TODO: Don't just throw
+        private Optional<FluentEntry.Attribute<B>> getAttribute(final FluentScope<B> scope) {
             final Optional<FluentTermElement> termElement = scope.bundle()
                     .getEntry(identifier, FluentTermElement.class);
 
             if (termElement.isEmpty()) {
-                throw getException();
+                return Optional.empty();
             }
 
             final Optional<AttributeReference> attribute = termElement.get().getAttribute(attributeIdentifier);
@@ -80,7 +81,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
                 throw getException();
             }
 
-            return (FluentEntry.Attribute<B>) attribute.get();
+            return Optional.of((FluentEntry.Attribute<B>) attribute.get());
         }
 
         private FluentPatternException getException() {
@@ -91,13 +92,14 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
         @Override
         public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
-            final FluentEntry.Attribute<B> attribute = getAttribute(scope);
-            if (attribute.getPatterns().size() != 1) {
+            final Optional<FluentEntry.Attribute<B>> attribute = getAttribute(scope);
+
+            if (attribute.isEmpty() || attribute.get().getPatterns().size() != 1) {
                 // Returns null to jump to the default directly
                 return null;
             }
 
-            return new FluentCachedChecker<>(scope, attribute);
+            return new FluentCachedChecker<>(scope, attribute.get());
         }
     }
 }
