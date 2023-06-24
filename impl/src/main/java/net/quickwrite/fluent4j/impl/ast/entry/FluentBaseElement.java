@@ -21,8 +21,8 @@ public abstract class FluentBaseElement<I, B extends ResultBuilder> implements F
     @Override
     public void resolve(final FluentScope<B> scope, final B builder) {
         if(!scope.addTraversed(identifier)) {
-            // TODO: Better exception handling
-            throw new RuntimeException("Recursive element found: '" + identifier.getFullIdentifier() + "'");
+            builder.append("{???}");
+            return;
         }
 
         for (final FluentPattern<B> pattern : patterns) {

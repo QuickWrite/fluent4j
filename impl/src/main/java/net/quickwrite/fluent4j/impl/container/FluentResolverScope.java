@@ -43,11 +43,6 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     }
 
     @Override
-    public void setTraversed(final Set<FluentIdentifier<?>> traversed) {
-        this.traversed = traversed;
-    }
-
-    @Override
     public boolean addTraversed(final FluentIdentifier<?> key) {
         return this.traversed.add(key);
     }
@@ -70,7 +65,11 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     @Override
     public FluentScope<B> clone() {
         try {
-            return (FluentScope<B>) super.clone();
+            final FluentResolverScope<B> newScope = (FluentResolverScope<B>) super.clone();
+
+            newScope.traversed = new HashSet<>(traversed);
+
+            return newScope;
         } catch (final CloneNotSupportedException ignored) {
             // This should NEVER happen
 
