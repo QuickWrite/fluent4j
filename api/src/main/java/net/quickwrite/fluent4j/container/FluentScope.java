@@ -13,8 +13,6 @@ public interface FluentScope<B extends ResultBuilder> extends Cloneable {
 
     boolean addTraversed(final FluentIdentifier<?> key);
 
-    void setTraversed(final Set<FluentIdentifier<?>> traversed);
-
     ArgumentList<B> arguments();
 
     void setArguments(final ArgumentList<B> arguments);
