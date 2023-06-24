@@ -2,8 +2,11 @@
 ## is recursive
 recursive-message1 = { recursive-message1 }
 
-recursive-term1 = { -recursive-term1 }
--recursive-term1 = { -recursive-term1 }
+recursive-term1 = { -recursive-term }
+
+recursive-term2 = This is a recursive {-recursive-term}.
+
+-recursive-term = { -recursive-term }
 
 recursive-selector = { -recursive-selector }
 -recursive-selector = { -recursive-selector.test ->
