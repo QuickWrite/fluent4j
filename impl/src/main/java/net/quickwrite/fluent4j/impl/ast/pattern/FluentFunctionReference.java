@@ -21,11 +21,15 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
 
     @Override
     public void resolve(final FluentScope<B> scope, final B builder) {
-        unwrap(scope).resolve(scope, builder);
+        try {
+            unwrap(scope).resolve(scope, builder);
+        } catch (final FluentPatternException exception) {
+            exception.getDefaultDataWriter().write(builder);
+        }
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
         return scope.bundle().getFunction(this.identifier)
                 .orElseThrow(() -> FluentPatternException.getPlaceable(writer -> writer.append(this.identifier).append("()")))
                 .parseFunction(scope, this.argumentList);
@@ -33,7 +37,11 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
 
     @Override
     public String toSimpleString(final FluentScope<B> scope) {
-        return unwrap(scope).toSimpleString(scope);
+        try {
+            return unwrap(scope).toSimpleString(scope);
+        } catch (final FluentPatternException exception) {
+            return "{" + identifier + "()}";
+        }
     }
 
     @SuppressWarnings("unchecked")

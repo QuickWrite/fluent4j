@@ -2,7 +2,7 @@ package net.quickwrite.fluent4j.exception;
 
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-public class FluentPatternException extends RuntimeException {
+public class FluentPatternException extends Exception {
     private final DefaultDataWriter defaultDataWriter;
 
     protected FluentPatternException(final DefaultDataWriter defaultDataWriter) {

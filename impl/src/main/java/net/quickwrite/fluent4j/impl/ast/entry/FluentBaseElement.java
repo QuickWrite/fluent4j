@@ -26,11 +26,7 @@ public abstract class FluentBaseElement<I, B extends ResultBuilder> implements F
         }
 
         for (final FluentPattern<B> pattern : patterns) {
-            try {
-                pattern.resolve(scope, builder);
-            } catch (final FluentPatternException exception) {
-                exception.getDefaultDataWriter().write(builder);
-            }
+            pattern.resolve(scope, builder);
         }
     }
 }
