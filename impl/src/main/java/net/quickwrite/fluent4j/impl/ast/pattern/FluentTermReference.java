@@ -9,10 +9,9 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
-import net.quickwrite.fluent4j.impl.container.FluentResolverScope;
+import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -25,15 +24,19 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
     public void resolve(final FluentScope<B> scope, final B builder) {
         final FluentScope<B> clonedScope = scope.clone();
         clonedScope.setArguments(argumentList);
-        unwrap(scope).resolve(clonedScope, builder);
+        try {
+            unwrap(scope).resolve(clonedScope, builder);
+        } catch (final FluentPatternException exception) {
+            exception.getDataWriter().write(builder);
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
         final Optional<FluentTermElement> entry = scope.bundle().getEntry(identifier, FluentTermElement.class);
         if (entry.isEmpty()) {
-            throw FluentPatternException.getPlaceable(appender -> appender.append('-').append(identifier));
+            throw ErrorUtil.getPlaceablePatternException(appender -> appender.append('-').append(identifier));
         }
 
         return entry.get();
@@ -41,7 +44,11 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
     @Override
     public String toSimpleString(final FluentScope<B> scope) {
-        return unwrap(scope).toSimpleString(scope);
+        try {
+            return unwrap(scope).toSimpleString(scope);
+        } catch (final FluentPatternException e) {
+            return "{-" + identifier + "}";
+        }
     }
 
     public static class AttributeReference<B extends ResultBuilder> extends FluentTermReference<B> implements FluentPlaceable.CannotPlaceable, FluentSelect.Selectable<B> {
@@ -55,9 +62,13 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
         @Override
         public void resolve(final FluentScope<B> scope, final B builder) {
-            final FluentEntry.Attribute<B> attribute = getAttribute(scope).orElseThrow(this::getException);
+            final Optional<FluentEntry.Attribute<B>> attribute = getAttribute(scope);
+            if (attribute.isEmpty()) {
+                getException().getDataWriter().write(builder);
+                return;
+            }
 
-            attribute.resolve(scope, builder);
+            attribute.get().resolve(scope, builder);
         }
 
         @Override
@@ -77,14 +88,14 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
             final Optional<AttributeReference> attribute = termElement.get().getAttribute(attributeIdentifier);
 
             if (attribute.isEmpty()) {
-                throw getException();
+                return Optional.empty();
             }
 
             return Optional.of((FluentEntry.Attribute<B>) attribute.get());
         }
 
         private FluentPatternException getException() {
-            return FluentPatternException.getPlaceable(
+            return ErrorUtil.getPlaceablePatternException(
                     builder -> builder.append('-').append(identifier).append('.').append(attributeIdentifier)
             );
         }

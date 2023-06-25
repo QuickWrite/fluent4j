@@ -6,13 +6,15 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
+import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
 
 public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B> {
-    private static NumberFunction<?> DEFAULT = new NumberFunction<>();
+    private static final NumberFunction<?> DEFAULT = new NumberFunction<>();
 
     @Override
     public String getIdentifier() {
@@ -21,7 +23,12 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
 
     @Override
     public FluentPlaceable<B> parseFunction(final FluentScope<B> scope, final ArgumentList<B> argumentList) {
-        final FluentPattern<B> pattern = argumentList.getArgument(0).unwrap(scope);
+        final FluentPattern<B> pattern;
+        try {
+            pattern = argumentList.getArgument(0).unwrap(scope);
+        } catch (final FluentPatternException exception) {
+            return new FluentTextElement<>("{NUMBER()}");
+        }
 
         final FormattedNumberLiteral<B> numberLiteral;
         if (pattern instanceof FluentNumberLiteral) {
