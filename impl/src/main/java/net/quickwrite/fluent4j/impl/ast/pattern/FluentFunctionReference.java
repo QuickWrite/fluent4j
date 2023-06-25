@@ -8,6 +8,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
+import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
@@ -24,14 +25,14 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
         try {
             unwrap(scope).resolve(scope, builder);
         } catch (final FluentPatternException exception) {
-            exception.getDefaultDataWriter().write(builder);
+            exception.getDataWriter().write(builder);
         }
     }
 
     @Override
     public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
         return scope.bundle().getFunction(this.identifier)
-                .orElseThrow(() -> FluentPatternException.getPlaceable(writer -> writer.append(this.identifier).append("()")))
+                .orElseThrow(() -> ErrorUtil.getPlaceablePatternException(builder -> builder.append(this.identifier).append("()")))
                 .parseFunction(scope, this.argumentList);
     }
 

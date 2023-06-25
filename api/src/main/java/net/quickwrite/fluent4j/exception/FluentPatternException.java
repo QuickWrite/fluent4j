@@ -3,35 +3,22 @@ package net.quickwrite.fluent4j.exception;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public class FluentPatternException extends Exception {
-    private final DefaultDataWriter defaultDataWriter;
+    private final DataWriter<? extends ResultBuilder> dataWriter;
 
-    protected FluentPatternException(final DefaultDataWriter defaultDataWriter) {
-        this.defaultDataWriter = defaultDataWriter;
+    protected FluentPatternException(final DataWriter<? extends ResultBuilder> dataWriter) {
+        this.dataWriter = dataWriter;
     }
 
-    public static FluentPatternException getDefault(final DefaultDataWriter defaultDataWriter) {
-        return new FluentPatternException(defaultDataWriter);
+    public static <B extends ResultBuilder> FluentPatternException getDefault(final DataWriter<B> dataWriter) {
+        return new FluentPatternException(dataWriter);
     }
 
-    public static FluentPatternException getPlaceable(final PlaceableDataWriter placeableDataWriter) {
-        return getDefault(placeableDataWriter);
+    @SuppressWarnings("unchecked")
+    public <B extends ResultBuilder> DataWriter<B> getDataWriter() {
+        return (DataWriter<B>) dataWriter;
     }
 
-    public DefaultDataWriter getDefaultDataWriter() {
-        return defaultDataWriter;
-    }
-
-    public interface DefaultDataWriter {
-        void write(final ResultBuilder builder);
-    }
-
-    public interface PlaceableDataWriter extends DefaultDataWriter{
-        default void write(final ResultBuilder builder) {
-            builder.append('{');
-            writeDefault(builder);
-            builder.append('}');
-        }
-
-        void writeDefault(final ResultBuilder appendable);
+    public interface DataWriter<B extends ResultBuilder> {
+        void write(final B builder);
     }
 }

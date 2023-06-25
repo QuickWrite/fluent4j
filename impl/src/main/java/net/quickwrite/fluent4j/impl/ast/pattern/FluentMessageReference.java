@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
+import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
@@ -21,7 +22,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
         try {
             unwrap(scope).resolve(scope, builder);
         } catch (final FluentPatternException exception) {
-            exception.getDefaultDataWriter().write(builder);
+            exception.getDataWriter().write(builder);
         }
     }
 
@@ -29,7 +30,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
     public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
         return scope.bundle().getMessage(identifier)
                 .orElseThrow(
-                        () -> FluentPatternException.getPlaceable(appender -> appender.append(identifier))
+                        () -> ErrorUtil.getPlaceablePatternException(identifier)
                 );
     }
 
@@ -55,13 +56,13 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
         public void resolve(final FluentScope<B> scope, final B builder) {
             final Optional<FluentEntry<B>> message = scope.bundle().getMessage(identifier);
             if (message.isEmpty()) {
-                getException().getDefaultDataWriter().write(builder);
+                getException().getDataWriter().write(builder);
                 return;
             }
 
             final Optional<FluentEntry.Attribute<B>> attribute = message.get().getAttribute(attributeIdentifier);
             if (attribute.isEmpty()) {
-                getException().getDefaultDataWriter().write(builder);
+                getException().getDataWriter().write(builder);
                 return;
             }
 
@@ -69,7 +70,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
         }
 
         private FluentPatternException getException() {
-            return FluentPatternException.getPlaceable(
+            return ErrorUtil.getPlaceablePatternException(
                     appender -> appender.append(identifier).append('.').append(attributeIdentifier)
             );
         }

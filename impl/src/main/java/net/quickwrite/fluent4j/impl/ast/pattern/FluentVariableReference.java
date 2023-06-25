@@ -7,6 +7,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
+import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.function.Function;
@@ -24,7 +25,7 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
         try {
             pattern = unwrap(scope);
         } catch (final FluentPatternException exception) {
-            exception.getDefaultDataWriter().write(builder);
+            exception.getDataWriter().write(builder);
             return;
         }
 
@@ -36,8 +37,7 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
         final ArgumentList.NamedArgument<B> argument = scope.arguments().getArgument(identifier);
 
         if(argument == null) {
-            throw FluentPatternException
-                    .getPlaceable(appender -> appender.append('$').append(identifier));
+            throw ErrorUtil.getPlaceablePatternException(appender -> appender.append('$').append(identifier));
         }
 
         return argument;
