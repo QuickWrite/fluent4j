@@ -53,7 +53,7 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
         this.stringNumber = numberLiteral.stringNumber;
 
         this.number = numberLiteral.number;
-        this.formattedNumber = numberLiteral.formattedNumber;;
+        this.formattedNumber = numberLiteral.formattedNumber;
     }
 
     @Override
