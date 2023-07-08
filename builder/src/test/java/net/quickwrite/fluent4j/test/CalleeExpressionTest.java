@@ -5,6 +5,7 @@ import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.*;
+import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.impl.container.FluentResourceBundle;
@@ -103,9 +104,8 @@ public class CalleeExpressionTest {
 
     @Test
     public void testTermAttrPlaceableError() {
-        // TODO: Don't use RuntimeException
         assertThrows(
-                RuntimeException.class,
+                FluentBuilderException.class,
                 () -> getResourceFromResource("expressions/callee/term/callee_term_attr_placeable_error.ftl")
         );
     }

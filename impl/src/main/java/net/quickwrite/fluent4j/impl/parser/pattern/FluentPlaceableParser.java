@@ -68,18 +68,17 @@ public class FluentPlaceableParser<B extends ResultBuilder> implements Placeable
             return ParseResult.success(selectExpression.get());
         }
 
+        if (placeable instanceof FluentPlaceable.CannotPlaceable) {
+            throw new FluentBuilderException(
+                    "A " + ((FluentPlaceable.CannotPlaceable) placeable).getName() + " cannot be used as a placeable.",
+                    iterator
+            );
+        }
+
         ParserUtil.skipWhitespaceAndNL(iterator);
 
         if (iterator.character() != '}') {
             throw new FluentExpectedException('}', iterator);
-        }
-
-        if (placeable instanceof FluentPlaceable.CannotPlaceable) {
-            throw new RuntimeException(
-                    "A " +
-                    ((FluentPlaceable.CannotPlaceable) placeable).getName() +
-                    " cannot be used as a placeable."
-            );
         }
 
         iterator.nextChar();
