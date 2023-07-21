@@ -9,6 +9,18 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
+/**
+ * The raw interface for the parser that parses
+ * any type of Placeable and returns the correct implementation
+ * of that Placeable.
+ *
+ * <p>
+ *     So the Parser would parse {@code { 5 }} and would output
+ *     a NumberLiteral and if it would parse {@code { "Hello" }}
+ *     it would return a StringLiteral.
+ * </p>
+ * @param <B> The Builder that is being used to parse this resource
+ */
 public interface PlaceableParser<B extends ResultBuilder> extends FluentPatternParser<FluentPattern<B>, B> {
     Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator);
 
