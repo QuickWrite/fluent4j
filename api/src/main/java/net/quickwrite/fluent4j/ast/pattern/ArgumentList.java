@@ -36,7 +36,7 @@ public interface ArgumentList<B extends ResultBuilder> {
      */
     @SuppressWarnings("unchecked")
     static <B extends ResultBuilder> ArgumentList<B> empty() {
-        return (ArgumentList<B>) ImmutableArgumentList.SELF;
+        return (ArgumentList<B>) EmptyArgumentList.SELF;
     }
 
     /**
@@ -150,27 +150,27 @@ public interface ArgumentList<B extends ResultBuilder> {
     interface NamedArgument<B extends ResultBuilder> extends FluentPattern<B> {
 
     }
-}
 
-/**
- * The ImmutableArgumentList class represents an immutable empty ArgumentList.
- * It is used to provide an empty ArgumentList instance through the static empty() method in ArgumentList interface.
- *
- * @param <B> The type of ResultBuilder used by the ImmutableArgumentList
- */
-class ImmutableArgumentList<B extends ResultBuilder> implements ArgumentList<B> {
     /**
-     * An instance of ImmutableArgumentList to represent an empty ArgumentList.
+     * The EmptyArgumentList class represents an immutable empty ArgumentList.
+     * It is used to provide an empty ArgumentList instance through the static empty() method in ArgumentList interface.
+     *
+     * @param <B> The type of ResultBuilder used by the EmptyArgumentList
      */
-    public static final ImmutableArgumentList<? extends ResultBuilder> SELF = new ImmutableArgumentList<>();
+    class EmptyArgumentList<B extends ResultBuilder> implements ArgumentList<B> {
+        /**
+         * An instance of ImmutableArgumentList to represent an empty ArgumentList.
+         */
+        public static final EmptyArgumentList<? extends ResultBuilder> SELF = new EmptyArgumentList<>();
 
-    @Override
-    public NamedArgument<B> getArgument(final String name) {
-        return null;
-    }
+        @Override
+        public NamedArgument<B> getArgument(final String name) {
+            return null;
+        }
 
-    @Override
-    public FluentPattern<B> getArgument(final int index) {
-        return null;
+        @Override
+        public FluentPattern<B> getArgument(final int index) {
+            return null;
+        }
     }
 }
