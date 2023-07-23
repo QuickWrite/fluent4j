@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
@@ -61,7 +62,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
                 return;
             }
 
-            final Optional<FluentEntry.Attribute<B>> attribute = message.get().getAttribute(attributeIdentifier);
+            final Optional<FluentAttributeEntry.Attribute<B>> attribute = message.get().getAttribute(attributeIdentifier);
             if (attribute.isEmpty()) {
                 getException().getDataWriter().write(builder);
                 return;

@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
@@ -61,7 +61,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
         @Override
         public void resolve(final FluentScope<B> scope, final B builder) {
-            final Optional<FluentEntry.Attribute<B>> attribute = getAttribute(scope);
+            final Optional<FluentAttributeEntry.Attribute<B>> attribute = getAttribute(scope);
             if (attribute.isEmpty()) {
                 getException().getDataWriter().write(builder);
                 return;
@@ -75,7 +75,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
             return "Term Attribute";
         }
 
-        private Optional<FluentEntry.Attribute<B>> getAttribute(final FluentScope<B> scope) {
+        private Optional<FluentAttributeEntry.Attribute<B>> getAttribute(final FluentScope<B> scope) {
             final Optional<FluentTermElement<B>> termElement = scope.bundle()
                     .getEntry(identifier, FluentTermElement.class);
 
@@ -94,9 +94,9 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
 
         @Override
         public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
-            final Optional<FluentEntry.Attribute<B>> attribute = getAttribute(scope);
+            final Optional<FluentAttributeEntry.Attribute<B>> attribute = getAttribute(scope);
 
-            if (attribute.isEmpty() || attribute.get().getPatterns().size() != 1) {
+            if (attribute.isEmpty() || !attribute.get().isSelectable()) {
                 // Returns null to jump to the default directly
                 return null;
             }

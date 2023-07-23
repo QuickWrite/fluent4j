@@ -1,5 +1,6 @@
 package net.quickwrite.fluent4j.impl.ast.entry;
 
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
@@ -8,10 +9,14 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 
-public abstract class FluentEntryBase<B extends ResultBuilder> extends FluentBaseElement<String, B> implements FluentEntry<B> {
-    protected final List<FluentEntry.Attribute<B>> attributes;
+public abstract class FluentAttributeEntryBase<B extends ResultBuilder> extends FluentBaseElement<String, B> implements FluentAttributeEntry<B> {
+    protected final List<FluentAttributeEntry.Attribute<B>> attributes;
 
-    public FluentEntryBase(final FluentIdentifier<String> identifier, final List<FluentPattern<B>> patterns, final List<FluentEntry.Attribute<B>> attributes) {
+    public FluentAttributeEntryBase(
+            final FluentIdentifier<String> identifier,
+            final List<FluentPattern<B>> patterns,
+            final List<FluentAttributeEntry.Attribute<B>> attributes
+    ) {
         super(identifier, patterns);
 
         this.attributes = attributes;

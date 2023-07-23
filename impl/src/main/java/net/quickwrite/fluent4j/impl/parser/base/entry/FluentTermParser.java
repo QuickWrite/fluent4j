@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.impl.parser.base.entry;
 
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -19,7 +19,7 @@ public class FluentTermParser<B extends ResultBuilder> extends FluentEntryParser
     @Override
     protected FluentTermElement<B> getInstance(final String identifier,
                                                final List<FluentPattern<B>> patterns,
-                                               final List<FluentEntry.Attribute<B>> attributes
+                                               final List<FluentAttributeEntry.Attribute<B>> attributes
     ) {
         return new FluentTermElement<B>(identifier, patterns, attributes);
     }

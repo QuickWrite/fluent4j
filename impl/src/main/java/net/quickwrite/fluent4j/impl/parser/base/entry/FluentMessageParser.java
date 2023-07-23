@@ -1,6 +1,6 @@
 package net.quickwrite.fluent4j.impl.parser.base.entry;
 
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessageElement;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
@@ -19,7 +19,7 @@ public final class FluentMessageParser<B extends ResultBuilder> extends FluentEn
     @Override
     protected FluentMessageElement<B> getInstance(final String identifier,
                                                   final List<FluentPattern<B>> patterns,
-                                                  final List<FluentEntry.Attribute<B>> attributes
+                                                  final List<FluentAttributeEntry.Attribute<B>> attributes
     ) {
         return new FluentMessageElement<>(identifier, patterns, attributes);
     }

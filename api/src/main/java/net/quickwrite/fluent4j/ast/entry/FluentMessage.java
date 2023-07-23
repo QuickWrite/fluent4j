@@ -7,5 +7,5 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
  *
  * @param <B> The type of ResultBuilder used by the FluentMessage
  */
-public interface FluentMessage<B extends ResultBuilder> extends FluentEntry<B> {
+public interface FluentMessage<B extends ResultBuilder> extends FluentAttributeEntry<B> {
 }
