@@ -9,8 +9,6 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentMessageElement;
 import net.quickwrite.fluent4j.impl.function.NumberFunction;
-import net.quickwrite.fluent4j.impl.parser.FluentParserGroup;
-import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.*;
@@ -41,20 +39,20 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
 
     @SuppressWarnings("unchecked")
     @Override
-    public Set<Map.Entry<String, FluentEntry<B>>> getMessages() {
-        return getEntries(FluentMessage.class);
+    public Set<FluentMessage<B>> getMessages() {
+        return (Set<FluentMessage<B>>) getEntries(FluentMessage.class);
     }
 
     @Override
-    public Optional<FluentEntry<B>> getMessage(final String key) {
+    public Optional<FluentMessage<B>> getMessage(final String key) {
         final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(FluentMessage.class);
 
-        return entryMap.map(fluentEntryMap -> fluentEntryMap.get(key));
+        return entryMap.map(fluentEntryMap -> (FluentMessage<B>) fluentEntryMap.get(key));
     }
 
     @Override
     public Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder) {
-        final Optional<FluentEntry<B>> message = getMessage(key);
+        final Optional<FluentMessage<B>> message = getMessage(key);
 
         if (message.isEmpty()) {
             return Optional.empty();
@@ -67,7 +65,7 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
 
     @Override
     public Optional<B> resolveMessage(final String key, final B builder) {
-        final Optional<FluentEntry<B>> message = getMessage(key);
+        final Optional<FluentMessage<B>> message = getMessage(key);
 
         if (message.isEmpty()) {
             return Optional.empty();
@@ -79,10 +77,80 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     }
 
     @Override
-    public <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz) {
+    public <T extends FluentEntry<B>> Set<T> getEntries(final Class<T> clazz) {
         final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
 
-        return entryMap.map(Map::entrySet).orElseGet(Set::of);
+        if (entryMap.isEmpty()) {
+            return Set.of();
+        }
+
+        return new Set<>() {
+            private final Collection<FluentEntry<B>> entries = entryMap.get().values();
+
+            @Override
+            public int size() {
+                return entries.size();
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return entries.isEmpty();
+            }
+
+            @Override
+            public boolean contains(final Object o) {
+                return entries.contains(o);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public Iterator<T> iterator() {
+                return (Iterator<T>) entries.iterator();
+            }
+
+            @Override
+            public Object[] toArray() {
+                return entries.toArray();
+            }
+
+            @Override
+            public <T1> T1[] toArray(final T1[] a) {
+                return entries.toArray(a);
+            }
+
+            @Override
+            public boolean add(final T bFluentEntry) {
+                return false;
+            }
+
+            @Override
+            public boolean remove(final Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(final Collection<?> c) {
+                return entries.containsAll(c);
+            }
+
+            @Override
+            public boolean addAll(final Collection<? extends T> c) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(final Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(final Collection<?> c) {
+                return false;
+            }
+
+            @Override
+            public void clear() {}
+        };
     }
 
     @SuppressWarnings("unchecked")

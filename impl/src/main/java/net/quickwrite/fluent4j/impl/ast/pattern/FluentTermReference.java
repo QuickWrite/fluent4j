@@ -31,10 +31,9 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
-        final Optional<FluentTermElement> entry = scope.bundle().getEntry(identifier, FluentTermElement.class);
+        final Optional<FluentTermElement<B>> entry = scope.bundle().getEntry(identifier, FluentTermElement.class);
         if (entry.isEmpty()) {
             throw ErrorUtil.getPlaceablePatternException(appender -> appender.append('-').append(identifier));
         }
@@ -76,22 +75,15 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
             return "Term Attribute";
         }
 
-        @SuppressWarnings("unchecked")
         private Optional<FluentEntry.Attribute<B>> getAttribute(final FluentScope<B> scope) {
-            final Optional<FluentTermElement> termElement = scope.bundle()
+            final Optional<FluentTermElement<B>> termElement = scope.bundle()
                     .getEntry(identifier, FluentTermElement.class);
 
             if (termElement.isEmpty()) {
                 return Optional.empty();
             }
 
-            final Optional<AttributeReference> attribute = termElement.get().getAttribute(attributeIdentifier);
-
-            if (attribute.isEmpty()) {
-                return Optional.empty();
-            }
-
-            return Optional.of((FluentEntry.Attribute<B>) attribute.get());
+            return termElement.get().getAttribute(attributeIdentifier);
         }
 
         private FluentPatternException getException() {

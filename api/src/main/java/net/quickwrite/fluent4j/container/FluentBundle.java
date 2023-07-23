@@ -3,10 +3,10 @@ package net.quickwrite.fluent4j.container;
 import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,12 +29,11 @@ public interface FluentBundle<B extends ResultBuilder> {
     boolean hasMessage(final String key);
 
     /**
-     * Returns a set of all messages with their
-     * respective key.
+     * Returns a set of all messages
      *
      * @return All messages
      */
-    Set<Map.Entry<String, FluentEntry<B>>> getMessages();
+    Set<FluentMessage<B>> getMessages();
 
     /**
      * Returns the message with the given key.
@@ -45,7 +44,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @param key The key of the message
      * @return The message or an empty optional
      */
-    Optional<FluentEntry<B>> getMessage(final String key);
+    Optional<FluentMessage<B>> getMessage(final String key);
 
     /**
      * Returns the Builder itself that was being given
@@ -72,6 +71,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @return The builder or an empty optional
      */
     Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder);
+
     /**
      * Returns the Builder itself that was being given
      * which was being run over the entire tree of the
@@ -102,14 +102,13 @@ public interface FluentBundle<B extends ResultBuilder> {
     Optional<B> resolveMessage(final String key, final B builder);
 
     /**
-     * Returns all the entries of the specified class
-     * type as a set with their respective key.
+     * Returns all the entries of the specified class.
      *
      * @param clazz The class that the entries should have
      * @return All elements
      * @param <T> The generic type that class can have
      */
-    <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz);
+    <T extends FluentEntry<B>> Set<T> getEntries(final Class<T> clazz);
 
     /**
      * Returns a single entry with the specific key

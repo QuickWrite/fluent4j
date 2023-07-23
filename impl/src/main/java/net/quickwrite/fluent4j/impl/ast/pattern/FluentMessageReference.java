@@ -2,6 +2,7 @@ package net.quickwrite.fluent4j.impl.ast.pattern;
 
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
@@ -54,7 +55,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
 
         @Override
         public void resolve(final FluentScope<B> scope, final B builder) {
-            final Optional<FluentEntry<B>> message = scope.bundle().getMessage(identifier);
+            final Optional<FluentMessage<B>> message = scope.bundle().getMessage(identifier);
             if (message.isEmpty()) {
                 getException().getDataWriter().write(builder);
                 return;
