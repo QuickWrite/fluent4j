@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 public abstract class FluentEntryParser<T extends FluentAttributeEntryBase<B>, B extends ResultBuilder> implements FluentElementParser<T> {
     private final FluentContentParser<B> patternParser;
-    private static final Function<ContentIterator, Boolean> END_CHECKER = iterator -> {
+    private static final FluentContentParser.EndChecker END_CHECKER = iterator -> {
         if (!Character.isWhitespace(iterator.character())) {
             return true;
         }

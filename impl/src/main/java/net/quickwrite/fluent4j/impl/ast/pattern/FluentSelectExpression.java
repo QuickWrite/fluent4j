@@ -10,7 +10,6 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 public class FluentSelectExpression<B extends ResultBuilder> implements FluentSelect<B>, FluentPlaceable<B> {
     private final FluentSelect.Selectable<B> selectable;
@@ -28,7 +27,7 @@ public class FluentSelectExpression<B extends ResultBuilder> implements FluentSe
 
     @Override
     public void resolve(final FluentScope<B> scope, final B builder) {
-        final Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker = selectable.selectChecker(scope);
+        final Selectable.SelectChecker<B> selectChecker = selectable.selectChecker(scope);
 
         if(selectChecker == null) {
             defaultVariant.resolve(scope, builder);
@@ -36,7 +35,7 @@ public class FluentSelectExpression<B extends ResultBuilder> implements FluentSe
         }
 
         for (final FluentSelect.FluentVariant<B> variant : variantList) {
-            if (!selectChecker.apply(variant)) {
+            if (!selectChecker.check(variant)) {
                 continue;
             }
 

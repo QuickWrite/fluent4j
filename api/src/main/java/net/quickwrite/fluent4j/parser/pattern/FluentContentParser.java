@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * A list of parsers for parsing the contents of a message
@@ -23,7 +22,16 @@ public interface FluentContentParser<B extends ResultBuilder> {
      *                   state of the iterator is defined as the end
      * @return A list of the parsed {@link FluentPattern}
      */
-    List<FluentPattern<B>> parse(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker);
+    List<FluentPattern<B>> parse(final ContentIterator iterator, final EndChecker endChecker);
+
+    /**
+     * The functional interface that determines if the
+     * current state of the iterator is the end of the content
+     * that should be parsed.
+     */
+    interface EndChecker {
+        boolean check(final ContentIterator iterator);
+    }
 
     interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<FluentContentParser<B>> {
         Builder<B> addParser(final FluentPatternParser<? extends FluentPattern<B>, B> parser);

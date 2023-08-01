@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
-import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -29,14 +28,14 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
     }
 
     @Override
-    public List<FluentPattern<B>> parse(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
+    public List<FluentPattern<B>> parse(final ContentIterator iterator, final EndChecker endChecker) {
         final List<FluentPattern<B>> patternList = generatePatternList(iterator, endChecker);
 
         return sanitizePatternList(patternList);
     }
 
     @SuppressWarnings("unchecked")
-    private List<FluentPattern<B>> generatePatternList(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
+    private List<FluentPattern<B>> generatePatternList(final ContentIterator iterator, final EndChecker endChecker) {
         final List<FluentPattern<B>> patternList = new ArrayList<>();
 
         int textStart = iterator.position()[1];
@@ -83,7 +82,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
             }
 
             iterator.nextChar();
-            if (endChecker.apply(iterator)) {
+            if (endChecker.check(iterator)) {
                 break;
             }
 

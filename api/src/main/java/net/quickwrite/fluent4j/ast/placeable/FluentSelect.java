@@ -6,8 +6,6 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.function.Function;
-
 /**
  * The Select Placeable that can be used as a Placeable in
  * Fluent Documents.
@@ -47,12 +45,22 @@ public interface FluentSelect<B extends ResultBuilder> extends FluentPlaceable<B
      */
     interface Selectable<B extends ResultBuilder> {
         /**
-         * Returns a function that can be used to check if
+         * Returns a select checker that can be used to check if
          * a Variant is the correct variant.
          *
          * @param scope The scope that the select checker should use
          * @return A SelectChecker that can be used for the different variants
          */
-        Function<FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope);
+        SelectChecker<B> selectChecker(final FluentScope<B> scope);
+
+        /**
+         * The checker to check if the current
+         * variant is the correct variant in the list.
+         *
+         * @param <B> The type of ResultBuilder associated with the resolvable entity.
+         */
+        interface SelectChecker<B extends ResultBuilder> {
+            boolean check(final FluentVariant<B> variant);
+        }
     }
 }

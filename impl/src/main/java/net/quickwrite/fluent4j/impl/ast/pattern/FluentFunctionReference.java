@@ -12,7 +12,6 @@ import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public class FluentFunctionReference<B extends ResultBuilder> extends ParameterizedLiteral<String, B> implements FluentSelect.Selectable<B> {
 
@@ -47,7 +46,7 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
 
     @SuppressWarnings("unchecked")
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
         final Optional<FluentFunction<B>> function = scope.bundle().getFunction(this.identifier);
 
         if (function.isEmpty()) {

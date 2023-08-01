@@ -13,7 +13,6 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
-import java.util.function.Function;
 
 public class FluentNumberLiteral<B extends ResultBuilder> implements
         FluentPlaceable<B>,
@@ -74,7 +73,7 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
         return (variant) -> {
             final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = variant.getIdentifier().getSimpleIdentifier();
 

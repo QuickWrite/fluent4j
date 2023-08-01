@@ -13,7 +13,6 @@ import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 public class FluentTermReference<B extends ResultBuilder> extends ParameterizedLiteral<String, B> {
     public FluentTermReference(final String identifier, final ArgumentList<B> argumentList) {
@@ -93,7 +92,7 @@ public class FluentTermReference<B extends ResultBuilder> extends ParameterizedL
         }
 
         @Override
-        public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
+        public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
             final Optional<FluentAttributeEntry.Attribute<B>> attribute = getAttribute(scope);
 
             if (attribute.isEmpty() || !attribute.get().isSelectable()) {

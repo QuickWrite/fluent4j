@@ -7,9 +7,6 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
-import java.util.function.Function;
-
 public class FluentTextElement<B extends ResultBuilder> implements
         FluentPattern<B>,
         FluentPlaceable<B>,
@@ -39,7 +36,7 @@ public class FluentTextElement<B extends ResultBuilder> implements
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
         return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }
