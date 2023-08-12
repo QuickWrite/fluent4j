@@ -8,8 +8,8 @@ import net.quickwrite.fluent4j.parser.pattern.ContentParserBuilder;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 
 public enum DefaultElementParser implements FluentElementParser.FluentElementParserList {
-    WHITESPACE_SKIPPER(new WhitespaceSkipper()),
-    COMMENT_SKIPPER(new CommentSkipper()),
+    WHITESPACE_SKIPPER(WhitespaceSkipper.DEFAULT),
+    COMMENT_SKIPPER(CommentSkipper.DEFAULT),
     TERM_PARSER(getTermParser(ContentParserBuilder.defaultParser())),
     MESSAGE_PARSER(getMessageParser(ContentParserBuilder.defaultParser()));
 

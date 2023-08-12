@@ -7,6 +7,8 @@ import net.quickwrite.fluent4j.parser.base.FluentElementParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
 
 public final class CommentSkipper implements FluentElementParser<FluentEntry> {
+    public static CommentSkipper DEFAULT = new CommentSkipper();
+
     @Override
     public ParseResult<FluentEntry> parse(final ContentIterator content) {
         for (int i = 0; i < 3; i++) {

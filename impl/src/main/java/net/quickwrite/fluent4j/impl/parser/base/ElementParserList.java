@@ -13,8 +13,8 @@ public final class ElementParserList {
 
     @SuppressWarnings("unchecked")
     public static final FluentElementParser<FluentEntry>
-            WHITESPACE_SKIPPER = new WhitespaceSkipper(),
-            COMMENT_SKIPPER = new CommentSkipper(),
+            WHITESPACE_SKIPPER = WhitespaceSkipper.DEFAULT,
+            COMMENT_SKIPPER = CommentSkipper.DEFAULT,
             TERM_PARSER = (FluentElementParser<FluentEntry>) getTermParser(FluentContentParserGroup.DEFAULT),
             MESSAGE_PARSER = (FluentElementParser<FluentEntry>) getMessageParser(FluentContentParserGroup.DEFAULT);
 
