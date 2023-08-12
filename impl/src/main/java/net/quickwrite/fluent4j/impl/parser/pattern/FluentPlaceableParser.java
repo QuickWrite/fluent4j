@@ -21,15 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluentPlaceableParser implements PlaceableParser {
-    public static final PlaceableParser DEFAULT = builder()
-            .addParser(PlaceableParserList.STRING)
-            .addParser(PlaceableParserList.NUMBER)
-            .addParser(PlaceableParserList.FUNCTION)
-            .addParser(PlaceableParserList.TERM_REFERENCE)
-            .addParser(PlaceableParserList.MESSAGE_REFERENCE)
-            .addParser(PlaceableParserList.VARIABLE)
-            .build();
-
     private final List<PlaceableExpressionParser> parserList;
 
     private FluentPlaceableParser(final List<PlaceableExpressionParser> parserList) {

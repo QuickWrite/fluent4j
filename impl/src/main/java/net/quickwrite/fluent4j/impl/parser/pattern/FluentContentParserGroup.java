@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FluentContentParserGroup implements FluentContentParser {
-    public static final FluentContentParser DEFAULT = builder()
-                .addParser(FluentPlaceableParser.DEFAULT)
-                .build();
-
     private final List<FluentPatternParser<? extends FluentPattern>> parserList;
 
     private static final IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);

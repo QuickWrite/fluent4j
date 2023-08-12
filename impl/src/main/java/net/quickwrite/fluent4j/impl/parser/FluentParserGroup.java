@@ -4,7 +4,6 @@ import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.impl.container.FluentEntryResource;
-import net.quickwrite.fluent4j.impl.parser.base.ElementParserList;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.base.FluentElementParser;
@@ -14,13 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FluentParserGroup implements ResourceParser {
-    public static ResourceParser DEFAULT = builder()
-            .addParser(ElementParserList.WHITESPACE_SKIPPER)
-            .addParser(ElementParserList.COMMENT_SKIPPER)
-            .addParser(ElementParserList.TERM_PARSER)
-            .addParser(ElementParserList.MESSAGE_PARSER)
-            .build();
-
     private final List<FluentElementParser<? extends FluentEntry>> parserList;
 
     private FluentParserGroup(final List<FluentElementParser<? extends FluentEntry>> parserList) {

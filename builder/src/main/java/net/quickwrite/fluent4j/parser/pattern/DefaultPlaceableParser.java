@@ -5,12 +5,12 @@ import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParse
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public enum DefaultPlaceableParser implements PlaceableExpressionParser.PlaceableExpressionParserList {
-    STRING(PlaceableParserList.STRING),
-    NUMBER(PlaceableParserList.NUMBER),
-    FUNCTION(PlaceableParserList.FUNCTION),
-    TERM_REFERENCE(PlaceableParserList.TERM_REFERENCE),
-    MESSAGE_REFERENCE(PlaceableParserList.MESSAGE_REFERENCE),
-    VARIABLE(PlaceableParserList.VARIABLE);
+    STRING(new FluentStringLiteralParser()),
+    NUMBER(new FluentNumberLiteralParser()),
+    FUNCTION(new FluentFunctionParser()),
+    TERM_REFERENCE(new FluentTermReferenceParser()),
+    MESSAGE_REFERENCE(new FluentMessageReferenceParser()),
+    VARIABLE(new FluentVariableReferenceParser());
 
     private final PlaceableExpressionParser parser;
 
