@@ -4,7 +4,6 @@ import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.iterator.StringIteratorFactory;
 import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.ResourceParserBuilder;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,13 +12,13 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 public class FluentUtils {
-    public static <B extends ResultBuilder> FluentResource<B> getResourceFromString(final String string) {
-        final ResourceParser<B> resourceParser = ResourceParserBuilder.defaultParser();
+    public static FluentResource getResourceFromString(final String string) {
+        final ResourceParser resourceParser = ResourceParserBuilder.defaultParser();
 
         return resourceParser.parse(StringIteratorFactory.from(string));
     }
 
-    public static <B extends ResultBuilder> FluentResource<B> getResourceFromResource(final String string) {
+    public static FluentResource getResourceFromResource(final String string) {
         try {
             return getResourceFromString(getResourceFileAsString(string));
         } catch (final IOException exception) {

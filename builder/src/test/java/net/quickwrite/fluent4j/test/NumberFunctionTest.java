@@ -4,7 +4,6 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -12,11 +11,11 @@ import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResou
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NumberFunctionTest {
-    private static final FluentBundle<ResultBuilder> bundleEnglish;
-    private static final FluentBundle<ResultBuilder> bundleGerman;
+    private static final FluentBundle bundleEnglish;
+    private static final FluentBundle bundleGerman;
 
     static {
-        final FluentResource<ResultBuilder> resource = getResourceFromResource("functions/number_function.ftl");
+        final FluentResource resource = getResourceFromResource("functions/number_function.ftl");
 
         bundleEnglish = FluentBundleBuilder.builder(ULocale.ENGLISH).addDefaultFunctions().addResource(resource).build();
 

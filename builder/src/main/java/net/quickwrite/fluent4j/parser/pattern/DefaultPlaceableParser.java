@@ -12,14 +12,13 @@ public enum DefaultPlaceableParser implements PlaceableExpressionParser.Placeabl
     MESSAGE_REFERENCE(PlaceableParserList.MESSAGE_REFERENCE),
     VARIABLE(PlaceableParserList.VARIABLE);
 
-    private final PlaceableExpressionParser<? extends ResultBuilder> parser;
+    private final PlaceableExpressionParser parser;
 
-    DefaultPlaceableParser(final PlaceableExpressionParser<? extends ResultBuilder> parser) {
+    DefaultPlaceableParser(final PlaceableExpressionParser parser) {
         this.parser = parser;
     }
 
-    @SuppressWarnings("unchecked")
-    public <B extends ResultBuilder> PlaceableExpressionParser<B> getParser() {
-        return (PlaceableExpressionParser<B>) parser;
+    public PlaceableExpressionParser getParser() {
+        return parser;
     }
 }

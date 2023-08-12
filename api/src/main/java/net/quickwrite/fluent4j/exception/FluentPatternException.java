@@ -3,22 +3,21 @@ package net.quickwrite.fluent4j.exception;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public class FluentPatternException extends Exception {
-    private final DataWriter<? extends ResultBuilder> dataWriter;
+    private final DataWriter dataWriter;
 
-    protected FluentPatternException(final DataWriter<? extends ResultBuilder> dataWriter) {
+    protected FluentPatternException(final DataWriter dataWriter) {
         this.dataWriter = dataWriter;
     }
 
-    public static <B extends ResultBuilder> FluentPatternException getDefault(final DataWriter<B> dataWriter) {
+    public static FluentPatternException getDefault(final DataWriter dataWriter) {
         return new FluentPatternException(dataWriter);
     }
 
-    @SuppressWarnings("unchecked")
-    public <B extends ResultBuilder> DataWriter<B> getDataWriter() {
-        return (DataWriter<B>) dataWriter;
+    public DataWriter getDataWriter() {
+        return dataWriter;
     }
 
-    public interface DataWriter<B extends ResultBuilder> {
-        void write(final B builder);
+    public interface DataWriter {
+        void write(final ResultBuilder builder);
     }
 }

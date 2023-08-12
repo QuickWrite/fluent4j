@@ -1,16 +1,14 @@
 package net.quickwrite.fluent4j.impl.ast.entry;
 
 import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Objects;
 
-public class FluentAttribute<B extends ResultBuilder> extends FluentBaseElement<String, B> implements FluentAttributeEntry.Attribute<B> {
-    public FluentAttribute(final String identifier, final List<FluentPattern<B>> patterns) {
+public class FluentAttribute extends FluentBaseElement<String> implements FluentAttributeEntry.Attribute {
+    public FluentAttribute(final String identifier, final List<FluentPattern> patterns) {
         super(new FluentAttributeIdentifier(identifier), patterns);
     }
 

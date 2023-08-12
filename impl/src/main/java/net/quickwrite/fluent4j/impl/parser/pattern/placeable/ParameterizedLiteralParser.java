@@ -15,9 +15,9 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> implements PlaceableExpressionParser<B> {
+public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> implements PlaceableExpressionParser {
     @Override
-    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<I> identifier = parseIdentifier(iterator);
         if (identifier.isEmpty()) {
             return Optional.empty();
@@ -36,13 +36,13 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
         iterator.nextChar();
         ParserUtil.skipWhitespace(iterator);
 
-        final ArgumentList<B> attributes = getAttributes(iterator, placeableParser);
+        final ArgumentList attributes = getAttributes(iterator, placeableParser);
 
         return Optional.of(getInstance(identifier.get(), attributes));
     }
 
-    private ArgumentList<B> getAttributes(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
-        final ArgumentList.PlenaryBuilder<B> attributesContainer = FluentArgumentContainer.plenaryBuilder();
+    private ArgumentList getAttributes(final ContentIterator iterator, final PlaceableParser placeableParser) {
+        final ArgumentList.PlenaryBuilder attributesContainer = FluentArgumentContainer.plenaryBuilder();
 
         boolean isFirst = true;
         boolean isNamed = false;
@@ -59,10 +59,10 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
 
             final int[] position = iterator.position();
 
-            final Optional<Map.Entry<String, ArgumentList.NamedArgument<B>>> namedEntry = tryParseNamed(iterator, placeableParser);
+            final Optional<Map.Entry<String, ArgumentList.NamedArgument>> namedEntry = tryParseNamed(iterator, placeableParser);
 
             if (namedEntry.isPresent()) {
-                final Map.Entry<String, ArgumentList.NamedArgument<B>> entry = namedEntry.get();
+                final Map.Entry<String, ArgumentList.NamedArgument> entry = namedEntry.get();
 
                 attributesContainer.add(entry.getKey(), entry.getValue());
 
@@ -76,7 +76,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
 
             iterator.setPosition(position);
 
-            final Optional<FluentPlaceable<B>> placeable = placeableParser.parsePlaceable(iterator);
+            final Optional<FluentPlaceable> placeable = placeableParser.parsePlaceable(iterator);
             if (placeable.isEmpty()) {
                 throw new FluentBuilderException("Expected an inline expression", iterator);
             }
@@ -91,7 +91,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
     }
 
     @SuppressWarnings("unchecked")
-    private Optional<Map.Entry<String, ArgumentList.NamedArgument<B>>> tryParseNamed(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    private Optional<Map.Entry<String, ArgumentList.NamedArgument>> tryParseNamed(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<String> identifier = ParserUtil.getIdentifier(iterator);
 
         if (identifier.isEmpty()) {
@@ -107,7 +107,7 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
         iterator.nextChar();
         ParserUtil.skipWhitespaceAndNL(iterator);
 
-        final Optional<FluentPlaceable<B>> placeable = placeableParser.parsePlaceable(iterator);
+        final Optional<FluentPlaceable> placeable = placeableParser.parsePlaceable(iterator);
         if (placeable.isEmpty()) {
             throw new FluentBuilderException("Expected attribute", iterator);
         }
@@ -116,14 +116,14 @@ public abstract class ParameterizedLiteralParser<I, B extends ResultBuilder> imp
             throw new FluentBuilderException("Expected literal", iterator);
         }
 
-        return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), (ArgumentList.NamedArgument<B>) placeable.get()));
+        return Optional.of(new AbstractMap.SimpleImmutableEntry<>(identifier.get(), (ArgumentList.NamedArgument) placeable.get()));
     }
 
     protected abstract Optional<I> parseIdentifier(final ContentIterator iterator);
 
-    protected abstract FluentPlaceable<B> getInstance(final I identifier);
+    protected abstract FluentPlaceable getInstance(final I identifier);
 
-    protected abstract FluentPlaceable<B> getInstance(final I identifier, final ArgumentList<B> argumentList);
+    protected abstract FluentPlaceable getInstance(final I identifier, final ArgumentList argumentList);
 
     protected abstract boolean optionalArguments();
 }

@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.impl.ast.entry;
 
 import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
@@ -9,13 +8,13 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 
-public abstract class FluentAttributeEntryBase<B extends ResultBuilder> extends FluentBaseElement<String, B> implements FluentAttributeEntry<B> {
-    protected final List<FluentAttributeEntry.Attribute<B>> attributes;
+public abstract class FluentAttributeEntryBase extends FluentBaseElement<String> implements FluentAttributeEntry {
+    protected final List<FluentAttributeEntry.Attribute> attributes;
 
     public FluentAttributeEntryBase(
             final FluentIdentifier<String> identifier,
-            final List<FluentPattern<B>> patterns,
-            final List<FluentAttributeEntry.Attribute<B>> attributes
+            final List<FluentPattern> patterns,
+            final List<FluentAttributeEntry.Attribute> attributes
     ) {
         super(identifier, patterns);
 
@@ -28,18 +27,18 @@ public abstract class FluentAttributeEntryBase<B extends ResultBuilder> extends 
     }
 
     @Override
-    public List<Attribute<B>> getAttributes() {
+    public List<Attribute> getAttributes() {
         return this.attributes;
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
-        final B builder = scope.builder().getSimpleBuilder();
+    public String toSimpleString(final FluentScope scope) {
+        final ResultBuilder builder = scope.builder().getSimpleBuilder();
 
         this.resolve(scope, builder);
 

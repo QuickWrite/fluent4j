@@ -5,7 +5,6 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class LeadingDotsTest {
-    private static final FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle bundle;
 
     static {
-        final FluentResource<ResultBuilder> resource = getResourceFromResource("dots/leading_dots.ftl");
+        final FluentResource resource = getResourceFromResource("dots/leading_dots.ftl");
         bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 

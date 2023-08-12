@@ -8,7 +8,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentFunctionParser<B extends ResultBuilder> extends ParameterizedLiteralParser<String, B> {
+public class FluentFunctionParser extends ParameterizedLiteralParser<String, ResultBuilder> {
     @Override
     protected Optional<String> parseIdentifier(final ContentIterator iterator) {
         if (!isFunctionIdentifierStart(iterator.character())) {
@@ -34,13 +34,13 @@ public class FluentFunctionParser<B extends ResultBuilder> extends Parameterized
     }
 
     @Override
-    protected FluentPlaceable<B> getInstance(final String identifier) {
+    protected FluentPlaceable getInstance(final String identifier) {
         return getInstance(identifier, ArgumentList.empty());
     }
 
     @Override
-    protected FluentPlaceable<B> getInstance(final String identifier, final ArgumentList<B> argumentList) {
-        return new FluentFunctionReference<>(identifier, argumentList);
+    protected FluentPlaceable getInstance(final String identifier, final ArgumentList argumentList) {
+        return new FluentFunctionReference(identifier, argumentList);
     }
 
     @Override

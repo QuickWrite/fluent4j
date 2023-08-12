@@ -4,7 +4,6 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ExpressionsTest {
-    private static final FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle bundle;
 
     static {
         bundle = FluentBundleBuilder.builder(ULocale.ENGLISH)

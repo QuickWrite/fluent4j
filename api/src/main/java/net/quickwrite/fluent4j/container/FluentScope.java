@@ -10,17 +10,15 @@ import java.util.Set;
  * This interface is a basic container for the resolving process
  * of the messages which stores basic information that can be useful
  * for the different components.
- *
- * @param <B> The type of ResultBuilder associated with the resolvable entities.
  */
-public interface FluentScope<B extends ResultBuilder> extends Cloneable {
+public interface FluentScope extends Cloneable {
 
     /**
      * Retrieves the FluentBundle associated with this FluentScope.
      *
      * @return The FluentBundle associated with this FluentScope
      */
-    FluentBundle<B> bundle();
+    FluentBundle bundle();
 
     /**
      * Retrieves the set of traversed FluentIdentifiers.
@@ -46,14 +44,14 @@ public interface FluentScope<B extends ResultBuilder> extends Cloneable {
      *
      * @return The ArgumentList
      */
-    ArgumentList<B> arguments();
+    ArgumentList arguments();
 
     /**
      * Sets the ArgumentList.
      *
      * @param arguments The ArgumentList to set
      */
-    void setArguments(final ArgumentList<B> arguments);
+    void setArguments(final ArgumentList arguments);
 
     /**
      * Returns the builder that is being used to build the resolved
@@ -61,12 +59,12 @@ public interface FluentScope<B extends ResultBuilder> extends Cloneable {
      *
      * @return The ResultBuilder associated with this FluentScope
      */
-    B builder();
+    ResultBuilder builder();
 
     /**
      * Creates and returns a clone of this FluentScope.
      *
      * @return A clone of this FluentScope
      */
-    FluentScope<B> clone();
+    FluentScope clone();
 }

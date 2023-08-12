@@ -13,16 +13,16 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.*;
 
-public class FluentResourceBundle<B extends ResultBuilder> implements FluentBundle<B> {
+public class FluentResourceBundle implements FluentBundle {
     private final ULocale locale;
-    private final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries;
+    private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
 
-    private final Map<String, FluentFunction<B>> functions;
+    private final Map<String, FluentFunction> functions;
 
     private FluentResourceBundle(
             final ULocale locale,
-            final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries,
-            final Map<String, FluentFunction<B>> functions
+            final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries,
+            final Map<String, FluentFunction> functions
     ) {
         this.locale = locale;
         this.entries = entries;
@@ -32,60 +32,60 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
 
     @Override
     public boolean hasMessage(final String key) {
-        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(FluentMessageElement.class);
+        final Optional<Map<String, FluentEntry>> entryMap = getEntryMap(FluentMessageElement.class);
 
         return entryMap.map(fluentEntryMap -> fluentEntryMap.containsKey(key)).orElse(false);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Set<FluentMessage<B>> getMessages() {
-        return (Set<FluentMessage<B>>) getEntries(FluentMessage.class);
+    public Set<FluentMessage> getMessages() {
+        return (Set<FluentMessage>) getEntries(FluentMessage.class);
     }
 
     @Override
-    public Optional<FluentMessage<B>> getMessage(final String key) {
-        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(FluentMessage.class);
+    public Optional<FluentMessage> getMessage(final String key) {
+        final Optional<Map<String, FluentEntry>> entryMap = getEntryMap(FluentMessage.class);
 
-        return entryMap.map(fluentEntryMap -> (FluentMessage<B>) fluentEntryMap.get(key));
+        return entryMap.map(fluentEntryMap -> (FluentMessage) fluentEntryMap.get(key));
     }
 
     @Override
-    public Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder) {
-        final Optional<FluentMessage<B>> message = getMessage(key);
+    public Optional<ResultBuilder> resolveMessage(final String key, final ArgumentList argumentList, final ResultBuilder builder) {
+        final Optional<FluentMessage> message = getMessage(key);
 
         if (message.isEmpty()) {
             return Optional.empty();
         }
 
-        message.get().resolve(new FluentResolverScope<>(this, argumentList, builder), builder);
+        message.get().resolve(new FluentResolverScope(this, argumentList, builder), builder);
 
         return Optional.of(builder);
     }
 
     @Override
-    public Optional<B> resolveMessage(final String key, final B builder) {
-        final Optional<FluentMessage<B>> message = getMessage(key);
+    public Optional<ResultBuilder> resolveMessage(final String key, final ResultBuilder builder) {
+        final Optional<FluentMessage> message = getMessage(key);
 
         if (message.isEmpty()) {
             return Optional.empty();
         }
 
-        message.get().resolve(new FluentResolverScope<>(this, ArgumentList.empty(), builder), builder);
+        message.get().resolve(new FluentResolverScope(this, ArgumentList.empty(), builder), builder);
 
         return Optional.of(builder);
     }
 
     @Override
-    public <T extends FluentEntry<B>> Set<T> getEntries(final Class<T> clazz) {
-        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
+    public <T extends FluentEntry> Set<T> getEntries(final Class<T> clazz) {
+        final Optional<Map<String, FluentEntry>> entryMap = getEntryMap(clazz);
 
         if (entryMap.isEmpty()) {
             return Set.of();
         }
 
         return new Set<>() {
-            private final Collection<FluentEntry<B>> entries = entryMap.get().values();
+            private final Collection<FluentEntry> entries = entryMap.get().values();
 
             @Override
             public int size() {
@@ -155,13 +155,13 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends FluentEntry<B>> Optional<T> getEntry(final String key, final Class<T> clazz) {
-        final Optional<Map<String, FluentEntry<B>>> entryMap = getEntryMap(clazz);
+    public <T extends FluentEntry> Optional<T> getEntry(final String key, final Class<T> clazz) {
+        final Optional<Map<String, FluentEntry>> entryMap = getEntryMap(clazz);
 
         return entryMap.map(fluentEntryMap -> (T) fluentEntryMap.get(key));
     }
 
-    private <T> Optional<Map<String, FluentEntry<B>>> getEntryMap(final Class<T> clazz) {
+    private <T> Optional<Map<String, FluentEntry>> getEntryMap(final Class<T> clazz) {
         return Optional.ofNullable(this.entries.get(clazz));
     }
 
@@ -171,23 +171,23 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
     }
 
     @Override
-    public Optional<FluentFunction<B>> getFunction(final String key) {
+    public Optional<FluentFunction> getFunction(final String key) {
         return Optional.ofNullable(this.functions.get(key));
     }
 
     @Override
-    public Set<FluentFunction<B>> getFunctions() {
+    public Set<FluentFunction> getFunctions() {
         return new HashSet<>(this.functions.values());
     }
 
-    public static <B extends ResultBuilder> FluentBundle.Builder<B> builder(final ULocale locale) {
-        return new FluentResourceBundle.FluentResourceBundleBuilder<>(locale);
+    public static FluentBundle.Builder builder(final ULocale locale) {
+        return new FluentResourceBundle.FluentResourceBundleBuilder(locale);
     }
 
-    private static class FluentResourceBundleBuilder<B extends ResultBuilder> implements FluentBundle.Builder<B> {
+    private static class FluentResourceBundleBuilder implements FluentBundle.Builder {
         private final ULocale locale;
-        private final Map<Class<? extends FluentEntry<?>>, Map<String, FluentEntry<B>>> entries;
-        private final Map<String, FluentFunction<B>> functions;
+        private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
+        private final Map<String, FluentFunction> functions;
 
         public FluentResourceBundleBuilder(final ULocale locale) {
             this.locale = locale;
@@ -195,11 +195,10 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
             this.functions = new HashMap<>();
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        public Builder<B> addResource(final FluentResource<B> resource) {
-            for (final FluentEntry<B> entry : resource.entries()) {
-                final Class<? extends FluentEntry<?>> clazz = (Class<? extends FluentEntry<?>>) getClass(entry);
+        public Builder addResource(final FluentResource resource) {
+            for (final FluentEntry entry : resource.entries()) {
+                final Class<? extends FluentEntry> clazz = getClass(entry);
 
                 if (!entries.containsKey(clazz)) {
                     entries.put(clazz, new HashMap<>());
@@ -210,17 +209,16 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
             return this;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        public Builder<B> addResourceNoDup(final FluentResource<B> resource) {
-            for (final FluentEntry<B> entry : resource.entries()) {
-                final Class<? extends FluentEntry<?>> clazz = (Class<? extends FluentEntry<?>>) getClass(entry);
+        public Builder addResourceNoDup(final FluentResource resource) {
+            for (final FluentEntry entry : resource.entries()) {
+                final Class<? extends FluentEntry> clazz = getClass(entry);
 
                 if (!entries.containsKey(clazz)) {
                     entries.put(clazz, new HashMap<>());
                 }
 
-                final Map<String, FluentEntry<B>> innerEntryMap = entries.get(clazz);
+                final Map<String, FluentEntry> innerEntryMap = entries.get(clazz);
 
                 if (innerEntryMap.containsKey(entry.getIdentifier().getSimpleIdentifier())) {
                     throw new RuntimeException("Duplicate entries for key '" + entry.getIdentifier().getFullIdentifier() + "' in '" + clazz.getSimpleName() + "'");
@@ -233,25 +231,25 @@ public class FluentResourceBundle<B extends ResultBuilder> implements FluentBund
         }
 
         @Override
-        public Builder<B> addFunction(final FluentFunction<B> function) {
+        public Builder addFunction(final FluentFunction function) {
             this.functions.put(function.getIdentifier(), function);
 
             return this;
         }
 
         @Override
-        public Builder<B> addDefaultFunctions() {
+        public Builder addDefaultFunctions() {
             this.addFunction(NumberFunction.getDefault());
 
             return this;
         }
 
         @Override
-        public FluentBundle<B> build() {
-            return new FluentResourceBundle<>(this.locale, this.entries, this.functions);
+        public FluentBundle build() {
+            return new FluentResourceBundle(this.locale, this.entries, this.functions);
         }
 
-        private Class<? extends FluentEntry> getClass(final FluentEntry<B> entry) {
+        private Class<? extends FluentEntry> getClass(final FluentEntry entry) {
             if (entry instanceof FluentMessage) {
                 return FluentMessage.class;
             }

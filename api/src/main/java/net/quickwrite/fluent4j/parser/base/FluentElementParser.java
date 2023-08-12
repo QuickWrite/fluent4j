@@ -24,6 +24,6 @@ public interface FluentElementParser<T> extends FluentParser<ParseResult<T>> {
      * to simplify the building step of the parser.
      */
     interface FluentElementParserList {
-        <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getParser();
+        FluentElementParser<? extends FluentEntry> getParser();
     }
 }

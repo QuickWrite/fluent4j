@@ -14,11 +14,11 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
 
-public class FluentNumberLiteral<B extends ResultBuilder> implements
-        FluentPlaceable<B>,
-        ArgumentList.NamedArgument<B>,
-        FluentSelect.Selectable<B>,
-        FluentSelect.FluentVariant.FluentVariantKey<B>
+public class FluentNumberLiteral implements
+        FluentPlaceable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey
 {
     protected final String stringNumber;
     protected final BigDecimal number;
@@ -48,7 +48,7 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
         this(new BigDecimal(Double.toString(number)));
     }
 
-    public FluentNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
+    public FluentNumberLiteral(final FluentNumberLiteral numberLiteral) {
         this.stringNumber = numberLiteral.stringNumber;
 
         this.number = numberLiteral.number;
@@ -56,29 +56,29 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         final String formattedNumber = NumberFormatter.withLocale(scope.bundle().getLocale()).format(number).toString();
 
         builder.append(formattedNumber);
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         return this.stringNumber;
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker selectChecker(final FluentScope scope) {
         return (variant) -> {
-            final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = variant.getIdentifier().getSimpleIdentifier();
+            final FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
 
             if (variantKey instanceof FluentNumberLiteral) {
-                return ((FluentNumberLiteral<B>) variantKey).number.compareTo(number) == 0;
+                return ((FluentNumberLiteral) variantKey).number.compareTo(number) == 0;
             }
 
             final String identifier = variantKey.toSimpleString(scope);

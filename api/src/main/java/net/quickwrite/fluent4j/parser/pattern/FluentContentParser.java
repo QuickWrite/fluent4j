@@ -2,16 +2,13 @@ package net.quickwrite.fluent4j.parser.pattern;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 
 /**
  * A list of parsers for parsing the contents of a message
- *
- * @param <B> The Builder that is being used to parse this resource
  */
-public interface FluentContentParser<B extends ResultBuilder> {
+public interface FluentContentParser {
     /**
      * Parses the content of an element into a list of {@link FluentPattern}
      * until it reaches the end of the input determined either by the
@@ -22,7 +19,7 @@ public interface FluentContentParser<B extends ResultBuilder> {
      *                   state of the iterator is defined as the end
      * @return A list of the parsed {@link FluentPattern}
      */
-    List<FluentPattern<B>> parse(final ContentIterator iterator, final EndChecker endChecker);
+    List<FluentPattern> parse(final ContentIterator iterator, final EndChecker endChecker);
 
     /**
      * The functional interface that determines if the
@@ -33,7 +30,7 @@ public interface FluentContentParser<B extends ResultBuilder> {
         boolean check(final ContentIterator iterator);
     }
 
-    interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<FluentContentParser<B>> {
-        Builder<B> addParser(final FluentPatternParser<? extends FluentPattern<B>, B> parser);
+    interface Builder extends net.quickwrite.fluent4j.util.Builder<FluentContentParser> {
+        Builder addParser(final FluentPatternParser<? extends FluentPattern> parser);
     }
 }

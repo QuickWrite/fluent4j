@@ -4,7 +4,6 @@ import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -12,10 +11,10 @@ import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResou
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnyCharTest {
-    private static final FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle bundle;
 
     static {
-        final FluentResource<ResultBuilder> resource = getResourceFromResource("utf8/any_char.ftl");
+        final FluentResource resource = getResourceFromResource("utf8/any_char.ftl");
         bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 

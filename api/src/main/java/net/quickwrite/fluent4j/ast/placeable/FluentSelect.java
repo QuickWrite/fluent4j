@@ -21,29 +21,23 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
  *         }
  *     </pre>
  * </p>
- *
- * @param <B> The scope that the Select Placeable should use
  */
-public interface FluentSelect<B extends ResultBuilder> extends FluentPlaceable<B> {
+public interface FluentSelect extends FluentPlaceable {
     /**
      * A single variant of the Select Placeable
-     *
-     * @param <B> The scope that the variant should use
      */
-    interface FluentVariant<B extends ResultBuilder> extends FluentResolvable<B> {
-        FluentIdentifier<FluentVariantKey<B>> getIdentifier();
+    interface FluentVariant extends FluentResolvable {
+        FluentIdentifier<FluentVariantKey> getIdentifier();
 
-        interface FluentVariantKey<B extends ResultBuilder> extends FluentPattern<B> {
+        interface FluentVariantKey extends FluentPattern {
         }
     }
 
     /**
      * Defines if the element is selectable and how it should
      * react to the different values.
-     *
-     * @param <B> The type of ResultBuilder associated with the resolvable entity.
      */
-    interface Selectable<B extends ResultBuilder> {
+    interface Selectable {
         /**
          * Returns a select checker that can be used to check if
          * a Variant is the correct variant.
@@ -51,16 +45,14 @@ public interface FluentSelect<B extends ResultBuilder> extends FluentPlaceable<B
          * @param scope The scope that the select checker should use
          * @return A SelectChecker that can be used for the different variants
          */
-        SelectChecker<B> selectChecker(final FluentScope<B> scope);
+        SelectChecker selectChecker(final FluentScope scope);
 
         /**
          * The checker to check if the current
          * variant is the correct variant in the list.
-         *
-         * @param <B> The type of ResultBuilder associated with the resolvable entity.
          */
-        interface SelectChecker<B extends ResultBuilder> {
-            boolean check(final FluentVariant<B> variant);
+        interface SelectChecker {
+            boolean check(final FluentVariant variant);
         }
     }
 }

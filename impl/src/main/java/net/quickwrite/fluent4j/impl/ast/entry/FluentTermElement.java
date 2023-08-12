@@ -4,13 +4,12 @@ import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Objects;
 
-public final class FluentTermElement<B extends ResultBuilder> extends FluentAttributeEntryBase<B> implements FluentEntry<B> {
-    public FluentTermElement(final String identifier, final List<FluentPattern<B>> patterns, final List<FluentAttributeEntry.Attribute<B>> attributes) {
+public final class FluentTermElement extends FluentAttributeEntryBase implements FluentEntry {
+    public FluentTermElement(final String identifier, final List<FluentPattern> patterns, final List<FluentAttributeEntry.Attribute> attributes) {
         super(new FluentTermIdentifier(identifier), patterns, attributes);
     }
 

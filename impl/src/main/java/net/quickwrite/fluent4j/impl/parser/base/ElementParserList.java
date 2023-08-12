@@ -12,21 +12,21 @@ public final class ElementParserList {
     private ElementParserList() {}
 
     @SuppressWarnings("unchecked")
-    public static final FluentElementParser<FluentEntry<ResultBuilder>>
-            WHITESPACE_SKIPPER = new WhitespaceSkipper<>(),
-            COMMENT_SKIPPER = new CommentSkipper<>(),
-            TERM_PARSER = (FluentElementParser<FluentEntry<ResultBuilder>>) getTermParser(FluentContentParserGroup.DEFAULT),
-            MESSAGE_PARSER = (FluentElementParser<FluentEntry<ResultBuilder>>) getMessageParser(FluentContentParserGroup.DEFAULT);
+    public static final FluentElementParser<FluentEntry>
+            WHITESPACE_SKIPPER = new WhitespaceSkipper(),
+            COMMENT_SKIPPER = new CommentSkipper(),
+            TERM_PARSER = (FluentElementParser<FluentEntry>) getTermParser(FluentContentParserGroup.DEFAULT),
+            MESSAGE_PARSER = (FluentElementParser<FluentEntry>) getMessageParser(FluentContentParserGroup.DEFAULT);
 
-    public static <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getTermParser(
-            final FluentContentParser<B> contentParser
+    public static FluentElementParser<? extends FluentEntry> getTermParser(
+            final FluentContentParser contentParser
     ) {
-        return new FluentTermParser<>(contentParser);
+        return new FluentTermParser(contentParser);
     }
 
-    public static <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getMessageParser(
-            final FluentContentParser<B> contentParser
+    public static FluentElementParser<? extends FluentEntry> getMessageParser(
+            final FluentContentParser contentParser
     ) {
-        return new FluentMessageParser<>(contentParser);
+        return new FluentMessageParser(contentParser);
     }
 }

@@ -5,11 +5,10 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentNumberLiteralParser<B extends ResultBuilder> implements PlaceableExpressionParser<B> {
+public class FluentNumberLiteralParser implements PlaceableExpressionParser {
     public static Optional<String> parseNumberLiteral(final ContentIterator iterator) {
         final int start = iterator.position()[1];
         
@@ -37,7 +36,7 @@ public class FluentNumberLiteralParser<B extends ResultBuilder> implements Place
     }
 
     @Override
-    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         final Optional<String> number = parseNumberLiteral(iterator);
 
         return number.map(FluentNumberLiteral::new);

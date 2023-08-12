@@ -1,7 +1,6 @@
 package net.quickwrite.fluent4j.ast.placeable;
 
 import net.quickwrite.fluent4j.ast.FluentPattern;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 /**
  * The specific interface fot a placeable.
@@ -13,9 +12,8 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
  *        placeable = { $var }
  *     </pre>
  * </p>
- * @param <B> The scope that the placeable should use
  */
-public interface FluentPlaceable<B extends ResultBuilder> extends FluentPattern<B> {
+public interface FluentPlaceable extends FluentPattern {
     /**
      * A specific interface that is being used to define that
      * this element should behave like a placeable but shouldn't

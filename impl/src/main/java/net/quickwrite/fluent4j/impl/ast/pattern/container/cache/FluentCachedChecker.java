@@ -8,12 +8,12 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.util.AbstractMap;
 import java.util.Map;
 
-public class FluentCachedChecker<B extends ResultBuilder> implements FluentSelect.Selectable.SelectChecker<B> {
-    private final Map.Entry<FluentScope<B>, String> resolveCache;
-    private final FluentScope<B> scope;
+public class FluentCachedChecker implements FluentSelect.Selectable.SelectChecker {
+    private final Map.Entry<FluentScope, String> resolveCache;
+    private final FluentScope scope;
 
-    public FluentCachedChecker(final FluentScope<B> scope, final FluentResolvable<B> argument) {
-        final B builder = scope.builder().getSimpleBuilder();
+    public FluentCachedChecker(final FluentScope scope, final FluentResolvable argument) {
+        final ResultBuilder builder = scope.builder().getSimpleBuilder();
 
         argument.resolve(scope, builder);
 
@@ -22,7 +22,7 @@ public class FluentCachedChecker<B extends ResultBuilder> implements FluentSelec
     }
 
     @Override
-    public boolean check(final FluentSelect.FluentVariant<B> variant) {
+    public boolean check(final FluentSelect.FluentVariant variant) {
         return this.resolveCache.getValue().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }

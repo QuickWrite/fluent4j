@@ -13,8 +13,8 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
 
-public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B> {
-    private static final NumberFunction<?> DEFAULT = new NumberFunction<>();
+public class NumberFunction implements FluentFunction {
+    private static final NumberFunction DEFAULT = new NumberFunction();
 
     @Override
     public String getIdentifier() {
@@ -22,22 +22,22 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
     }
 
     @Override
-    public FluentPlaceable<B> parseFunction(final FluentScope<B> scope, final ArgumentList<B> argumentList) {
-        final FluentPattern<B> pattern;
+    public FluentPlaceable parseFunction(final FluentScope scope, final ArgumentList argumentList) {
+        final FluentPattern pattern;
         try {
             pattern = argumentList.getArgument(0).unwrap(scope);
         } catch (final FluentPatternException exception) {
-            return new FluentTextElement<>("{NUMBER()}");
+            return new FluentTextElement("{NUMBER()}");
         }
 
-        final FormattedNumberLiteral<B> numberLiteral;
+        final FormattedNumberLiteral numberLiteral;
         if (pattern instanceof FluentNumberLiteral) {
-            numberLiteral = new FormattedNumberLiteral<>((FluentNumberLiteral<B>) pattern);
+            numberLiteral = new FormattedNumberLiteral((FluentNumberLiteral) pattern);
         } else {
-            numberLiteral = new FormattedNumberLiteral<>(pattern.toSimpleString(scope));
+            numberLiteral = new FormattedNumberLiteral(pattern.toSimpleString(scope));
         }
 
-        final FluentPattern<B> useGrouping = argumentList.getArgument("useGrouping");
+        final FluentPattern useGrouping = argumentList.getArgument("useGrouping");
         if (useGrouping != null) {
             numberLiteral.useGrouping = useGrouping.toSimpleString(scope).toUpperCase();
         }
@@ -63,12 +63,11 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
         return numberLiteral;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <B extends ResultBuilder> NumberFunction<B> getDefault() {
-        return (NumberFunction<B>) DEFAULT;
+    public static NumberFunction getDefault() {
+        return DEFAULT;
     }
 
-    private int getIntegerValue(final FluentPattern<B> argument, final FluentScope<B> scope, final int defaultValue) {
+    private int getIntegerValue(final FluentPattern argument, final FluentScope scope, final int defaultValue) {
         if (argument != null) {
             try {
                 return Integer.parseInt(argument.toSimpleString(scope));
@@ -80,7 +79,7 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
         return defaultValue;
     }
 
-    private static class FormattedNumberLiteral<B extends ResultBuilder> extends FluentNumberLiteral<B> {
+    private static class FormattedNumberLiteral extends FluentNumberLiteral {
         private String useGrouping = "OFF";
         private int minimumFractionDigits;
         private int maximumFractionDigits;
@@ -94,12 +93,12 @@ public class NumberFunction<B extends ResultBuilder> implements FluentFunction<B
             super(number);
         }
 
-        public FormattedNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
+        public FormattedNumberLiteral(final FluentNumberLiteral numberLiteral) {
             super(numberLiteral);
         }
 
         @Override
-        public void resolve(final FluentScope<B> scope, final B builder) {
+        public void resolve(final FluentScope scope, final ResultBuilder builder) {
             LocalizedNumberFormatter numberFormatter = NumberFormatter.with().locale(scope.bundle().getLocale()).precision(Precision.minMaxFraction(minimumFractionDigits, maximumFractionDigits))
                     .integerWidth(IntegerWidth.zeroFillTo(minimumIntegerDigits));
 

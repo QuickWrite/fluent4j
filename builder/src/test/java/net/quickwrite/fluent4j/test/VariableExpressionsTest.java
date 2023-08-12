@@ -7,7 +7,6 @@ import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
@@ -16,18 +15,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class VariableExpressionsTest {
-    private static final FluentBundle<ResultBuilder> bundle;
+    private static final FluentBundle bundle;
 
-    private static final ArgumentList<ResultBuilder> arguments_string = ArgumentListBuilder.builder()
+    private static final ArgumentList arguments_string = ArgumentListBuilder.builder()
             .add("var", "String")
             .build();
 
-    private static final ArgumentList<ResultBuilder> arguments_number = ArgumentListBuilder.builder()
+    private static final ArgumentList arguments_number = ArgumentListBuilder.builder()
             .add("var", 42)
             .build();
 
     static {
-        final FluentResource<ResultBuilder> resource = getResourceFromResource("expressions/variables/variable_expressions.ftl");
+        final FluentResource resource = getResourceFromResource("expressions/variables/variable_expressions.ftl");
         bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
     }
 

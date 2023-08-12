@@ -2,12 +2,11 @@ package net.quickwrite.fluent4j.ast.entry;
 
 import net.quickwrite.fluent4j.ast.FluentResolvable;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface FluentAttributeEntry<B extends ResultBuilder> extends FluentEntry<B> {
+public interface FluentAttributeEntry extends FluentEntry {
     /**
      * Returns a list of attributes that this entry has.
      *
@@ -18,7 +17,7 @@ public interface FluentAttributeEntry<B extends ResultBuilder> extends FluentEnt
      *
      * @return A list of attributes
      */
-    List<FluentAttributeEntry.Attribute<B>> getAttributes();
+    List<FluentAttributeEntry.Attribute> getAttributes();
 
     /**
      * Returns the specific attribute with the given
@@ -36,8 +35,8 @@ public interface FluentAttributeEntry<B extends ResultBuilder> extends FluentEnt
      * @param identifier The identifier of the attribute
      * @return The attribute
      */
-    default Optional<FluentAttributeEntry.Attribute<B>> getAttribute(final String identifier) {
-        for (final FluentAttributeEntry.Attribute<B> attribute : getAttributes()) {
+    default Optional<FluentAttributeEntry.Attribute> getAttribute(final String identifier) {
+        for (final FluentAttributeEntry.Attribute attribute : getAttributes()) {
             if(attribute.getIdentifier().getSimpleIdentifier().equals(identifier)) {
                 return Optional.of(attribute);
             }
@@ -48,10 +47,8 @@ public interface FluentAttributeEntry<B extends ResultBuilder> extends FluentEnt
 
     /**
      * A single attribute of the FluentEntry.
-     *
-     * @param <B> The type of ResultBuilder used by the Attribute
      */
-    interface Attribute<B extends ResultBuilder> extends FluentResolvable<B> {
+    interface Attribute extends FluentResolvable {
         /**
          * Returns the identifier of the attribute
          *

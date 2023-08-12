@@ -6,33 +6,31 @@ import net.quickwrite.fluent4j.impl.parser.base.ElementParserList;
 import net.quickwrite.fluent4j.impl.parser.base.WhitespaceSkipper;
 import net.quickwrite.fluent4j.parser.pattern.ContentParserBuilder;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public enum DefaultElementParser implements FluentElementParser.FluentElementParserList {
-    WHITESPACE_SKIPPER(new WhitespaceSkipper<>()),
-    COMMENT_SKIPPER(new CommentSkipper<>()),
+    WHITESPACE_SKIPPER(new WhitespaceSkipper()),
+    COMMENT_SKIPPER(new CommentSkipper()),
     TERM_PARSER(getTermParser(ContentParserBuilder.defaultParser())),
     MESSAGE_PARSER(getMessageParser(ContentParserBuilder.defaultParser()));
 
-    private final FluentElementParser<? extends FluentEntry<? extends ResultBuilder>> parser;
+    private final FluentElementParser<? extends FluentEntry> parser;
 
-    DefaultElementParser(final FluentElementParser<? extends FluentEntry<? extends ResultBuilder>> parser) {
+    DefaultElementParser(final FluentElementParser<? extends FluentEntry> parser) {
         this.parser = parser;
     }
 
-    @SuppressWarnings("unchecked")
-    public <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getParser() {
-        return (FluentElementParser<? extends FluentEntry<B>>) parser;
+    public FluentElementParser<? extends FluentEntry> getParser() {
+        return parser;
     }
 
-    public static <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getTermParser(
-            final FluentContentParser<B> contentParser
+    public static FluentElementParser<? extends FluentEntry> getTermParser(
+            final FluentContentParser contentParser
     ) {
         return ElementParserList.getTermParser(contentParser);
     }
 
-    public static <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getMessageParser(
-            final FluentContentParser<B> contentParser
+    public static FluentElementParser<? extends FluentEntry> getMessageParser(
+            final FluentContentParser contentParser
     ) {
         return ElementParserList.getMessageParser(contentParser);
     }

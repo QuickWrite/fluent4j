@@ -3,9 +3,7 @@ package net.quickwrite.fluent4j.parser.pattern.placeable;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
-import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
@@ -19,15 +17,14 @@ import java.util.Optional;
  *     a NumberLiteral and if it would parse {@code { "Hello" }}
  *     it would return a StringLiteral.
  * </p>
- * @param <B> The Builder that is being used to parse this resource
  */
-public interface PlaceableParser<B extends ResultBuilder> extends FluentPatternParser<FluentPattern<B>, B> {
-    Optional<FluentPlaceable<B>> parsePlaceable(final ContentIterator iterator);
+public interface PlaceableParser extends FluentPatternParser<FluentPattern> {
+    Optional<FluentPlaceable> parsePlaceable(final ContentIterator iterator);
 
-    interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<PlaceableParser<B>> {
-        Builder<B> addParser(final PlaceableExpressionParser<B> parser);
+    interface Builder extends net.quickwrite.fluent4j.util.Builder<PlaceableParser> {
+        Builder addParser(final PlaceableExpressionParser parser);
 
-        default Builder<B> addParser(final PlaceableExpressionParser.PlaceableExpressionParserList parser) {
+        default Builder addParser(final PlaceableExpressionParser.PlaceableExpressionParserList parser) {
             return addParser(parser.getParser());
         }
     }

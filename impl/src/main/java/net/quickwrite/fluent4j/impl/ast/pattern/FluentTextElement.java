@@ -7,12 +7,12 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-public class FluentTextElement<B extends ResultBuilder> implements
-        FluentPattern<B>,
-        FluentPlaceable<B>,
-        ArgumentList.NamedArgument<B>,
-        FluentSelect.Selectable<B>,
-        FluentSelect.FluentVariant.FluentVariantKey<B>
+public class FluentTextElement implements
+        FluentPattern,
+        FluentPlaceable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey
 {
     private final String content;
 
@@ -21,22 +21,22 @@ public class FluentTextElement<B extends ResultBuilder> implements
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         builder.append(content);
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         return this.content;
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker selectChecker(final FluentScope scope) {
         return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }

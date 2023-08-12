@@ -13,14 +13,14 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentFunctionReference<B extends ResultBuilder> extends ParameterizedLiteral<String, B> implements FluentSelect.Selectable<B> {
+public class FluentFunctionReference extends ParameterizedLiteral<String> implements FluentSelect.Selectable {
 
-    public FluentFunctionReference(final String identifier, final ArgumentList<B> argumentList) {
+    public FluentFunctionReference(final String identifier, final ArgumentList argumentList) {
         super(identifier, argumentList);
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         try {
             unwrap(scope).resolve(scope, builder);
         } catch (final FluentPatternException exception) {
@@ -29,14 +29,14 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
+    public FluentPattern unwrap(final FluentScope scope) throws FluentPatternException {
         return scope.bundle().getFunction(this.identifier)
                 .orElseThrow(() -> ErrorUtil.getPlaceablePatternException(builder -> builder.append(this.identifier).append("()")))
                 .parseFunction(scope, this.argumentList);
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         try {
             return unwrap(scope).toSimpleString(scope);
         } catch (final FluentPatternException exception) {
@@ -44,21 +44,20 @@ public class FluentFunctionReference<B extends ResultBuilder> extends Parameteri
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
-        final Optional<FluentFunction<B>> function = scope.bundle().getFunction(this.identifier);
+    public SelectChecker selectChecker(final FluentScope scope) {
+        final Optional<FluentFunction> function = scope.bundle().getFunction(this.identifier);
 
         if (function.isEmpty()) {
             return null;
         }
 
-        final FluentPlaceable<B> placeable = function.get().parseFunction(scope, this.argumentList);
+        final FluentPlaceable placeable = function.get().parseFunction(scope, this.argumentList);
 
         if (placeable instanceof FluentSelect.Selectable) {
             return ((FluentSelect.Selectable) placeable).selectChecker(scope);
         }
 
-        return new FluentCachedChecker<>(scope, placeable);
+        return new FluentCachedChecker(scope, placeable);
     }
 }

@@ -9,7 +9,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.nio.CharBuffer;
 
-public class IntermediateTextElement<B extends ResultBuilder> implements FluentPattern<B>, FluentPlaceable<B>, ArgumentList.NamedArgument<B>, FluentSelect.Selectable<B> {
+public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
     private final CharBuffer content;
     private final boolean isAfterNL;
 
@@ -43,22 +43,22 @@ public class IntermediateTextElement<B extends ResultBuilder> implements FluentP
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         builder.append(slice(whitespace));
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         return slice(whitespace).toString();
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public SelectChecker<B> selectChecker(final FluentScope<B> scope) {
+    public SelectChecker selectChecker(final FluentScope scope) {
         return (variant) -> slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
     }
 }

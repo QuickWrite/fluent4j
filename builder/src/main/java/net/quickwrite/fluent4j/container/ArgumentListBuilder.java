@@ -7,15 +7,15 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 public class ArgumentListBuilder {
     private ArgumentListBuilder() {}
 
-    public static <B extends ResultBuilder> ArgumentList<B> empty() {
+    public static ArgumentList empty() {
         return ArgumentList.empty();
     }
 
-    public static <B extends ResultBuilder> ArgumentList.Builder<B> builder() {
+    public static ArgumentList.Builder builder() {
         return FluentArgumentContainer.builder();
     }
 
-    public static <B extends ResultBuilder> ArgumentList.PlenaryBuilder<B> plenaryBuilder() {
+    public static ArgumentList.PlenaryBuilder plenaryBuilder() {
         return FluentArgumentContainer.plenaryBuilder();
     }
 }
