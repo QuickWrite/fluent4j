@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class FluentArgumentContainer implements ArgumentList {
-    public static ArgumentList EMPTY = builder().build();
-
     private final Map<String, NamedArgument> named;
     private final List<FluentPattern> positional;
 
