@@ -3,6 +3,7 @@ package net.quickwrite.fluent4j.ast.pattern;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * The ArgumentList interface represents a list of arguments used in Fluent4J patterns.
@@ -15,7 +16,7 @@ public interface ArgumentList {
      * @param name The name of the named argument
      * @return The NamedArgument associated with the specified name, or null if not found
      */
-    NamedArgument getArgument(final String name);
+    Optional<NamedArgument> getArgument(final String name);
 
     /**
      * Retrieves the positional argument at the specified index from the ArgumentList.
@@ -23,7 +24,7 @@ public interface ArgumentList {
      * @param index The index of the positional argument
      * @return The FluentPattern representing the positional argument, or null if not found
      */
-    FluentPattern getArgument(final int index);
+    Optional<FluentPattern> getArgument(final int index);
 
     /**
      * Creates an empty ArgumentList instance.
@@ -151,13 +152,13 @@ public interface ArgumentList {
         public static final EmptyArgumentList SELF = new EmptyArgumentList();
 
         @Override
-        public NamedArgument getArgument(final String name) {
-            return null;
+        public Optional<NamedArgument> getArgument(final String name) {
+            return Optional.empty();
         }
 
         @Override
-        public FluentPattern getArgument(final int index) {
-            return null;
+        public Optional<FluentPattern> getArgument(final int index) {
+            return Optional.empty();
         }
     }
 }

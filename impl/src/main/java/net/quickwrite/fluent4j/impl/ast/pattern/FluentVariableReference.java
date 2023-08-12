@@ -10,6 +10,8 @@ import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChec
 import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
+import java.util.Optional;
+
 public class FluentVariableReference implements FluentPlaceable, FluentSelect.Selectable {
     private final String identifier;
 
@@ -32,13 +34,13 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
 
     @Override
     public FluentPattern unwrap(final FluentScope scope) throws FluentPatternException {
-        final ArgumentList.NamedArgument argument = scope.arguments().getArgument(identifier);
+        final Optional<ArgumentList.NamedArgument> argument = scope.arguments().getArgument(identifier);
 
-        if(argument == null) {
+        if(argument.isEmpty()) {
             throw ErrorUtil.getPlaceablePatternException(appender -> appender.append('$').append(identifier));
         }
 
-        return argument;
+        return argument.get();
     }
 
     @Override
@@ -52,16 +54,16 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
 
     @Override
     public SelectChecker selectChecker(final FluentScope scope) {
-        final FluentPattern argument = scope.arguments().getArgument(identifier);
+        final Optional<ArgumentList.NamedArgument> argument = scope.arguments().getArgument(identifier);
 
-        if (argument == null) {
+        if (argument.isEmpty()) {
             return null;
         }
 
-        if (argument instanceof FluentSelect.Selectable) {
-            return ((FluentSelect.Selectable) argument).selectChecker(scope);
+        if (argument.get() instanceof FluentSelect.Selectable selectable) {
+            return selectable.selectChecker(scope);
         }
 
-        return new FluentCachedChecker(scope, argument);
+        return new FluentCachedChecker(scope, argument.get());
     }
 }

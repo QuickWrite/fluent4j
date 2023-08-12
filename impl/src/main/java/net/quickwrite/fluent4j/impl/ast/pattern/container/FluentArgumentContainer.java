@@ -6,10 +6,7 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FluentArgumentContainer implements ArgumentList {
     private final Map<String, NamedArgument> named;
@@ -21,8 +18,8 @@ public class FluentArgumentContainer implements ArgumentList {
     }
 
     @Override
-    public NamedArgument getArgument(final String name) {
-        return this.named.get(name);
+    public Optional<NamedArgument> getArgument(final String name) {
+        return Optional.ofNullable(this.named.get(name));
     }
 
     public void addArgument(final String name, final NamedArgument argument) {
@@ -30,8 +27,8 @@ public class FluentArgumentContainer implements ArgumentList {
     }
 
     @Override
-    public FluentPattern getArgument(final int index) {
-        return this.positional.get(index);
+    public Optional<FluentPattern> getArgument(final int index) {
+        return Optional.ofNullable(this.positional.get(index));
     }
 
     public void addAttribute(final FluentPattern pattern) {

@@ -12,6 +12,8 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class NumberFunction implements FluentFunction {
     private static final NumberFunction DEFAULT = new NumberFunction();
@@ -25,8 +27,8 @@ public class NumberFunction implements FluentFunction {
     public FluentPlaceable parseFunction(final FluentScope scope, final ArgumentList argumentList) {
         final FluentPattern pattern;
         try {
-            pattern = argumentList.getArgument(0).unwrap(scope);
-        } catch (final FluentPatternException exception) {
+            pattern = argumentList.getArgument(0).orElseThrow().unwrap(scope);
+        } catch (final FluentPatternException | NoSuchElementException exception) {
             return new FluentTextElement("{NUMBER()}");
         }
 
@@ -37,10 +39,8 @@ public class NumberFunction implements FluentFunction {
             numberLiteral = new FormattedNumberLiteral(pattern.toSimpleString(scope));
         }
 
-        final FluentPattern useGrouping = argumentList.getArgument("useGrouping");
-        if (useGrouping != null) {
-            numberLiteral.useGrouping = useGrouping.toSimpleString(scope).toUpperCase();
-        }
+        final Optional<ArgumentList.NamedArgument> useGrouping = argumentList.getArgument("useGrouping");
+        useGrouping.ifPresent(namedArgument -> numberLiteral.useGrouping = namedArgument.toSimpleString(scope).toUpperCase());
 
         numberLiteral.minimumFractionDigits = getIntegerValue(
                 argumentList.getArgument("minimumFractionDigits"),
@@ -67,10 +67,10 @@ public class NumberFunction implements FluentFunction {
         return DEFAULT;
     }
 
-    private int getIntegerValue(final FluentPattern argument, final FluentScope scope, final int defaultValue) {
-        if (argument != null) {
+    private int getIntegerValue(final Optional<ArgumentList.NamedArgument> argument, final FluentScope scope, final int defaultValue) {
+        if (argument.isPresent()) {
             try {
-                return Integer.parseInt(argument.toSimpleString(scope));
+                return Integer.parseInt(argument.get().toSimpleString(scope));
             } catch (final NumberFormatException ignored) {
 
             }
