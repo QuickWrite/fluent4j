@@ -14,7 +14,7 @@ public interface ArgumentList {
      * Retrieves the named argument with the specified name from the ArgumentList.
      *
      * @param name The name of the named argument
-     * @return The NamedArgument associated with the specified name, or null if not found
+     * @return The NamedArgument associated with the specified name
      */
     Optional<NamedArgument> getArgument(final String name);
 
@@ -22,7 +22,7 @@ public interface ArgumentList {
      * Retrieves the positional argument at the specified index from the ArgumentList.
      *
      * @param index The index of the positional argument
-     * @return The FluentPattern representing the positional argument, or null if not found
+     * @return The FluentPattern representing the positional argument
      */
     Optional<FluentPattern> getArgument(final int index);
 
