@@ -73,16 +73,25 @@ public class FluentNumberLiteral implements
     }
 
     @Override
-    public SelectChecker selectChecker(final FluentScope scope) {
-        return (variant) -> {
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        for (final FluentSelect.FluentVariant variant : variants) {
             final FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
 
-            if (variantKey instanceof FluentNumberLiteral) {
-                return ((FluentNumberLiteral) variantKey).number.compareTo(number) == 0;
+            if (variantKey instanceof FluentNumberLiteral numberLiteral) {
+                if(numberLiteral.number.compareTo(number) == 0) {
+                    return variant;
+                }
             }
 
             final String identifier = variantKey.toSimpleString(scope);
-            return PluralRules.forLocale(scope.bundle().getLocale()).select(formattedNumber).equals(identifier);
-        };
+            if (PluralRules.forLocale(scope.bundle().getLocale()).select(formattedNumber).equals(identifier)) {
+                return variant;
+            }
+        }
+
+        return defaultVariant;
     }
 }

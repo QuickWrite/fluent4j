@@ -6,7 +6,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
-import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
+import net.quickwrite.fluent4j.impl.util.FluentCheckerUtil;
 import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -53,17 +53,20 @@ public class FluentVariableReference implements FluentPlaceable, FluentSelect.Se
     }
 
     @Override
-    public SelectChecker selectChecker(final FluentScope scope) {
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
         final Optional<ArgumentList.NamedArgument> argument = scope.arguments().getArgument(identifier);
 
         if (argument.isEmpty()) {
-            return null;
+            return defaultVariant;
         }
 
         if (argument.get() instanceof FluentSelect.Selectable selectable) {
-            return selectable.selectChecker(scope);
+            return selectable.select(scope, variants, defaultVariant);
         }
 
-        return new FluentCachedChecker(scope, argument.get());
+        return FluentCheckerUtil.check(scope, argument.get(), variants, defaultVariant);
     }
 }

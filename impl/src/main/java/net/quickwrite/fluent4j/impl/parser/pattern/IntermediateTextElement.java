@@ -58,7 +58,16 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
     }
 
     @Override
-    public SelectChecker selectChecker(final FluentScope scope) {
-        return (variant) -> slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        for (final FluentSelect.FluentVariant variant : variants) {
+            if(slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
+                return variant;
+            }
+        }
+
+        return defaultVariant;
     }
 }

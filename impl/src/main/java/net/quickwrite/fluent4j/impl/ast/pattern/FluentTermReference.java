@@ -8,7 +8,7 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentTermElement;
-import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
+import net.quickwrite.fluent4j.impl.util.FluentCheckerUtil;
 import net.quickwrite.fluent4j.impl.util.ErrorUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
@@ -92,15 +92,17 @@ public class FluentTermReference extends ParameterizedLiteral<String> {
         }
 
         @Override
-        public SelectChecker selectChecker(final FluentScope scope) {
+        public FluentSelect.FluentVariant select(final FluentScope scope,
+                                                 final FluentSelect.FluentVariant[] variants,
+                                                 final FluentSelect.FluentVariant defaultVariant
+        ) {
             final Optional<FluentAttributeEntry.Attribute> attribute = getAttribute(scope);
 
             if (attribute.isEmpty() || !attribute.get().isSelectable()) {
-                // Returns null to jump to the default directly
-                return null;
+                return defaultVariant;
             }
 
-            return new FluentCachedChecker(scope, attribute.get());
+            return FluentCheckerUtil.check(scope, attribute.get(), variants, defaultVariant);
         }
     }
 }

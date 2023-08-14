@@ -13,37 +13,28 @@ import java.util.Objects;
 
 public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
     private final FluentSelect.Selectable selectable;
-    private final List<FluentSelect.FluentVariant> variantList;
+    private final FluentSelect.FluentVariant[] variants;
     private final FluentSelect.FluentVariant defaultVariant;
+
+    public FluentSelectExpression(final FluentSelect.Selectable selectable,
+                                  final FluentSelect.FluentVariant[] variants,
+                                  final FluentSelect.FluentVariant defaultVariant
+    ) {
+        this.selectable = selectable;
+        this.variants = variants;
+        this.defaultVariant = defaultVariant;
+    }
 
     public FluentSelectExpression(final FluentSelect.Selectable selectable,
                                   final List<FluentSelect.FluentVariant> variantList,
                                   final FluentSelect.FluentVariant defaultVariant
     ) {
-        this.selectable = selectable;
-        this.variantList = variantList;
-        this.defaultVariant = defaultVariant;
+        this(selectable, variantList.toArray(new FluentSelect.FluentVariant[0]), defaultVariant);
     }
 
     @Override
     public void resolve(final FluentScope scope, final ResultBuilder builder) {
-        final Selectable.SelectChecker selectChecker = selectable.selectChecker(scope);
-
-        if(selectChecker == null) {
-            defaultVariant.resolve(scope, builder);
-            return;
-        }
-
-        for (final FluentSelect.FluentVariant variant : variantList) {
-            if (!selectChecker.check(variant)) {
-                continue;
-            }
-
-            variant.resolve(scope, builder);
-            return;
-        }
-
-        defaultVariant.resolve(scope, builder);
+        selectable.select(scope, variants, defaultVariant).resolve(scope, builder);
     }
 
     @Override

@@ -36,7 +36,16 @@ public class FluentTextElement implements
     }
 
     @Override
-    public SelectChecker selectChecker(final FluentScope scope) {
-        return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        for(final FluentSelect.FluentVariant variant : variants) {
+            if (content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
+                return variant;
+            }
+        }
+
+        return defaultVariant;
     }
 }

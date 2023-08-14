@@ -39,20 +39,22 @@ public interface FluentSelect extends FluentPlaceable {
      */
     interface Selectable {
         /**
-         * Returns a select checker that can be used to check if
-         * a Variant is the correct variant.
+         * Selects the best variant that is being given.
          *
-         * @param scope The scope that the select checker should use
-         * @return A SelectChecker that can be used for the different variants
+         * <p>
+         *     This method does <strong>not</strong> return
+         *     {@code null} and should always return the
+         *     default variant if something either went wrong
+         *     (in a recoverable way) or there are no other
+         *     options.
+         * </p>
+         *
+         * @param scope The scope that is being used for this resolve
+         * @param variants The different variants
+         * @param defaultVariant A default variant that can always be
+         *                       used as a fallback
+         * @return The best variant for this element
          */
-        SelectChecker selectChecker(final FluentScope scope);
-
-        /**
-         * The checker to check if the current
-         * variant is the correct variant in the list.
-         */
-        interface SelectChecker {
-            boolean check(final FluentVariant variant);
-        }
+        FluentVariant select(final FluentScope scope, final FluentVariant[] variants, final FluentVariant defaultVariant);
     }
 }
