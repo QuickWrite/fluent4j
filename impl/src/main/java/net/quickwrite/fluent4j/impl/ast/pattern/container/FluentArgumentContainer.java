@@ -10,9 +10,9 @@ import java.util.*;
 
 public class FluentArgumentContainer implements ArgumentList {
     private final Map<String, NamedArgument> named;
-    private final List<FluentPattern> positional;
+    private final FluentPattern[] positional;
 
-    private FluentArgumentContainer(final Map<String, NamedArgument> named, final List<FluentPattern> positional) {
+    private FluentArgumentContainer(final Map<String, NamedArgument> named, final FluentPattern[] positional) {
         this.named = named;
         this.positional = positional;
     }
@@ -22,17 +22,9 @@ public class FluentArgumentContainer implements ArgumentList {
         return Optional.ofNullable(this.named.get(name));
     }
 
-    public void addArgument(final String name, final NamedArgument argument) {
-        this.named.put(name, argument);
-    }
-
     @Override
     public Optional<FluentPattern> getArgument(final int index) {
-        return Optional.ofNullable(this.positional.get(index));
-    }
-
-    public void addAttribute(final FluentPattern pattern) {
-        this.positional.add(pattern);
+        return Optional.ofNullable(this.positional[index]);
     }
 
     public static ArgumentList.Builder builder() {
@@ -79,7 +71,7 @@ public class FluentArgumentContainer implements ArgumentList {
 
         @Override
         public ArgumentList build() {
-            return new FluentArgumentContainer(named, List.of());
+            return new FluentArgumentContainer(named, new FluentPattern[0]);
         }
     }
 
@@ -123,7 +115,7 @@ public class FluentArgumentContainer implements ArgumentList {
 
         @Override
         public ArgumentList build() {
-            return new FluentArgumentContainer(named, positional);
+            return new FluentArgumentContainer(named, positional.toArray(new FluentPattern[0]));
         }
     }
 }
