@@ -36,11 +36,10 @@ public class FluentResourceBundle implements FluentBundle {
 
         return entryMap.map(fluentEntryMap -> fluentEntryMap.containsKey(key)).orElse(false);
     }
-
-    @SuppressWarnings("unchecked")
+    
     @Override
     public Set<FluentMessage> getMessages() {
-        return (Set<FluentMessage>) getEntries(FluentMessage.class);
+        return getEntries(FluentMessage.class);
     }
 
     @Override
