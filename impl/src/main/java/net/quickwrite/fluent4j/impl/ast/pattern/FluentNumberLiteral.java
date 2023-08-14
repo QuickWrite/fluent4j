@@ -80,10 +80,9 @@ public class FluentNumberLiteral implements
         for (final FluentSelect.FluentVariant variant : variants) {
             final FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
 
-            if (variantKey instanceof FluentNumberLiteral numberLiteral) {
-                if(numberLiteral.number.compareTo(number) == 0) {
-                    return variant;
-                }
+            if (variantKey instanceof FluentNumberLiteral numberLiteral
+                    && numberLiteral.number.compareTo(number) == 0) {
+                return variant;
             }
 
             final String identifier = variantKey.toSimpleString(scope);
