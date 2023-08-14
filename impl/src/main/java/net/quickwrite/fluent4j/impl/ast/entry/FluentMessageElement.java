@@ -12,13 +12,7 @@ public final class FluentMessageElement extends FluentAttributeEntryBase impleme
         super(new FluentMessageIdentifier(identifier), patterns, attributes);
     }
 
-    private static class FluentMessageIdentifier implements FluentIdentifier<String> {
-        private final String identifier;
-
-        public FluentMessageIdentifier(final String identifier) {
-            this.identifier = identifier;
-        }
-
+    private record FluentMessageIdentifier(String identifier) implements FluentIdentifier<String> {
         @Override
         public String getSimpleIdentifier() {
             return this.identifier;
@@ -27,19 +21,6 @@ public final class FluentMessageElement extends FluentAttributeEntryBase impleme
         @Override
         public String getFullIdentifier() {
             return this.identifier;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            final FluentMessageIdentifier that = (FluentMessageIdentifier) o;
-            return Objects.equals(identifier, that.identifier);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(identifier);
         }
     }
 }

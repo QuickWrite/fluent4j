@@ -57,34 +57,15 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
             return this.identifier;
         }
 
-        private static class FluentVariantIdentifier implements FluentIdentifier<FluentSelect.FluentVariant.FluentVariantKey> {
-            private final FluentSelect.FluentVariant.FluentVariantKey identifier;
-
-            public FluentVariantIdentifier(final FluentSelect.FluentVariant.FluentVariantKey identifier) {
-                this.identifier = identifier;
-            }
-
+        private record FluentVariantIdentifier(FluentVariantKey identifier) implements FluentIdentifier<FluentVariantKey> {
             @Override
-            public FluentSelect.FluentVariant.FluentVariantKey getSimpleIdentifier() {
+            public FluentVariantKey getSimpleIdentifier() {
                 return this.identifier;
             }
 
             @Override
-            public FluentSelect.FluentVariant.FluentVariantKey getFullIdentifier() {
+            public FluentVariantKey getFullIdentifier() {
                 return this.identifier;
-            }
-
-            @Override
-            public boolean equals(final Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-                final FluentVariantIdentifier that = (FluentVariantIdentifier) o;
-                return Objects.equals(identifier, that.identifier);
-            }
-
-            @Override
-            public int hashCode() {
-                return Objects.hash(identifier);
             }
         }
     }

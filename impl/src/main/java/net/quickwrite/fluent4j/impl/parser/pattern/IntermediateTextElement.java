@@ -9,29 +9,8 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.nio.CharBuffer;
 
-public class IntermediateTextElement implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
-    private final CharBuffer content;
-    private final boolean isAfterNL;
-
-    private final int whitespace;
-
-    public IntermediateTextElement(final CharBuffer content, final int whitespace, final boolean isAfterNL) {
-        this.content = content;
-        this.whitespace = whitespace;
-        this.isAfterNL = isAfterNL;
-    }
-
-    public CharBuffer getContent() {
-        return this.content;
-    }
-
-    public int getWhitespace() {
-        return this.whitespace;
-    }
-
-    public boolean isAfterNL() {
-        return this.isAfterNL;
-    }
+public record IntermediateTextElement(CharBuffer content, int whitespace, boolean isAfterNL)
+        implements FluentPattern, FluentPlaceable, ArgumentList.NamedArgument, FluentSelect.Selectable {
 
     public CharBuffer slice(final int whitespace) {
         int start = whitespace;
@@ -63,7 +42,7 @@ public class IntermediateTextElement implements FluentPattern, FluentPlaceable, 
                                              final FluentSelect.FluentVariant defaultVariant
     ) {
         for (final FluentSelect.FluentVariant variant : variants) {
-            if(slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
+            if (slice(whitespace).toString().equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
                 return variant;
             }
         }

@@ -99,7 +99,7 @@ public class FluentContentParserGroup implements FluentContentParser {
                 continue;
             }
 
-            final int whitespace = textElement.getWhitespace();
+            final int whitespace = textElement.whitespace();
             if (whitespace != -1 && whitespace < minWhitespace) {
                 minWhitespace = whitespace;
             }
@@ -123,14 +123,14 @@ public class FluentContentParserGroup implements FluentContentParser {
 
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
 
-            if (textElement.getWhitespace() == -1) {
+            if (textElement.whitespace() == -1) {
                 break firstElementIf;
             }
 
             builder.append(
                     textElement.slice(
                             // If there was something before this just use the calculated whitespace
-                            textElement.isAfterNL() ? minWhitespace : textElement.getWhitespace()
+                            textElement.isAfterNL() ? minWhitespace : textElement.whitespace()
                     )
             );
         }
@@ -154,7 +154,7 @@ public class FluentContentParserGroup implements FluentContentParser {
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
 
             if (!textElement.isAfterNL()) {
-                builder.append(textElement.getContent());
+                builder.append(textElement.content());
 
                 continue;
             }

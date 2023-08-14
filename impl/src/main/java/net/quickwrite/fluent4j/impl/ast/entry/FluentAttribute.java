@@ -22,12 +22,7 @@ public class FluentAttribute extends FluentBaseElement<String> implements Fluent
         return this.patterns.length == 1;
     }
 
-    private static class FluentAttributeIdentifier implements FluentIdentifier<String> {
-        private final String identifier;
-
-        public FluentAttributeIdentifier(final String identifier) {
-            this.identifier = identifier;
-        }
+    private record FluentAttributeIdentifier(String identifier) implements FluentIdentifier<String> {
 
         @Override
         public String getSimpleIdentifier() {
@@ -37,19 +32,6 @@ public class FluentAttribute extends FluentBaseElement<String> implements Fluent
         @Override
         public String getFullIdentifier() {
             return this.identifier;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            final FluentAttribute.FluentAttributeIdentifier that = (FluentAttribute.FluentAttributeIdentifier) o;
-            return Objects.equals(identifier, that.identifier);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(identifier);
         }
     }
 }

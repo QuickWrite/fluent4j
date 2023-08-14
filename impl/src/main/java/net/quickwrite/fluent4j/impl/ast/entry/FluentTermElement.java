@@ -12,13 +12,7 @@ public final class FluentTermElement extends FluentAttributeEntryBase implements
         super(new FluentTermIdentifier(identifier), patterns, attributes);
     }
 
-    private static class FluentTermIdentifier implements FluentIdentifier<String> {
-        private final String identifier;
-
-        public FluentTermIdentifier(final String identifier) {
-            this.identifier = identifier;
-        }
-
+    private record FluentTermIdentifier(String identifier) implements FluentIdentifier<String> {
         @Override
         public String getSimpleIdentifier() {
             return this.identifier;
@@ -26,20 +20,12 @@ public final class FluentTermElement extends FluentAttributeEntryBase implements
 
         @Override
         public String getFullIdentifier() {
-            return "-" + this.identifier;
-        }
-
-        @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            final FluentTermElement.FluentTermIdentifier that = (FluentTermElement.FluentTermIdentifier) o;
-            return Objects.equals(identifier, that.identifier);
-        }
+                return "-" + this.identifier;
+            }
 
         @Override
         public int hashCode() {
-            return Objects.hash("-") + Objects.hash(identifier);
+                return Objects.hash("-", identifier);
+            }
         }
-    }
 }

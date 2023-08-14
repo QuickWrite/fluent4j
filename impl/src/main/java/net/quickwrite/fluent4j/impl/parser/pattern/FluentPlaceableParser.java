@@ -165,7 +165,7 @@ public class FluentPlaceableParser implements PlaceableParser {
         iterator.nextChar();
 
         if (selectable instanceof IntermediateTextElement) {
-            selectable = new FluentTextElement(((IntermediateTextElement) selectable).getContent().toString());
+            selectable = new FluentTextElement(((IntermediateTextElement) selectable).content().toString());
         }
 
         return Optional.of(new FluentSelectExpression(selectable, variantList, defaultVariant));
