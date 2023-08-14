@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FluentAttribute extends FluentBaseElement<String> implements FluentAttributeEntry.Attribute {
-    public FluentAttribute(final String identifier, final List<FluentPattern> patterns) {
+    public FluentAttribute(final String identifier, final FluentPattern[] patterns) {
         super(new FluentAttributeIdentifier(identifier), patterns);
     }
 
@@ -19,7 +19,7 @@ public class FluentAttribute extends FluentBaseElement<String> implements Fluent
 
     @Override
     public boolean isSelectable() {
-        return this.patterns.size() == 1;
+        return this.patterns.length == 1;
     }
 
     private static class FluentAttributeIdentifier implements FluentIdentifier<String> {

@@ -13,21 +13,21 @@ public class CommentTest {
     public void testCommentOne() {
         final FluentResource resource = getResourceFromResource("comment/comment_one.ftl");
 
-        assertEquals(0, resource.entries().size());
+        assertEquals(0, resource.entries().length);
     }
 
     @Test
     public void testCommentTwo() {
         final FluentResource resource = getResourceFromResource("comment/comment_two.ftl");
 
-        assertEquals(0, resource.entries().size());
+        assertEquals(0, resource.entries().length);
     }
 
     @Test
     public void testCommentThree() {
         final FluentResource resource = getResourceFromResource("comment/comment_three.ftl");
 
-        assertEquals(0, resource.entries().size());
+        assertEquals(0, resource.entries().length);
     }
 
     @Test

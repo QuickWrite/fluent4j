@@ -48,7 +48,7 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
     }
 
     public static class FluentVariant extends FluentBaseElement<FluentSelect.FluentVariant.FluentVariantKey> implements FluentSelect.FluentVariant {
-        public FluentVariant(final FluentSelect.FluentVariant.FluentVariantKey identifier, final List<FluentPattern> content) {
+        public FluentVariant(final FluentSelect.FluentVariant.FluentVariantKey identifier, final FluentPattern[] content) {
             super(new FluentVariantIdentifier(identifier), content);
         }
 

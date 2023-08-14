@@ -55,7 +55,13 @@ public abstract class FluentEntryParser<T extends FluentAttributeEntryBase> impl
 
         final List<FluentAttributeEntry.Attribute> attributes = getAttributes(content);
 
-        return ParseResult.success(getInstance(identifier.get(), patterns, attributes));
+        return ParseResult.success(
+                getInstance(
+                        identifier.get(),
+                        patterns.toArray(new FluentPattern[0]),
+                        attributes.toArray(new FluentAttributeEntry.Attribute[0])
+                )
+        );
     }
 
     private List<FluentAttributeEntry.Attribute> getAttributes(final ContentIterator content) {
@@ -84,7 +90,7 @@ public abstract class FluentEntryParser<T extends FluentAttributeEntryBase> impl
                     END_CHECKER
             );
 
-            attributes.add(new FluentAttribute(identifier, patterns));
+            attributes.add(new FluentAttribute(identifier, patterns.toArray(new FluentPattern[0])));
         }
 
         return attributes;
@@ -92,8 +98,8 @@ public abstract class FluentEntryParser<T extends FluentAttributeEntryBase> impl
 
     protected abstract T getInstance(
             final String identifier,
-            final List<FluentPattern> patterns,
-            final List<FluentAttributeEntry.Attribute> attributes
+            final FluentPattern[] patterns,
+            final FluentAttributeEntry.Attribute[] attributes
     );
 
     protected abstract Optional<String> getIdentifier(final ContentIterator content);

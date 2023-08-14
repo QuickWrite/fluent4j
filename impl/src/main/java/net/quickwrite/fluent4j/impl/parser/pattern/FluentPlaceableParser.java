@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class FluentPlaceableParser implements PlaceableParser {
-    private final List<PlaceableExpressionParser> parserList;
+    private final PlaceableExpressionParser[] parsers;
 
-    private FluentPlaceableParser(final List<PlaceableExpressionParser> parserList) {
-        this.parserList = parserList;
+    private FluentPlaceableParser(final PlaceableExpressionParser[] parsers) {
+        this.parsers = parsers;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FluentPlaceableParser implements PlaceableParser {
     public Optional<FluentPlaceable> parsePlaceable(final ContentIterator iterator) {
         final int[] position = iterator.position();
 
-        for (final PlaceableExpressionParser expressionParser : parserList) {
+        for (final PlaceableExpressionParser expressionParser : parsers) {
             final Optional<FluentPlaceable> parseResult = expressionParser.parse(iterator, this);
 
             if (parseResult.isEmpty()) {
@@ -197,7 +197,7 @@ public class FluentPlaceableParser implements PlaceableParser {
             return character == '[' || character == '*' || character == '}';
         });
 
-        return Optional.of(new FluentSelectExpression.FluentVariant(variantKey, content));
+        return Optional.of(new FluentSelectExpression.FluentVariant(variantKey, content.toArray(new FluentPattern[0])));
     }
 
     private FluentSelect.FluentVariant.FluentVariantKey getVariantKey(final ContentIterator iterator) {
@@ -234,7 +234,7 @@ public class FluentPlaceableParser implements PlaceableParser {
 
         @Override
         public PlaceableParser build() {
-            return new FluentPlaceableParser(this.parserList);
+            return new FluentPlaceableParser(this.parserList.toArray(new PlaceableExpressionParser[0]));
         }
     }
 }

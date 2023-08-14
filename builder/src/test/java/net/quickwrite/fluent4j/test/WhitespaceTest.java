@@ -15,14 +15,14 @@ public class WhitespaceTest {
     public void testZeroLength() {
         final FluentResource resource = getResourceFromResource("whitespace/zero_length.ftl");
 
-        assertEquals(0, resource.entries().size());
+        assertEquals(0, resource.entries().length);
     }
 
     @Test
     public void testWhitespace() {
         final FluentResource resource = getResourceFromResource("whitespace/whitespace.ftl");
 
-        assertEquals(0, resource.entries().size());
+        assertEquals(0, resource.entries().length);
     }
 
     @Test

@@ -5,11 +5,10 @@ import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 
-import java.util.List;
 import java.util.Objects;
 
 public final class FluentMessageElement extends FluentAttributeEntryBase implements FluentMessage {
-    public FluentMessageElement(final String identifier, final List<FluentPattern> patterns, final List<FluentAttributeEntry.Attribute> attributes) {
+    public FluentMessageElement(final String identifier, final FluentPattern[] patterns, final FluentAttributeEntry.Attribute[] attributes) {
         super(new FluentMessageIdentifier(identifier), patterns, attributes);
     }
 

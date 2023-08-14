@@ -17,7 +17,7 @@ public interface FluentResource {
      *
      * @return A list of all entries
      */
-    List<FluentEntry> entries();
+    FluentEntry[] entries();
 
     /**
      * Returns a single entry at the given position.

@@ -10,9 +10,9 @@ import java.util.List;
 
 public abstract class FluentBaseElement<I> implements FluentResolvable {
     protected final FluentIdentifier<I> identifier;
-    protected final List<FluentPattern> patterns;
+    protected final FluentPattern[] patterns;
 
-    protected FluentBaseElement(final FluentIdentifier<I> identifier, final List<FluentPattern> patterns) {
+    protected FluentBaseElement(final FluentIdentifier<I> identifier, final FluentPattern[] patterns) {
         this.identifier = identifier;
         this.patterns = patterns;
     }

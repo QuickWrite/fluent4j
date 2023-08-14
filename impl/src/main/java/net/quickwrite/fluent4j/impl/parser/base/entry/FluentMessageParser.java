@@ -7,7 +7,6 @@ import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 
-import java.util.List;
 import java.util.Optional;
 
 public final class FluentMessageParser extends FluentEntryParser<FluentMessageElement> {
@@ -17,8 +16,8 @@ public final class FluentMessageParser extends FluentEntryParser<FluentMessageEl
 
     @Override
     protected FluentMessageElement getInstance(final String identifier,
-                                               final List<FluentPattern> patterns,
-                                               final List<FluentAttributeEntry.Attribute> attributes
+                                               final FluentPattern[] patterns,
+                                               final FluentAttributeEntry.Attribute[] attributes
     ) {
         return new FluentMessageElement(identifier, patterns, attributes);
     }

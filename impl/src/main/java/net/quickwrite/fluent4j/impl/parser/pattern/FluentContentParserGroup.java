@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FluentContentParserGroup implements FluentContentParser {
-    private final List<FluentPatternParser<? extends FluentPattern>> parserList;
+    private final FluentPatternParser<? extends FluentPattern>[] parsers;
 
     private static final IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);
 
-    private FluentContentParserGroup(final List<FluentPatternParser<? extends FluentPattern>> parserList) {
-        this.parserList = parserList;
+    private FluentContentParserGroup(final FluentPatternParser<? extends FluentPattern>[] parsers) {
+        this.parsers = parsers;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class FluentContentParserGroup implements FluentContentParser {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentPatternParser<? extends FluentPattern> patternParser : parserList) {
+            for (final FluentPatternParser<? extends FluentPattern> patternParser : parsers) {
                 if (iterator.character() != patternParser.getStartingChar()) {
                     continue;
                 }
@@ -249,9 +249,10 @@ public class FluentContentParserGroup implements FluentContentParser {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public FluentContentParser build() {
-            return new FluentContentParserGroup(parserList);
+            return new FluentContentParserGroup(parserList.toArray(new FluentPatternParser[0]));
         }
     }
 }

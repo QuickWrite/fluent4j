@@ -17,7 +17,7 @@ public interface FluentAttributeEntry extends FluentEntry {
      *
      * @return A list of attributes
      */
-    List<FluentAttributeEntry.Attribute> getAttributes();
+    FluentAttributeEntry.Attribute[] getAttributes();
 
     /**
      * Returns the specific attribute with the given

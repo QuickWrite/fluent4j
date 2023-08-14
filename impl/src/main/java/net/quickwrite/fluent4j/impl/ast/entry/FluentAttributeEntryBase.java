@@ -6,15 +6,13 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.List;
-
 public abstract class FluentAttributeEntryBase extends FluentBaseElement<String> implements FluentAttributeEntry {
-    protected final List<FluentAttributeEntry.Attribute> attributes;
+    protected final FluentAttributeEntry.Attribute[] attributes;
 
-    public FluentAttributeEntryBase(
+    protected FluentAttributeEntryBase(
             final FluentIdentifier<String> identifier,
-            final List<FluentPattern> patterns,
-            final List<FluentAttributeEntry.Attribute> attributes
+            final FluentPattern[] patterns,
+            final FluentAttributeEntry.Attribute[] attributes
     ) {
         super(identifier, patterns);
 
@@ -27,7 +25,7 @@ public abstract class FluentAttributeEntryBase extends FluentBaseElement<String>
     }
 
     @Override
-    public List<Attribute> getAttributes() {
+    public FluentAttributeEntry.Attribute[] getAttributes() {
         return this.attributes;
     }
 

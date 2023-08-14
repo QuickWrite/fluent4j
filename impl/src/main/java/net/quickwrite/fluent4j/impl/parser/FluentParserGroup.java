@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FluentParserGroup implements ResourceParser {
-    private final List<FluentElementParser<? extends FluentEntry>> parserList;
+    private final FluentElementParser<? extends FluentEntry>[] parsers;
 
-    private FluentParserGroup(final List<FluentElementParser<? extends FluentEntry>> parserList) {
-        this.parserList = parserList;
+    private FluentParserGroup(final FluentElementParser<? extends FluentEntry>[] parsers) {
+        this.parsers = parsers;
     }
 
     @Override
@@ -27,7 +27,7 @@ public final class FluentParserGroup implements ResourceParser {
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentElementParser<? extends FluentEntry> parser : parserList) {
+            for (final FluentElementParser<? extends FluentEntry> parser : parsers) {
                 final ParseResult<? extends FluentEntry> result = parser.parse(iterator);
 
                 switch (result.getType()) {
@@ -44,7 +44,7 @@ public final class FluentParserGroup implements ResourceParser {
             throw new FluentBuilderException("Every parser returned FAILURE.", iterator);
         }
 
-        return new FluentEntryResource(elements);
+        return new FluentEntryResource(elements.toArray(new FluentEntry[0]));
     }
 
 
@@ -66,9 +66,10 @@ public final class FluentParserGroup implements ResourceParser {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public ResourceParser build() {
-            return new FluentParserGroup(this.parserList);
+            return new FluentParserGroup(this.parserList.toArray(new FluentElementParser[0]));
         }
     }
 }
