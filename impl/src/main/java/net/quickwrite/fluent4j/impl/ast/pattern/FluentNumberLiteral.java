@@ -4,7 +4,6 @@ import com.ibm.icu.number.FormattedNumber;
 import com.ibm.icu.number.LocalizedNumberFormatter;
 import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.PluralRules;
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
@@ -13,19 +12,19 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
-import java.util.function.Function;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-public class FluentNumberLiteral<B extends ResultBuilder> implements
-        FluentPlaceable<B>,
-        ArgumentList.NamedArgument<B>,
-        FluentSelect.Selectable<B>,
-        FluentSelect.FluentVariant.FluentVariantKey<B>
-{
+public class FluentNumberLiteral implements
+        FluentPlaceable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey {
     protected final String stringNumber;
     protected final BigDecimal number;
     protected final FormattedNumber formattedNumber;
 
-    private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(ULocale.ENGLISH);
+    private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(Locale.ENGLISH);
 
     public FluentNumberLiteral(final String number) {
         this.stringNumber = number;
@@ -49,7 +48,7 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
         this(new BigDecimal(Double.toString(number)));
     }
 
-    public FluentNumberLiteral(final FluentNumberLiteral<B> numberLiteral) {
+    public FluentNumberLiteral(final FluentNumberLiteral numberLiteral) {
         this.stringNumber = numberLiteral.stringNumber;
 
         this.number = numberLiteral.number;
@@ -57,33 +56,41 @@ public class FluentNumberLiteral<B extends ResultBuilder> implements
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
-        final String formattedNumber = NumberFormatter.withLocale(scope.bundle().getLocale()).format(number).toString();
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
+        final String formattedNumber = NumberFormat.getInstance(scope.bundle().getLocale()).format(number);;
 
         builder.append(formattedNumber);
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         return this.stringNumber;
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
-        return (variant) -> {
-            final FluentSelect.FluentVariant.FluentVariantKey<B> variantKey = variant.getIdentifier().getSimpleIdentifier();
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        for (final FluentSelect.FluentVariant variant : variants) {
+            final FluentSelect.FluentVariant.FluentVariantKey variantKey = variant.getIdentifier().getSimpleIdentifier();
 
-            if (variantKey instanceof FluentNumberLiteral) {
-                return ((FluentNumberLiteral<B>) variantKey).number.compareTo(number) == 0;
+            if (variantKey instanceof FluentNumberLiteral numberLiteral
+                    && numberLiteral.number.compareTo(number) == 0) {
+                return variant;
             }
 
             final String identifier = variantKey.toSimpleString(scope);
-            return PluralRules.forLocale(scope.bundle().getLocale()).select(formattedNumber).equals(identifier);
-        };
+            if (PluralRules.forLocale(scope.bundle().getLocale()).select(formattedNumber).equals(identifier)) {
+                return variant;
+            }
+        }
+
+        return defaultVariant;
     }
 }

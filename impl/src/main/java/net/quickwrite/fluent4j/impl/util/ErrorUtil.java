@@ -8,11 +8,11 @@ import java.util.function.Consumer;
 public final class ErrorUtil {
     private ErrorUtil() {}
 
-    public static <B extends ResultBuilder> void writePlaceable(final B builder, final CharSequence string) {
+    public static void writePlaceable(final ResultBuilder builder, final CharSequence string) {
         builder.append('{').append(string).append('}');
     }
 
-    public static <B extends ResultBuilder> void writePlaceable(final B builder, final Consumer<B> consumer) {
+    public static void writePlaceable(final ResultBuilder builder, final Consumer<ResultBuilder> consumer) {
         builder.append('{');
         consumer.accept(builder);
         builder.append('}');

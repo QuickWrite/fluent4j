@@ -6,13 +6,13 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
-import net.quickwrite.fluent4j.impl.ast.pattern.container.cache.FluentCachedChecker;
 import net.quickwrite.fluent4j.impl.util.ErrorUtil;
+import net.quickwrite.fluent4j.impl.util.FluentCheckerUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.function.Function;
+import java.util.Optional;
 
-public class FluentVariableReference<B extends ResultBuilder> implements FluentPlaceable<B>, FluentSelect.Selectable<B> {
+public class FluentVariableReference implements FluentPlaceable, FluentSelect.Selectable {
     private final String identifier;
 
     public FluentVariableReference(final String identifier) {
@@ -20,8 +20,8 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
-        final FluentPattern<B> pattern;
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
+        final FluentPattern pattern;
         try {
             pattern = unwrap(scope);
         } catch (final FluentPatternException exception) {
@@ -33,18 +33,18 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
-        final ArgumentList.NamedArgument<B> argument = scope.arguments().getArgument(identifier);
+    public FluentPattern unwrap(final FluentScope scope) throws FluentPatternException {
+        final Optional<ArgumentList.NamedArgument> argument = scope.arguments().getArgument(identifier);
 
-        if(argument == null) {
+        if (argument.isEmpty()) {
             throw ErrorUtil.getPlaceablePatternException(appender -> appender.append('$').append(identifier));
         }
 
-        return argument;
+        return argument.get();
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         try {
             return unwrap(scope).toSimpleString(scope);
         } catch (final FluentPatternException exception) {
@@ -52,19 +52,21 @@ public class FluentVariableReference<B extends ResultBuilder> implements FluentP
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
-        final FluentPattern<B> argument = scope.arguments().getArgument(identifier);
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        final Optional<ArgumentList.NamedArgument> argument = scope.arguments().getArgument(identifier);
 
-        if (argument == null) {
-            return null;
+        if (argument.isEmpty()) {
+            return defaultVariant;
         }
 
-        if (argument instanceof FluentSelect.Selectable) {
-            return ((FluentSelect.Selectable<B>) argument).selectChecker(scope);
+        if (argument.get() instanceof FluentSelect.Selectable selectable) {
+            return selectable.select(scope, variants, defaultVariant);
         }
 
-        return new FluentCachedChecker<>(scope, argument);
+        return FluentCheckerUtil.check(scope, argument.get(), variants, defaultVariant);
     }
 }

@@ -23,6 +23,12 @@
             <artifactId>api</artifactId>
             <version>0.2.3-alpha</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>72.1</version>
+        </dependency>
     </dependencies>
 
 </project>

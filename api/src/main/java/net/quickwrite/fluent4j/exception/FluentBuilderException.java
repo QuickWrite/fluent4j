@@ -26,7 +26,7 @@ public class FluentBuilderException extends RuntimeException {
     }
 
     @Override
-    public String toString() {
+    public String getLocalizedMessage() {
         final String lineNumber = Integer.toString(position[0] + 1);
         final StringBuilder builder = new StringBuilder();
 

@@ -1,48 +1,50 @@
 package net.quickwrite.fluent4j.test;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
-import net.quickwrite.fluent4j.container.*;
+import net.quickwrite.fluent4j.container.FluentBundle;
+import net.quickwrite.fluent4j.container.FluentBundleBuilder;
+import net.quickwrite.fluent4j.container.FluentResource;
+import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
-import net.quickwrite.fluent4j.impl.container.FluentResourceBundle;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CalleeExpressionTest {
-    private static final FluentBundle<ResultBuilder> bundle;
-    private static final FluentBundle<ResultBuilder> bundle2;
+    private static final FluentBundle bundle;
+    private static final FluentBundle bundle2;
     private static final String FUNCTION_RESULT = "[Function Result]";
 
     static {
-        final FluentResource<ResultBuilder> resource = getResourceFromResource("expressions/callee/callee_expressions.ftl");
+        final FluentResource resource = getResourceFromResource("expressions/callee/callee_expressions.ftl");
 
-        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH)
+        bundle = FluentBundleBuilder.builder(Locale.ENGLISH)
                 .addResource(resource)
-                .addFunction(new FluentFunction<>() {
+                .addFunction(new FluentFunction() {
                     @Override
                     public String getIdentifier() {
                         return "FUNCTION";
                     }
 
                     @Override
-                    public FluentPlaceable<ResultBuilder> parseFunction(
-                            final FluentScope<ResultBuilder> scope,
-                            final ArgumentList<ResultBuilder> argumentList
+                    public FluentPlaceable parseFunction(
+                            final FluentScope scope,
+                            final ArgumentList argumentList
                     ) {
-                        return new FluentTextElement<>(FUNCTION_RESULT);
+                        return new FluentTextElement(FUNCTION_RESULT);
                     }
                 }).build();
 
-        bundle2 = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
+        bundle2 = FluentBundleBuilder.builder(Locale.ENGLISH).addResource(resource).build();
     }
 
     @Test

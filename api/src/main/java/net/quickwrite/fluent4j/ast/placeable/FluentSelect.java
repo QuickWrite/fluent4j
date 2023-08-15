@@ -6,8 +6,6 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.function.Function;
-
 /**
  * The Select Placeable that can be used as a Placeable in
  * Fluent Documents.
@@ -23,36 +21,40 @@ import java.util.function.Function;
  *         }
  *     </pre>
  * </p>
- *
- * @param <B> The scope that the Select Placeable should use
  */
-public interface FluentSelect<B extends ResultBuilder> extends FluentPlaceable<B> {
+public interface FluentSelect extends FluentPlaceable {
     /**
      * A single variant of the Select Placeable
-     *
-     * @param <B> The scope that the variant should use
      */
-    interface FluentVariant<B extends ResultBuilder> extends FluentResolvable<B> {
-        FluentIdentifier<FluentVariantKey<B>> getIdentifier();
+    interface FluentVariant extends FluentResolvable {
+        FluentIdentifier<FluentVariantKey> getIdentifier();
 
-        interface FluentVariantKey<B extends ResultBuilder> extends FluentPattern<B> {
+        interface FluentVariantKey extends FluentPattern {
         }
     }
 
     /**
      * Defines if the element is selectable and how it should
      * react to the different values.
-     *
-     * @param <B> The type of ResultBuilder associated with the resolvable entity.
      */
-    interface Selectable<B extends ResultBuilder> {
+    interface Selectable {
         /**
-         * Returns a function that can be used to check if
-         * a Variant is the correct variant.
+         * Selects the best variant that is being given.
          *
-         * @param scope The scope that the select checker should use
-         * @return A SelectChecker that can be used for the different variants
+         * <p>
+         *     This method does <strong>not</strong> return
+         *     {@code null} and should always return the
+         *     default variant if something either went wrong
+         *     (in a recoverable way) or there are no other
+         *     options.
+         * </p>
+         *
+         * @param scope The scope that is being used for this resolve
+         * @param variants The different variants
+         * @param defaultVariant A default variant that can always be
+         *                       used as a fallback
+         * @return The best variant for this element
          */
-        Function<FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope);
+        FluentVariant select(final FluentScope scope, final FluentVariant[] variants, final FluentVariant defaultVariant);
     }
 }

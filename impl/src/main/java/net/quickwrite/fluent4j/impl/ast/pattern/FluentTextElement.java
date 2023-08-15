@@ -7,16 +7,12 @@ import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.io.IOException;
-import java.util.function.Function;
-
-public class FluentTextElement<B extends ResultBuilder> implements
-        FluentPattern<B>,
-        FluentPlaceable<B>,
-        ArgumentList.NamedArgument<B>,
-        FluentSelect.Selectable<B>,
-        FluentSelect.FluentVariant.FluentVariantKey<B>
-{
+public class FluentTextElement implements
+        FluentPattern,
+        FluentPlaceable,
+        ArgumentList.NamedArgument,
+        FluentSelect.Selectable,
+        FluentSelect.FluentVariant.FluentVariantKey {
     private final String content;
 
     public FluentTextElement(final String content) {
@@ -24,22 +20,31 @@ public class FluentTextElement<B extends ResultBuilder> implements
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         builder.append(content);
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         return this.content;
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) {
+    public FluentPattern unwrap(final FluentScope scope) {
         return this;
     }
 
     @Override
-    public Function<FluentSelect.FluentVariant<B>, Boolean> selectChecker(final FluentScope<B> scope) {
-        return variant -> content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope));
+    public FluentSelect.FluentVariant select(final FluentScope scope,
+                                             final FluentSelect.FluentVariant[] variants,
+                                             final FluentSelect.FluentVariant defaultVariant
+    ) {
+        for (final FluentSelect.FluentVariant variant : variants) {
+            if (content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
+                return variant;
+            }
+        }
+
+        return defaultVariant;
     }
 }

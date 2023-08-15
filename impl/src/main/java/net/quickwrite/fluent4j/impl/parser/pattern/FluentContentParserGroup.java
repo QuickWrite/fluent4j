@@ -5,39 +5,29 @@ import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;
 import net.quickwrite.fluent4j.parser.pattern.FluentPatternParser;
-import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-public class FluentContentParserGroup<B extends ResultBuilder> implements FluentContentParser<B> {
-    @SuppressWarnings("unchecked")
-    public static final FluentContentParser<? extends ResultBuilder> DEFAULT = builder()
-                .addParser((FluentPatternParser<? extends FluentPattern<ResultBuilder>, ResultBuilder>) FluentPlaceableParser.DEFAULT)
-                .build();
+public class FluentContentParserGroup implements FluentContentParser {
+    private static final IntermediateTextElement NEWLINE_INTERMEDIATE = new IntermediateTextElement(CharBuffer.wrap("\n"), -1, false);
+    private final FluentPatternParser<? extends FluentPattern>[] parsers;
 
-    private final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList;
-
-    private static final IntermediateTextElement<?> NEWLINE_INTERMEDIATE = new IntermediateTextElement<>(CharBuffer.wrap("\n"), -1, false);
-
-    private FluentContentParserGroup(final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList) {
-        this.parserList = parserList;
+    private FluentContentParserGroup(final FluentPatternParser<? extends FluentPattern>[] parsers) {
+        this.parsers = parsers;
     }
 
     @Override
-    public List<FluentPattern<B>> parse(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
-        final List<FluentPattern<B>> patternList = generatePatternList(iterator, endChecker);
+    public List<FluentPattern> parse(final ContentIterator iterator, final EndChecker endChecker) {
+        final List<FluentPattern> patternList = generatePatternList(iterator, endChecker);
 
         return sanitizePatternList(patternList);
     }
 
-    @SuppressWarnings("unchecked")
-    private List<FluentPattern<B>> generatePatternList(final ContentIterator iterator, final Function<ContentIterator, Boolean> endChecker) {
-        final List<FluentPattern<B>> patternList = new ArrayList<>();
+    private List<FluentPattern> generatePatternList(final ContentIterator iterator, final EndChecker endChecker) {
+        final List<FluentPattern> patternList = new ArrayList<>();
 
         int textStart = iterator.position()[1];
         boolean isAfterNL = false;
@@ -46,12 +36,12 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         while (iterator.line() != null) {
             final int[] position = iterator.position();
 
-            for (final FluentPatternParser<? extends FluentPattern<B>, B> patternParser : parserList) {
+            for (final FluentPatternParser<? extends FluentPattern> patternParser : parsers) {
                 if (iterator.character() != patternParser.getStartingChar()) {
                     continue;
                 }
 
-                final ParseResult<? extends FluentPattern<B>> result = patternParser.parse(iterator, this);
+                final ParseResult<? extends FluentPattern> result = patternParser.parse(iterator, this);
 
                 if (result.getType() == ParseResult.ParseResultType.FAILURE) {
                     iterator.setPosition(position);
@@ -79,11 +69,11 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
             if (textStart != position[1]) {
                 patternList.add(createIntermediateTextElement(iterator, textStart, position, isAfterNL));
             } else if (isAfterNL && patternList.size() != 0) {
-                patternList.add((FluentPattern<B>) NEWLINE_INTERMEDIATE);
+                patternList.add((FluentPattern) NEWLINE_INTERMEDIATE);
             }
 
             iterator.nextChar();
-            if (endChecker.apply(iterator)) {
+            if (endChecker.check(iterator)) {
                 break;
             }
 
@@ -94,21 +84,21 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         return patternList;
     }
 
-    final List<FluentPattern<B>> sanitizePatternList(final List<FluentPattern<B>> patternList) {
+    final List<FluentPattern> sanitizePatternList(final List<FluentPattern> patternList) {
         int minWhitespace = Integer.MAX_VALUE;
 
-        for (final FluentPattern<B> pattern : patternList) {
+        for (final FluentPattern pattern : patternList) {
             if (!(pattern instanceof IntermediateTextElement)) {
                 continue;
             }
 
-            final IntermediateTextElement<?> textElement = (IntermediateTextElement<?>) pattern;
+            final IntermediateTextElement textElement = (IntermediateTextElement) pattern;
 
             if (!textElement.isAfterNL()) {
                 continue;
             }
 
-            final int whitespace = textElement.getWhitespace();
+            final int whitespace = textElement.whitespace();
             if (whitespace != -1 && whitespace < minWhitespace) {
                 minWhitespace = whitespace;
             }
@@ -122,7 +112,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
             return List.of();
         }
 
-        final List<FluentPattern<B>> result = new ArrayList<>(patternList.size());
+        final List<FluentPattern> result = new ArrayList<>(patternList.size());
         final StringBuilder builder = new StringBuilder();
         int start = skipLeadingNL(patternList);
 
@@ -130,26 +120,26 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         if (start == 0 && patternList.get(0) instanceof IntermediateTextElement) {
             start = 1;
 
-            final IntermediateTextElement<?> textElement = (IntermediateTextElement<?>) patternList.get(0);
+            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
 
-            if (textElement.getWhitespace() == -1) {
+            if (textElement.whitespace() == -1) {
                 break firstElementIf;
             }
 
             builder.append(
                     textElement.slice(
                             // If there was something before this just use the calculated whitespace
-                            textElement.isAfterNL() ? minWhitespace : textElement.getWhitespace()
+                            textElement.isAfterNL() ? minWhitespace : textElement.whitespace()
                     )
             );
         }
 
         for (int i = start; i < patternList.size(); i++) {
-            final FluentPattern<B> element = patternList.get(i);
+            final FluentPattern element = patternList.get(i);
 
             if (!(element instanceof IntermediateTextElement)) {
-                 if (builder.length() != 0) {
-                    result.add(new FluentTextElement<>(builder.toString()));
+                if (builder.length() != 0) {
+                    result.add(new FluentTextElement(builder.toString()));
 
                     // clear the StringBuilder
                     builder.setLength(0);
@@ -160,10 +150,10 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
                 continue;
             }
 
-            final IntermediateTextElement<?> textElement = (IntermediateTextElement<?>) patternList.get(i);
+            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
 
             if (!textElement.isAfterNL()) {
-                builder.append(textElement.getContent());
+                builder.append(textElement.content());
 
                 continue;
             }
@@ -176,7 +166,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         removeTrailingWhitespace(builder);
 
         if (builder.length() != 0) {
-            result.add(new FluentTextElement<>(builder.toString()));
+            result.add(new FluentTextElement(builder.toString()));
         }
 
         return result;
@@ -192,7 +182,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         return sequence.length();
     }
 
-    private int skipLeadingNL(final List<FluentPattern<B>> patternList) {
+    private int skipLeadingNL(final List<FluentPattern> patternList) {
         for (int i = 0; i < patternList.size(); i++) {
             if (!(patternList.get(i) instanceof IntermediateTextElement)) {
                 return i;
@@ -218,7 +208,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         builder.setLength(0);
     }
 
-    private IntermediateTextElement<B> createIntermediateTextElement(
+    private IntermediateTextElement createIntermediateTextElement(
             final ContentIterator iterator,
             final int start,
             final int[] end,
@@ -229,7 +219,7 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         iterator.setPosition(end);
 
         final CharBuffer buffer = CharBuffer.wrap(iterator.line(), start, end[1]);
-        final IntermediateTextElement<B> textElement = new IntermediateTextElement<>(
+        final IntermediateTextElement textElement = new IntermediateTextElement(
                 buffer,
                 countWhitespace(buffer),
                 isAfterNL
@@ -239,28 +229,28 @@ public class FluentContentParserGroup<B extends ResultBuilder> implements Fluent
         return textElement;
     }
 
-
-    public static <B extends ResultBuilder> FluentContentParser.Builder<B> builder() {
-        return new FluentContentParserGroupBuilder<>();
+    public static FluentContentParser.Builder builder() {
+        return new FluentContentParserGroupBuilder();
     }
 
-    private static class FluentContentParserGroupBuilder<B extends ResultBuilder> implements FluentContentParser.Builder<B> {
-        private final List<FluentPatternParser<? extends FluentPattern<B>, B>> parserList;
+    private static class FluentContentParserGroupBuilder implements FluentContentParser.Builder {
+        private final List<FluentPatternParser<? extends FluentPattern>> parserList;
 
         public FluentContentParserGroupBuilder() {
             this.parserList = new ArrayList<>();
         }
 
         @Override
-        public Builder<B> addParser(final FluentPatternParser<? extends FluentPattern<B>, B> parser) {
+        public Builder addParser(final FluentPatternParser<? extends FluentPattern> parser) {
             parserList.add(parser);
 
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public FluentContentParser<B> build() {
-            return new FluentContentParserGroup<>(parserList);
+        public FluentContentParser build() {
+            return new FluentContentParserGroup(parserList.toArray(new FluentPatternParser[0]));
         }
     }
 }

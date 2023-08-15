@@ -1,17 +1,23 @@
 package net.quickwrite.fluent4j.parser;
 
 import net.quickwrite.fluent4j.impl.parser.FluentParserGroup;
-import net.quickwrite.fluent4j.result.ResultBuilder;
+import net.quickwrite.fluent4j.parser.base.DefaultElementParser;
 
 public final class ResourceParserBuilder {
+    private static final ResourceParser DEFAULT = builder()
+            .addParser(DefaultElementParser.WHITESPACE_SKIPPER)
+            .addParser(DefaultElementParser.COMMENT_SKIPPER)
+            .addParser(DefaultElementParser.TERM_PARSER)
+            .addParser(DefaultElementParser.MESSAGE_PARSER)
+            .build();
+
     private ResourceParserBuilder() {}
 
-    public static <B extends ResultBuilder> ResourceParser.Builder<B> builder() {
+    public static ResourceParser.Builder builder() {
         return FluentParserGroup.builder();
     }
 
-    @SuppressWarnings("unchecked")
-    public static <B extends ResultBuilder> ResourceParser<B> defaultParser() {
-        return (ResourceParser<B>) FluentParserGroup.DEFAULT;
+    public static ResourceParser defaultParser() {
+        return DEFAULT;
     }
 }

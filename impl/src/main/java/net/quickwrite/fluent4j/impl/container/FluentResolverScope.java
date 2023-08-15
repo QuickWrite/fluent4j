@@ -9,22 +9,22 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FluentResolverScope<B extends ResultBuilder> implements FluentScope<B> {
-    private final FluentBundle<B> bundle;
+public class FluentResolverScope implements FluentScope {
+    private final FluentBundle bundle;
     private Set<FluentIdentifier<?>> traversed;
 
-    private ArgumentList<B> argumentList;
+    private ArgumentList argumentList;
 
-    private final B builder;
+    private final ResultBuilder builder;
 
-    public FluentResolverScope(final FluentBundle<B> bundle, final ArgumentList<B> argumentList, final B builder) {
+    public FluentResolverScope(final FluentBundle bundle, final ArgumentList argumentList, final ResultBuilder builder) {
         this(bundle, argumentList, new HashSet<>(), builder);
     }
 
-    public FluentResolverScope(final FluentBundle<B> bundle,
-                               final ArgumentList<B> argumentList,
+    public FluentResolverScope(final FluentBundle bundle,
+                               final ArgumentList argumentList,
                                final Set<FluentIdentifier<?>> traversed,
-                               final B builder
+                               final ResultBuilder builder
     ) {
         this.bundle = bundle;
         this.traversed = traversed;
@@ -33,7 +33,7 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     }
 
     @Override
-    public FluentBundle<B> bundle() {
+    public FluentBundle bundle() {
         return this.bundle;
     }
 
@@ -48,24 +48,23 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
     }
 
     @Override
-    public ArgumentList<B> arguments() {
+    public ArgumentList arguments() {
         return this.argumentList;
     }
 
     @Override
-    public void setArguments(final ArgumentList<B> arguments) {
+    public void setArguments(final ArgumentList arguments) {
         this.argumentList = arguments;
     }
 
-    public B builder() {
+    public ResultBuilder builder() {
         return this.builder;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public FluentScope<B> clone() {
+    public FluentScope clone() {
         try {
-            final FluentResolverScope<B> newScope = (FluentResolverScope<B>) super.clone();
+            final FluentResolverScope newScope = (FluentResolverScope) super.clone();
 
             newScope.traversed = new HashSet<>(traversed);
 
@@ -73,7 +72,7 @@ public class FluentResolverScope<B extends ResultBuilder> implements FluentScope
         } catch (final CloneNotSupportedException ignored) {
             // This should NEVER happen
 
-            // When it happens the exception will be thrown and when the application crashes
+            // If it happens the exception will be thrown and when the application crashes
             // this message will be shown.
             // When this exception is being thrown something bad must have happened
             // which couldn't have been anticipated.
