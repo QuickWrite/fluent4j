@@ -1,6 +1,5 @@
 package net.quickwrite.fluent4j.impl.container;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
@@ -14,13 +13,13 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 import java.util.*;
 
 public class FluentResourceBundle implements FluentBundle {
-    private final ULocale locale;
+    private final Locale locale;
     private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
 
     private final Map<String, FluentFunction> functions;
 
     private FluentResourceBundle(
-            final ULocale locale,
+            final Locale locale,
             final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries,
             final Map<String, FluentFunction> functions
     ) {
@@ -166,7 +165,7 @@ public class FluentResourceBundle implements FluentBundle {
     }
 
     @Override
-    public ULocale getLocale() {
+    public Locale getLocale() {
         return this.locale;
     }
 
@@ -180,16 +179,16 @@ public class FluentResourceBundle implements FluentBundle {
         return new HashSet<>(this.functions.values());
     }
 
-    public static FluentBundle.Builder builder(final ULocale locale) {
+    public static FluentBundle.Builder builder(final Locale locale) {
         return new FluentResourceBundle.FluentResourceBundleBuilder(locale);
     }
 
     private static class FluentResourceBundleBuilder implements FluentBundle.Builder {
-        private final ULocale locale;
+        private final Locale locale;
         private final Map<Class<? extends FluentEntry>, Map<String, FluentEntry>> entries;
         private final Map<String, FluentFunction> functions;
 
-        public FluentResourceBundleBuilder(final ULocale locale) {
+        public FluentResourceBundleBuilder(final Locale locale) {
             this.locale = locale;
             this.entries = new HashMap<>();
             this.functions = new HashMap<>();

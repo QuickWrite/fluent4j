@@ -1,11 +1,12 @@
 package net.quickwrite.fluent4j.test;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +30,7 @@ public class WhitespaceTest {
     public void testWhitespaceInValue() {
         final FluentResource resource = getResourceFromResource("whitespace/whitespace_in_value.ftl");
 
-        final FluentBundle bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
+        final FluentBundle bundle = FluentBundleBuilder.builder(Locale.ENGLISH).addResource(resource).build();
 
         assertEquals("""
                         first line

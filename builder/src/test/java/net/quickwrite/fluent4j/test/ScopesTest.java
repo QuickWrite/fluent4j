@@ -1,6 +1,5 @@
 package net.quickwrite.fluent4j.test;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.ArgumentListBuilder;
 import net.quickwrite.fluent4j.container.FluentBundle;
@@ -8,6 +7,8 @@ import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,10 +31,10 @@ public class ScopesTest {
 
     static {
         final FluentResource resource = getResourceFromResource("scope/scopes.ftl");
-        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(resource).build();
+        bundle = FluentBundleBuilder.builder(Locale.ENGLISH).addResource(resource).build();
 
         final FluentResource termParamResource = getResourceFromResource("scope/term_parameters.ftl");
-        termParamBundle = FluentBundleBuilder.builder(ULocale.ENGLISH).addResource(termParamResource).build();
+        termParamBundle = FluentBundleBuilder.builder(Locale.ENGLISH).addResource(termParamResource).build();
     }
 
     @Test

@@ -1,12 +1,12 @@
 package net.quickwrite.fluent4j.container;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -132,7 +132,7 @@ public interface FluentBundle {
      *
      * @return The locale of the bundle
      */
-    ULocale getLocale();
+    Locale getLocale();
 
     /**
      * Returns the function with the specific key.

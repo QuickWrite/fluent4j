@@ -1,11 +1,12 @@
 package net.quickwrite.fluent4j.test;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +16,7 @@ public class ExpressionsTest {
     private static final FluentBundle bundle;
 
     static {
-        bundle = FluentBundleBuilder.builder(ULocale.ENGLISH)
+        bundle = FluentBundleBuilder.builder(Locale.ENGLISH)
                 .addResource(getResourceFromResource("expressions/literal_expressions.ftl"))
                 .addResource(getResourceFromResource("expressions/member_expressions.ftl"))
                 .build();

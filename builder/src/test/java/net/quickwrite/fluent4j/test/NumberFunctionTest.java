@@ -1,11 +1,12 @@
 package net.quickwrite.fluent4j.test;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.container.FluentBundle;
 import net.quickwrite.fluent4j.container.FluentBundleBuilder;
 import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,9 +18,9 @@ public class NumberFunctionTest {
     static {
         final FluentResource resource = getResourceFromResource("functions/number_function.ftl");
 
-        bundleEnglish = FluentBundleBuilder.builder(ULocale.ENGLISH).addDefaultFunctions().addResource(resource).build();
+        bundleEnglish = FluentBundleBuilder.builder(Locale.ENGLISH).addDefaultFunctions().addResource(resource).build();
 
-        bundleGerman = FluentBundleBuilder.builder(ULocale.GERMAN).addDefaultFunctions().addResource(resource).build();
+        bundleGerman = FluentBundleBuilder.builder(Locale.GERMAN).addDefaultFunctions().addResource(resource).build();
     }
 
     @Test
