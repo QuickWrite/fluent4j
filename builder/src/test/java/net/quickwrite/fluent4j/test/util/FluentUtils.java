@@ -18,7 +18,7 @@ public class FluentUtils {
 
     public static FluentResource getResourceFromResource(final String string) {
         try {
-            final ResourceParser<B> resourceParser = ResourceParserBuilder.defaultParser();
+            final ResourceParser resourceParser = ResourceParserBuilder.defaultParser();
 
             return resourceParser.parse(FluentIteratorFactory.fromFile(getResourceFileAsFile(string)));
         } catch (final IOException | URISyntaxException exception) {
