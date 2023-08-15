@@ -203,7 +203,7 @@ public interface FluentBundle {
         }
 
         @Override
-        public String toString() {
+        public String getLocalizedMessage() {
             return "Duplicate entries for key '" +
                     entry.getIdentifier().getFullIdentifier() +
                     "' in '" +
