@@ -7,13 +7,12 @@ import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentVariableReferenceParser<B extends ResultBuilder> implements PlaceableExpressionParser<B> {
+public class FluentVariableReferenceParser implements PlaceableExpressionParser {
     @Override
-    public Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser) {
+    public Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser) {
         if (iterator.character() != '$') {
             return Optional.empty();
         }
@@ -26,6 +25,6 @@ public class FluentVariableReferenceParser<B extends ResultBuilder> implements P
             throw new FluentExpectedException("identifier", Character.toString(iterator.character()), iterator);
         }
 
-        return Optional.of(new FluentVariableReference<>(identifier.get()));
+        return Optional.of(new FluentVariableReference(identifier.get()));
     }
 }

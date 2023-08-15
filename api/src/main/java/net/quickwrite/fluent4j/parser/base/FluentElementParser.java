@@ -3,7 +3,6 @@ package net.quickwrite.fluent4j.parser.base;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.parser.FluentParser;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 /**
  * The parser for the basis of the file.
@@ -15,7 +14,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
  * messages, terms, etc.
  * </p>
  *
- * @param <T>
+ * @param <T> The return value of the Element Parser
  */
 public interface FluentElementParser<T> extends FluentParser<ParseResult<T>> {
     /**
@@ -24,6 +23,6 @@ public interface FluentElementParser<T> extends FluentParser<ParseResult<T>> {
      * to simplify the building step of the parser.
      */
     interface FluentElementParserList {
-        <B extends ResultBuilder> FluentElementParser<? extends FluentEntry<B>> getParser();
+        FluentElementParser<? extends FluentEntry> getParser();
     }
 }

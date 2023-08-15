@@ -17,12 +17,11 @@ import java.util.Optional;
  *     For example with the placeable {@code { 42 } } it would
  *     parse from the {@code 4} to the {@code }} and close it.
  * </p>
- * @param <B> The Builder that is being used to parse this resource
  */
-public interface PlaceableExpressionParser<B extends ResultBuilder> {
-    Optional<FluentPlaceable<B>> parse(final ContentIterator iterator, final PlaceableParser<B> placeableParser);
+public interface PlaceableExpressionParser {
+    Optional<FluentPlaceable> parse(final ContentIterator iterator, final PlaceableParser placeableParser);
 
     interface PlaceableExpressionParserList {
-        <B extends ResultBuilder> PlaceableExpressionParser<B> getParser();
+        PlaceableExpressionParser getParser();
     }
 }

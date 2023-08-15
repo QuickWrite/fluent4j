@@ -1,7 +1,8 @@
 package net.quickwrite.fluent4j.impl.ast.pattern;
 
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
@@ -10,7 +11,7 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;
 
-public class FluentMessageReference<B extends ResultBuilder> implements FluentPlaceable<B> {
+public class FluentMessageReference implements FluentPlaceable {
     protected final String identifier;
 
     public FluentMessageReference(final String identifier) {
@@ -18,7 +19,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
     }
 
     @Override
-    public void resolve(final FluentScope<B> scope, final B builder) {
+    public void resolve(final FluentScope scope, final ResultBuilder builder) {
         try {
             unwrap(scope).resolve(scope, builder);
         } catch (final FluentPatternException exception) {
@@ -27,7 +28,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
     }
 
     @Override
-    public FluentPattern<B> unwrap(final FluentScope<B> scope) throws FluentPatternException {
+    public FluentPattern unwrap(final FluentScope scope) throws FluentPatternException {
         return scope.bundle().getMessage(identifier)
                 .orElseThrow(
                         () -> ErrorUtil.getPlaceablePatternException(identifier)
@@ -35,7 +36,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
     }
 
     @Override
-    public String toSimpleString(final FluentScope<B> scope) {
+    public String toSimpleString(final FluentScope scope) {
         try {
             return unwrap(scope).toSimpleString(scope);
         } catch (final FluentPatternException e) {
@@ -43,7 +44,7 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
         }
     }
 
-    public static class AttributeReference<B extends ResultBuilder> extends FluentMessageReference<B> {
+    public static class AttributeReference extends FluentMessageReference {
         private final String attributeIdentifier;
 
         public AttributeReference(final String identifier, final String attributeIdentifier) {
@@ -53,14 +54,14 @@ public class FluentMessageReference<B extends ResultBuilder> implements FluentPl
         }
 
         @Override
-        public void resolve(final FluentScope<B> scope, final B builder) {
-            final Optional<FluentEntry<B>> message = scope.bundle().getMessage(identifier);
+        public void resolve(final FluentScope scope, final ResultBuilder builder) {
+            final Optional<FluentMessage> message = scope.bundle().getMessage(identifier);
             if (message.isEmpty()) {
                 getException().getDataWriter().write(builder);
                 return;
             }
 
-            final Optional<FluentEntry.Attribute<B>> attribute = message.get().getAttribute(attributeIdentifier);
+            final Optional<FluentAttributeEntry.Attribute> attribute = message.get().getAttribute(attributeIdentifier);
             if (attribute.isEmpty()) {
                 getException().getDataWriter().write(builder);
                 return;

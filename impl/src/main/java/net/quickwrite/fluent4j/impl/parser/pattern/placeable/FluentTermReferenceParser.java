@@ -12,7 +12,7 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FluentTermReferenceParser<B extends ResultBuilder> extends ParameterizedLiteralParser<Map.Entry<String, String>, B> {
+public class FluentTermReferenceParser extends ParameterizedLiteralParser<Map.Entry<String, String>, ResultBuilder> {
     @Override
     protected Optional<Map.Entry<String, String>> parseIdentifier(final ContentIterator iterator) {
         if (iterator.character() != '-') {
@@ -43,17 +43,17 @@ public class FluentTermReferenceParser<B extends ResultBuilder> extends Paramete
     }
 
     @Override
-    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier) {
+    protected FluentPlaceable getInstance(final Map.Entry<String, String> identifier) {
         return getInstance(identifier, ArgumentList.empty());
     }
 
     @Override
-    protected FluentPlaceable<B> getInstance(final Map.Entry<String, String> identifier, final ArgumentList<B> argumentList) {
+    protected FluentPlaceable getInstance(final Map.Entry<String, String> identifier, final ArgumentList argumentList) {
         if (identifier.getValue() != null) {
-            return new FluentTermReference.AttributeReference<>(identifier.getKey(), identifier.getValue(), argumentList);
+            return new FluentTermReference.AttributeReference(identifier.getKey(), identifier.getValue(), argumentList);
         }
 
-        return new FluentTermReference<>(identifier.getKey(), argumentList);
+        return new FluentTermReference(identifier.getKey(), argumentList);
     }
 
     @Override

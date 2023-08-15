@@ -4,20 +4,19 @@ import net.quickwrite.fluent4j.container.FluentResource;
 import net.quickwrite.fluent4j.iterator.FluentIteratorFactory;
 import net.quickwrite.fluent4j.parser.ResourceParser;
 import net.quickwrite.fluent4j.parser.ResourceParserBuilder;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 public class FluentUtils {
-    public static <B extends ResultBuilder> FluentResource<B> getResourceFromString(final String string) {
-        final ResourceParser<B> resourceParser = ResourceParserBuilder.defaultParser();
+    public static FluentResource getResourceFromString(final String string) {
+        final ResourceParser resourceParser = ResourceParserBuilder.defaultParser();
 
         return resourceParser.parse(FluentIteratorFactory.fromString(string));
     }
 
-    public static <B extends ResultBuilder> FluentResource<B> getResourceFromResource(final String string) {
+    public static FluentResource getResourceFromResource(final String string) {
         try {
             final ResourceParser<B> resourceParser = ResourceParserBuilder.defaultParser();
 

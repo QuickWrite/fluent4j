@@ -1,12 +1,12 @@
 package net.quickwrite.fluent4j.container;
 
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
+import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.Map;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,10 +15,8 @@ import java.util.Set;
  * to be used together in a single view, widget or any other UI abstraction. <br />
  * This also contains the different functions and other types of messages like
  * terms as they are dependent on the locale.
- *
- * @param <B> The type of ResultBuilder associated with the resolvable entities.
  */
-public interface FluentBundle<B extends ResultBuilder> {
+public interface FluentBundle {
     /**
      * Returns if the message with this specific
      * key does exist.
@@ -29,12 +27,11 @@ public interface FluentBundle<B extends ResultBuilder> {
     boolean hasMessage(final String key);
 
     /**
-     * Returns a set of all messages with their
-     * respective key.
+     * Returns a set of all messages
      *
      * @return All messages
      */
-    Set<Map.Entry<String, FluentEntry<B>>> getMessages();
+    Set<FluentMessage> getMessages();
 
     /**
      * Returns the message with the given key.
@@ -45,7 +42,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @param key The key of the message
      * @return The message or an empty optional
      */
-    Optional<FluentEntry<B>> getMessage(final String key);
+    Optional<FluentMessage> getMessage(final String key);
 
     /**
      * Returns the Builder itself that was being given
@@ -71,7 +68,8 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @param builder The builder that should be used
      * @return The builder or an empty optional
      */
-    Optional<B> resolveMessage(final String key, final ArgumentList<B> argumentList, final B builder);
+    Optional<ResultBuilder> resolveMessage(final String key, final ArgumentList argumentList, final ResultBuilder builder);
+
     /**
      * Returns the Builder itself that was being given
      * which was being run over the entire tree of the
@@ -99,17 +97,16 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @param builder The builder that should be used
      * @return The builder or an empty optional
      */
-    Optional<B> resolveMessage(final String key, final B builder);
+    Optional<ResultBuilder> resolveMessage(final String key, final ResultBuilder builder);
 
     /**
-     * Returns all the entries of the specified class
-     * type as a set with their respective key.
+     * Returns all the entries of the specified class.
      *
      * @param clazz The class that the entries should have
      * @return All elements
      * @param <T> The generic type that class can have
      */
-    <T extends FluentEntry<B>> Set<Map.Entry<String, FluentEntry<B>>> getEntries(final Class<T> clazz);
+    <T extends FluentEntry> Set<T> getEntries(final Class<T> clazz);
 
     /**
      * Returns a single entry with the specific key
@@ -123,7 +120,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @return The entry or an empty optional
      * @param <T> The generic type that class can have
      */
-    <T extends FluentEntry<B>> Optional<T> getEntry(final String key, final Class<T> clazz);
+    <T extends FluentEntry> Optional<T> getEntry(final String key, final Class<T> clazz);
 
     /**
      * Returns the locale that this specific bundle
@@ -135,7 +132,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      *
      * @return The locale of the bundle
      */
-    ULocale getLocale();
+    Locale getLocale();
 
     /**
      * Returns the function with the specific key.
@@ -154,7 +151,7 @@ public interface FluentBundle<B extends ResultBuilder> {
      * @param key The key (aka. the name) of the function
      * @return The function itself or an empty optional
      */
-    Optional<FluentFunction<B>> getFunction(final String key);
+    Optional<FluentFunction> getFunction(final String key);
 
     /**
      * Returns all the functions as a set.
@@ -167,15 +164,51 @@ public interface FluentBundle<B extends ResultBuilder> {
      *
      * @return All the functions
      */
-    Set<FluentFunction<B>> getFunctions();
+    Set<FluentFunction> getFunctions();
 
-    interface Builder<B extends ResultBuilder> extends net.quickwrite.fluent4j.util.Builder<FluentBundle<B>> {
-        Builder<B> addResource(final FluentResource<B> resource);
+    interface Builder extends net.quickwrite.fluent4j.util.Builder<FluentBundle> {
+        Builder addResource(final FluentResource resource);
 
-        Builder<B> addResourceNoDup(final FluentResource<B> resource);
+        Builder addResourceNoDup(final FluentResource resource) throws DuplicateEntryException;
 
-        Builder<B> addFunction(final FluentFunction<B> function);
+        Builder addFunction(final FluentFunction function);
 
-        Builder<B> addDefaultFunctions();
+        Builder addDefaultFunctions();
+    }
+
+    class DuplicateEntryException extends RuntimeException {
+        private final FluentEntry entry;
+        private final Class<? extends FluentEntry> clazz;
+
+        public DuplicateEntryException(final FluentEntry entry, final Class<? extends FluentEntry> clazz) {
+            this.entry = entry;
+            this.clazz = clazz;
+        }
+
+        public DuplicateEntryException(final FluentEntry entry,
+                                       final Class<? extends FluentEntry> clazz,
+                                       final Throwable cause
+        ) {
+            super(cause);
+            this.entry = entry;
+            this.clazz = clazz;
+        }
+
+        public FluentEntry getEntry() {
+            return this.entry;
+        }
+
+        public Class<? extends FluentEntry> getEntryClass() {
+            return this.clazz;
+        }
+
+        @Override
+        public String getLocalizedMessage() {
+            return "Duplicate entries for key '" +
+                    entry.getIdentifier().getFullIdentifier() +
+                    "' in '" +
+                    clazz.getSimpleName() +
+                    "'";
+        }
     }
 }

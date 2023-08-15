@@ -26,7 +26,9 @@ public final class ParserUtil {
 
         final int position = content.position()[1];
 
+        /* @formatter:off */
         while (isFluentIdentifierPart(content.nextChar()));
+        /* @formatter:on */
 
         return Optional.of(content.line().substring(position, content.position()[1]));
     }

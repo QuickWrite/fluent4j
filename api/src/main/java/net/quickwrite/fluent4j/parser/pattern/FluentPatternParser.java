@@ -3,7 +3,6 @@ package net.quickwrite.fluent4j.parser.pattern;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.result.ParseResult;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 /**
  * The basic pattern parser interface
@@ -17,9 +16,8 @@ import net.quickwrite.fluent4j.result.ResultBuilder;
  * </p>
  *
  * @param <T> The resulting pattern
- * @param <B> The Builder that is being used to parse this resource
  */
-public interface FluentPatternParser<T extends FluentPattern<B>, B extends ResultBuilder> {
+public interface FluentPatternParser<T extends FluentPattern> {
     /**
      * Returns the starting character of the component
      *
@@ -37,5 +35,5 @@ public interface FluentPatternParser<T extends FluentPattern<B>, B extends Resul
      *                      the message content
      * @return The result of the parsing operation
      */
-    ParseResult<T> parse(final ContentIterator iterator, final FluentContentParser<B> contentParser);
+    ParseResult<T> parse(final ContentIterator iterator, final FluentContentParser contentParser);
 }
