@@ -9,7 +9,6 @@ import net.quickwrite.fluent4j.impl.ast.entry.FluentBaseElement;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.List;
-import java.util.Objects;
 
 public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
     private final FluentSelect.Selectable selectable;
@@ -57,7 +56,8 @@ public class FluentSelectExpression implements FluentSelect, FluentPlaceable {
             return this.identifier;
         }
 
-        private record FluentVariantIdentifier(FluentVariantKey identifier) implements FluentIdentifier<FluentVariantKey> {
+        private record FluentVariantIdentifier(
+                FluentVariantKey identifier) implements FluentIdentifier<FluentVariantKey> {
             @Override
             public FluentVariantKey getSimpleIdentifier() {
                 return this.identifier;

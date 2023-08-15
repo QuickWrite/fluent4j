@@ -6,8 +6,6 @@ import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
-import java.util.List;
-
 public abstract class FluentBaseElement<I> implements FluentResolvable {
     protected final FluentIdentifier<I> identifier;
     protected final FluentPattern[] patterns;
@@ -19,7 +17,7 @@ public abstract class FluentBaseElement<I> implements FluentResolvable {
 
     @Override
     public void resolve(final FluentScope scope, final ResultBuilder builder) {
-        if(!scope.addTraversed(identifier)) {
+        if (!scope.addTraversed(identifier)) {
             builder.append("{???}");
             return;
         }

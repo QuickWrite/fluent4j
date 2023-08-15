@@ -12,8 +12,7 @@ public class FluentTextElement implements
         FluentPlaceable,
         ArgumentList.NamedArgument,
         FluentSelect.Selectable,
-        FluentSelect.FluentVariant.FluentVariantKey
-{
+        FluentSelect.FluentVariant.FluentVariantKey {
     private final String content;
 
     public FluentTextElement(final String content) {
@@ -40,7 +39,7 @@ public class FluentTextElement implements
                                              final FluentSelect.FluentVariant[] variants,
                                              final FluentSelect.FluentVariant defaultVariant
     ) {
-        for(final FluentSelect.FluentVariant variant : variants) {
+        for (final FluentSelect.FluentVariant variant : variants) {
             if (content.equals(variant.getIdentifier().getSimpleIdentifier().toSimpleString(scope))) {
                 return variant;
             }

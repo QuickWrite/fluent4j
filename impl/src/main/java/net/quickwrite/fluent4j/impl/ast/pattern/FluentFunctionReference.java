@@ -7,8 +7,8 @@ import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.ast.placeable.FluentSelect;
 import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.exception.FluentPatternException;
-import net.quickwrite.fluent4j.impl.util.FluentCheckerUtil;
 import net.quickwrite.fluent4j.impl.util.ErrorUtil;
+import net.quickwrite.fluent4j.impl.util.FluentCheckerUtil;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Optional;

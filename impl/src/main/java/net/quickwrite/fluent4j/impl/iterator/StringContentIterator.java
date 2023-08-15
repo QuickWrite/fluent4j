@@ -46,7 +46,7 @@ public final class StringContentIterator implements ContentIterator {
             return character();
         }
 
-        if(line().codePointAt(characterIndex) > Character.MAX_VALUE) {
+        if (line().codePointAt(characterIndex) > Character.MAX_VALUE) {
             this.characterIndex++;
         }
         this.characterIndex++;

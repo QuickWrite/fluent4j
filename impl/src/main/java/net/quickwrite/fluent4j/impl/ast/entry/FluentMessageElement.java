@@ -1,11 +1,9 @@
 package net.quickwrite.fluent4j.impl.ast.entry;
 
-import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.identifier.FluentIdentifier;
-
-import java.util.Objects;
 
 public final class FluentMessageElement extends FluentAttributeEntryBase implements FluentMessage {
     public FluentMessageElement(final String identifier, final FluentPattern[] patterns, final FluentAttributeEntry.Attribute[] attributes) {

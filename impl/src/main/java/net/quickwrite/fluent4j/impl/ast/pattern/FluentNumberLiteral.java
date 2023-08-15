@@ -18,8 +18,7 @@ public class FluentNumberLiteral implements
         FluentPlaceable,
         ArgumentList.NamedArgument,
         FluentSelect.Selectable,
-        FluentSelect.FluentVariant.FluentVariantKey
-{
+        FluentSelect.FluentVariant.FluentVariantKey {
     protected final String stringNumber;
     protected final BigDecimal number;
     protected final FormattedNumber formattedNumber;

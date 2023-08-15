@@ -1,7 +1,7 @@
 package net.quickwrite.fluent4j.impl.parser.base.entry;
 
-import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.ast.FluentPattern;
+import net.quickwrite.fluent4j.ast.entry.FluentAttributeEntry;
 import net.quickwrite.fluent4j.exception.FluentBuilderException;
 import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.entry.FluentAttribute;

@@ -8,7 +8,7 @@ import net.quickwrite.fluent4j.exception.FluentExpectedException;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentNumberLiteral;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentSelectExpression;
 import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
-import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
+import net.quickwrite.fluent4j.impl.parser.pattern.placeable.FluentNumberLiteralParser;
 import net.quickwrite.fluent4j.impl.util.ParserUtil;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.FluentContentParser;

@@ -14,7 +14,9 @@ public final class WhitespaceSkipper implements FluentElementParser<FluentEntry>
             return ParseResult.failure();
         }
 
+        /* @formatter:off */
         while (Character.isWhitespace(content.nextChar()));
+        /* @formatter:on */
 
         return ParseResult.skip();
     }

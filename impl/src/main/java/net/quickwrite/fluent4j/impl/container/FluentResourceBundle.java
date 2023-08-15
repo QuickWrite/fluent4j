@@ -1,8 +1,8 @@
 package net.quickwrite.fluent4j.impl.container;
 
 import com.ibm.icu.util.ULocale;
-import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
+import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.container.FluentBundle;
@@ -36,7 +36,7 @@ public class FluentResourceBundle implements FluentBundle {
 
         return entryMap.map(fluentEntryMap -> fluentEntryMap.containsKey(key)).orElse(false);
     }
-    
+
     @Override
     public Set<FluentMessage> getMessages() {
         return getEntries(FluentMessage.class);
@@ -148,7 +148,8 @@ public class FluentResourceBundle implements FluentBundle {
             }
 
             @Override
-            public void clear() {}
+            public void clear() {
+            }
         };
     }
 

@@ -17,7 +17,9 @@ public class FluentFunctionParser extends ParameterizedLiteralParser<String, Res
 
         final int position = iterator.position()[1];
 
+        /* @formatter:off */
         while (isFunctionIdentifierPart(iterator.nextChar()));
+        /* @formatter:on */
 
         return Optional.of(iterator.line().substring(position, iterator.position()[1]));
     }

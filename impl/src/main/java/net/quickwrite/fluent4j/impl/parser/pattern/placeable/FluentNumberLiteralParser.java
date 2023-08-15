@@ -11,7 +11,7 @@ import java.util.Optional;
 public class FluentNumberLiteralParser implements PlaceableExpressionParser {
     public static Optional<String> parseNumberLiteral(final ContentIterator iterator) {
         final int start = iterator.position()[1];
-        
+
         if (iterator.character() == '-' && !isDigit(iterator.nextChar())) {
             return Optional.empty();
         }
@@ -20,13 +20,17 @@ public class FluentNumberLiteralParser implements PlaceableExpressionParser {
             return Optional.empty();
         }
 
+        /* @formatter:off */
         while (isDigit(iterator.nextChar()));
+        /* @formatter:on */
 
         if (iterator.character() != '.') {
             return Optional.of(iterator.line().substring(start, iterator.position()[1]));
         }
 
+        /* @formatter:off */
         while (isDigit(iterator.nextChar()));
+        /* @formatter:on */
 
         return Optional.of(iterator.line().substring(start, iterator.position()[1]));
     }
