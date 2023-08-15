@@ -169,10 +169,46 @@ public interface FluentBundle {
     interface Builder extends net.quickwrite.fluent4j.util.Builder<FluentBundle> {
         Builder addResource(final FluentResource resource);
 
-        Builder addResourceNoDup(final FluentResource resource);
+        Builder addResourceNoDup(final FluentResource resource) throws DuplicateEntryException;
 
         Builder addFunction(final FluentFunction function);
 
         Builder addDefaultFunctions();
+    }
+
+    class DuplicateEntryException extends RuntimeException {
+        private final FluentEntry entry;
+        private final Class<? extends FluentEntry> clazz;
+
+        public DuplicateEntryException(final FluentEntry entry, final Class<? extends FluentEntry> clazz) {
+            this.entry = entry;
+            this.clazz = clazz;
+        }
+
+        public DuplicateEntryException(final FluentEntry entry,
+                                       final Class<? extends FluentEntry> clazz,
+                                       final Throwable cause
+        ) {
+            super(cause);
+            this.entry = entry;
+            this.clazz = clazz;
+        }
+
+        public FluentEntry getEntry() {
+            return this.entry;
+        }
+
+        public Class<? extends FluentEntry> getEntryClass() {
+            return this.clazz;
+        }
+
+        @Override
+        public String toString() {
+            return "Duplicate entries for key '" +
+                    entry.getIdentifier().getFullIdentifier() +
+                    "' in '" +
+                    clazz.getSimpleName() +
+                    "'";
+        }
     }
 }

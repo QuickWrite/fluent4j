@@ -209,7 +209,7 @@ public class FluentResourceBundle implements FluentBundle {
         }
 
         @Override
-        public Builder addResourceNoDup(final FluentResource resource) {
+        public Builder addResourceNoDup(final FluentResource resource) throws DuplicateEntryException {
             for (final FluentEntry entry : resource.entries()) {
                 final Class<? extends FluentEntry> clazz = getClass(entry);
 
@@ -220,7 +220,7 @@ public class FluentResourceBundle implements FluentBundle {
                 final Map<String, FluentEntry> innerEntryMap = entries.get(clazz);
 
                 if (innerEntryMap.containsKey(entry.getIdentifier().getSimpleIdentifier())) {
-                    throw new RuntimeException("Duplicate entries for key '" + entry.getIdentifier().getFullIdentifier() + "' in '" + clazz.getSimpleName() + "'");
+                    throw new DuplicateEntryException(entry, clazz);
                 }
 
                 innerEntryMap.put(entry.getIdentifier().getSimpleIdentifier(), entry);
