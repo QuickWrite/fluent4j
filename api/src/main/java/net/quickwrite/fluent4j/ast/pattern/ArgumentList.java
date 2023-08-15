@@ -151,6 +151,8 @@ public interface ArgumentList {
          */
         public static final EmptyArgumentList SELF = new EmptyArgumentList();
 
+        private EmptyArgumentList() {}
+
         @Override
         public Optional<NamedArgument> getArgument(final String name) {
             return Optional.empty();
