@@ -4,7 +4,6 @@ import com.ibm.icu.number.FormattedNumber;
 import com.ibm.icu.number.LocalizedNumberFormatter;
 import com.ibm.icu.number.NumberFormatter;
 import com.ibm.icu.text.PluralRules;
-import com.ibm.icu.util.ULocale;
 import net.quickwrite.fluent4j.ast.FluentPattern;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
@@ -13,6 +12,8 @@ import net.quickwrite.fluent4j.container.FluentScope;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class FluentNumberLiteral implements
         FluentPlaceable,
@@ -23,7 +24,7 @@ public class FluentNumberLiteral implements
     protected final BigDecimal number;
     protected final FormattedNumber formattedNumber;
 
-    private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(ULocale.ENGLISH);
+    private static final LocalizedNumberFormatter NUMBER_FORMATTER = NumberFormatter.withLocale(Locale.ENGLISH);
 
     public FluentNumberLiteral(final String number) {
         this.stringNumber = number;
@@ -56,7 +57,7 @@ public class FluentNumberLiteral implements
 
     @Override
     public void resolve(final FluentScope scope, final ResultBuilder builder) {
-        final String formattedNumber = NumberFormatter.withLocale(scope.bundle().getLocale()).format(number).toString();
+        final String formattedNumber = NumberFormat.getInstance(scope.bundle().getLocale()).format(number);;
 
         builder.append(formattedNumber);
     }
