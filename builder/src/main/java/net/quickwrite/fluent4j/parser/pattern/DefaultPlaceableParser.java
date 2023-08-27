@@ -2,7 +2,6 @@ package net.quickwrite.fluent4j.parser.pattern;
 
 import net.quickwrite.fluent4j.impl.parser.pattern.placeable.*;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
-import net.quickwrite.fluent4j.result.ResultBuilder;
 
 public enum DefaultPlaceableParser implements PlaceableExpressionParser.PlaceableExpressionParserList {
     STRING(new FluentStringLiteralParser()),
