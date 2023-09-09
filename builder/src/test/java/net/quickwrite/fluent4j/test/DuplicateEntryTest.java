@@ -7,10 +7,10 @@ import net.quickwrite.fluent4j.result.StringResultFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static net.quickwrite.fluent4j.test.util.FluentUtils.getResourceFromResource;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DuplicateEntryTest {
     private static final FluentResource resource01;
@@ -99,11 +99,19 @@ public class DuplicateEntryTest {
 
     @Test
     public void testNoDuplicateEntryException() {
-        final FluentBundle bundle = FluentBundleBuilder.builder(Locale.ENGLISH)
-                .addResource(resource01)
-                .addResourceNoDup(resource02)
-                .build();
+        final AtomicReference<FluentBundle> bundle = new AtomicReference<>();
 
-        assertEquals(2, bundle.getMessages().size());
+
+        assertDoesNotThrow(
+                () -> bundle.set(FluentBundleBuilder.builder(Locale.ENGLISH)
+                                                    .addResource(resource01)
+                                                    .addResourceNoDup(resource02)
+                                                    .build()
+                )
+        );
+
+
+
+        assertEquals(2, bundle.get().getMessages().size());
     }
 }

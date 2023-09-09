@@ -4,6 +4,7 @@ import net.quickwrite.fluent4j.ast.entry.FluentEntry;
 import net.quickwrite.fluent4j.ast.FluentFunction;
 import net.quickwrite.fluent4j.ast.entry.FluentMessage;
 import net.quickwrite.fluent4j.ast.pattern.ArgumentList;
+import net.quickwrite.fluent4j.exception.FluentException;
 import net.quickwrite.fluent4j.result.ResultBuilder;
 
 import java.util.Locale;
@@ -176,7 +177,7 @@ public interface FluentBundle {
         Builder addDefaultFunctions();
     }
 
-    class DuplicateEntryException extends RuntimeException {
+    class DuplicateEntryException extends FluentException {
         private final FluentEntry entry;
         private final Class<? extends FluentEntry> clazz;
 
