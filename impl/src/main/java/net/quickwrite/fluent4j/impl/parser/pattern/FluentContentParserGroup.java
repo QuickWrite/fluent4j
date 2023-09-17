@@ -92,11 +92,9 @@ public class FluentContentParserGroup implements FluentContentParser {
         int minWhitespace = Integer.MAX_VALUE;
 
         for (final FluentPattern pattern : patternList) {
-            if (!(pattern instanceof IntermediateTextElement)) {
+            if (!(pattern instanceof IntermediateTextElement textElement)) {
                 continue;
             }
-
-            final IntermediateTextElement textElement = (IntermediateTextElement) pattern;
 
             if (!textElement.isAfterNL()) {
                 continue;
@@ -116,44 +114,13 @@ public class FluentContentParserGroup implements FluentContentParser {
 
         int start = skipLeadingNL(patternList);
 
-        firstElementIf:
-        if (start == 0 && patternList.get(0) instanceof IntermediateTextElement) {
-            start = 1;
-
-            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(0);
-
-            if (textElement.whitespace() == -1) {
-                break firstElementIf;
-            }
-
-            builder.appendString(
-                    textElement.slice(
-                            // If there was something before this just use the calculated whitespace
-                            textElement.isAfterNL() ? minWhitespace : textElement.whitespace()
-                    )
-            );
-        }
-
-        for (int i = start; i < patternList.size(); i++) {
-            final FluentPattern element = patternList.get(i);
-
-            if (!(element instanceof IntermediateTextElement)) {
-                builder.appendElement(element);
-
+        for(int i = start; i < patternList.size(); i++) {
+            if (patternList.get(i) instanceof Sanitizable sanitizable) {
+                sanitizable.sanitize(i, start, patternList, builder, minWhitespace);
                 continue;
             }
 
-            final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
-
-            if (!textElement.isAfterNL()) {
-                builder.appendString(textElement.content());
-
-                continue;
-            }
-
-            builder.appendString('\n');
-
-            builder.appendString(textElement.slice(minWhitespace));
+            builder.appendElement(patternList.get(i));
         }
 
         builder.removeTrailingWhitespace();

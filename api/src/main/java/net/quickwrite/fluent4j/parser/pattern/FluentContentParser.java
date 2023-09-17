@@ -30,6 +30,16 @@ public interface FluentContentParser {
         boolean check(final ContentIterator iterator);
     }
 
+    interface Sanitizable {
+        void sanitize(
+                final int index,
+                final int start,
+                final List<FluentPattern> unsanitizedPatternList,
+                final ListBuilder builder,
+                final int whitespace
+        );
+    }
+
     interface ListBuilder {
         List<FluentPattern> currentList();
 
