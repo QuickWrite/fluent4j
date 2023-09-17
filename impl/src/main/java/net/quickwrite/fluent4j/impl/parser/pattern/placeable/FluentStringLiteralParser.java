@@ -2,12 +2,11 @@ package net.quickwrite.fluent4j.impl.parser.pattern.placeable;
 
 import net.quickwrite.fluent4j.ast.placeable.FluentPlaceable;
 import net.quickwrite.fluent4j.exception.FluentBuilderException;
-import net.quickwrite.fluent4j.impl.parser.pattern.IntermediateTextElement;
+import net.quickwrite.fluent4j.impl.ast.pattern.FluentTextElement;
 import net.quickwrite.fluent4j.iterator.ContentIterator;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableExpressionParser;
 import net.quickwrite.fluent4j.parser.pattern.placeable.PlaceableParser;
 
-import java.nio.CharBuffer;
 import java.util.Optional;
 
 public class FluentStringLiteralParser implements PlaceableExpressionParser {
@@ -52,13 +51,7 @@ public class FluentStringLiteralParser implements PlaceableExpressionParser {
 
         iterator.nextChar();
 
-        return Optional.of(
-                new IntermediateTextElement(
-                        CharBuffer.wrap(builder.toString()),
-                        0,
-                        false
-                )
-        );
+        return Optional.of(new FluentTextElement(builder.toString()));
     }
 
     private int parseCharacters(final ContentIterator iterator, final int amount) {
