@@ -5,41 +5,33 @@ A Java library that implements [Mozillas Fluent project](https://www.projectflue
 ### Maven
 ```xml
 <repositories>
-    ...
     <repository>
         <id>quickwrite-net-fluent4j</id>
         <url>https://dl.cloudsmith.io/public/quickwrite-net/fluent4j/maven/</url>
     </repository>
-    ...
 </repositories>
 ```
 ```xml
 <dependencies>
-    ...
     <dependency>
-        <groupId>quickwrite-net</groupId>
-        <artifactId>fluent4j</artifactId>
+        <groupId>net.quickwrite</groupId>
+        <artifactId>builder</artifactId>
         <version>{{package-version}}</version>
     </dependency>
-    ...
 </dependencies>
 ```
 
 ### Gradle
 ```groovy
 repositories {
-    ...
     maven {
         url "https://dl.cloudsmith.io/public/quickwrite-net/fluent4j/maven/"
     }
-    ...
 }
 ```
 ```groovy
 dependencies {
-    ...
-    implementation 'net.quickwrite:fluent4j:{{package-version}}'
-    ...
+    implementation 'net.quickwrite:builder:{{package-version}}'
 }
 ```
 
