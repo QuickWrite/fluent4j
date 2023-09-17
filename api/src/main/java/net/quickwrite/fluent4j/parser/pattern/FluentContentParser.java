@@ -30,6 +30,18 @@ public interface FluentContentParser {
         boolean check(final ContentIterator iterator);
     }
 
+    interface ListBuilder {
+        List<FluentPattern> currentList();
+
+        ListBuilder appendString(final CharSequence charSequence);
+
+        ListBuilder appendString(final char character);
+
+        ListBuilder appendElement(final FluentPattern pattern);
+
+        void flushString();
+    }
+
     interface Builder extends net.quickwrite.fluent4j.util.Builder<FluentContentParser> {
         Builder addParser(final FluentPatternParser<? extends FluentPattern> parser);
     }

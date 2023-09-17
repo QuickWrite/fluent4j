@@ -85,6 +85,10 @@ public class FluentContentParserGroup implements FluentContentParser {
     }
 
     final List<FluentPattern> sanitizePatternList(final List<FluentPattern> patternList) {
+        if (patternList.size() == 0) {
+            return List.of();
+        }
+
         int minWhitespace = Integer.MAX_VALUE;
 
         for (final FluentPattern pattern : patternList) {
@@ -108,12 +112,8 @@ public class FluentContentParserGroup implements FluentContentParser {
             minWhitespace = 0;
         }
 
-        if (patternList.size() == 0) {
-            return List.of();
-        }
+        final FluentContentParserListBuilder builder = new FluentContentParserListBuilder(patternList.size());
 
-        final List<FluentPattern> result = new ArrayList<>(patternList.size());
-        final StringBuilder builder = new StringBuilder();
         int start = skipLeadingNL(patternList);
 
         firstElementIf:
@@ -126,7 +126,7 @@ public class FluentContentParserGroup implements FluentContentParser {
                 break firstElementIf;
             }
 
-            builder.append(
+            builder.appendString(
                     textElement.slice(
                             // If there was something before this just use the calculated whitespace
                             textElement.isAfterNL() ? minWhitespace : textElement.whitespace()
@@ -138,14 +138,7 @@ public class FluentContentParserGroup implements FluentContentParser {
             final FluentPattern element = patternList.get(i);
 
             if (!(element instanceof IntermediateTextElement)) {
-                if (builder.length() != 0) {
-                    result.add(new FluentTextElement(builder.toString()));
-
-                    // clear the StringBuilder
-                    builder.setLength(0);
-                }
-
-                result.add(patternList.get(i));
+                builder.appendElement(element);
 
                 continue;
             }
@@ -153,23 +146,21 @@ public class FluentContentParserGroup implements FluentContentParser {
             final IntermediateTextElement textElement = (IntermediateTextElement) patternList.get(i);
 
             if (!textElement.isAfterNL()) {
-                builder.append(textElement.content());
+                builder.appendString(textElement.content());
 
                 continue;
             }
 
-            builder.append('\n');
+            builder.appendString('\n');
 
-            builder.append(textElement.slice(minWhitespace));
+            builder.appendString(textElement.slice(minWhitespace));
         }
 
-        removeTrailingWhitespace(builder);
+        builder.removeTrailingWhitespace();
 
-        if (builder.length() != 0) {
-            result.add(new FluentTextElement(builder.toString()));
-        }
+        builder.flushString();
 
-        return result;
+        return builder.currentList();
     }
 
     private int countWhitespace(final CharSequence sequence) {
@@ -194,18 +185,6 @@ public class FluentContentParserGroup implements FluentContentParser {
         }
 
         return patternList.size() - 1;
-    }
-
-    private void removeTrailingWhitespace(final StringBuilder builder) {
-        for (int i = builder.length() - 1; i > -1; i--) {
-            if (!Character.isWhitespace(builder.codePointAt(i))) {
-                builder.setLength(i + 1);
-
-                return;
-            }
-        }
-
-        builder.setLength(0);
     }
 
     private IntermediateTextElement createIntermediateTextElement(
@@ -251,6 +230,66 @@ public class FluentContentParserGroup implements FluentContentParser {
         @Override
         public FluentContentParser build() {
             return new FluentContentParserGroup(parserList.toArray(new FluentPatternParser[0]));
+        }
+    }
+
+    private static final class FluentContentParserListBuilder implements ListBuilder {
+        private final List<FluentPattern> patternList;
+        private final StringBuilder builder;
+
+        public FluentContentParserListBuilder(final int bufferSize) {
+            this.patternList = new ArrayList<>(bufferSize);
+            this.builder = new StringBuilder();
+        }
+
+        @Override
+        public List<FluentPattern> currentList() {
+            return this.patternList;
+        }
+
+        @Override
+        public ListBuilder appendString(final CharSequence charSequence) {
+            builder.append(charSequence);
+
+            return this;
+        }
+
+        @Override
+        public ListBuilder appendString(final char character) {
+            builder.append(character);
+
+            return this;
+        }
+
+        @Override
+        public ListBuilder appendElement(final FluentPattern pattern) {
+            this.flushString();
+
+            patternList.add(pattern);
+
+            return this;
+        }
+
+        @Override
+        public void flushString() {
+            if (this.builder.isEmpty()) {
+                return;
+            }
+
+            this.patternList.add(new FluentTextElement(this.builder.toString()));
+            this.builder.setLength(0);
+        }
+
+        public void removeTrailingWhitespace() {
+            for (int i = this.builder.length() - 1; i > -1; i--) {
+                if (!Character.isWhitespace(builder.codePointAt(i))) {
+                    this.builder.setLength(i + 1);
+
+                    return;
+                }
+            }
+
+            this.builder.setLength(0);
         }
     }
 }
