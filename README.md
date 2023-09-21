@@ -15,7 +15,7 @@ A Java library that implements [Mozillas Fluent project](https://www.projectflue
 <dependencies>
     <dependency>
         <groupId>net.quickwrite</groupId>
-        <artifactId>builder</artifactId>
+        <artifactId>fluent-builder</artifactId>
         <version>{{package-version}}</version>
     </dependency>
 </dependencies>
