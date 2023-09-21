@@ -31,7 +31,7 @@ repositories {
 ```
 ```groovy
 dependencies {
-    implementation 'net.quickwrite:builder:{{package-version}}'
+    implementation 'net.quickwrite:fluent-builder:{{package-version}}'
 }
 ```
 
