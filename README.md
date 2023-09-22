@@ -76,7 +76,7 @@ FluentArguments arguments = ArgumentListBuilder.builder()
                                                .add("unreadEmails", 5)
                                                .build();
 
-System.out.println(bundle.resolveMessage("emails", arguments, new StringResultBuilder()).get());
+System.out.println(bundle.resolveMessage("emails", arguments, StringResultFactory.construct()).get());
 ```
 
 ```console
