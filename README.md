@@ -63,7 +63,7 @@ FluentBundle bundle = FluentBundleBuilder.builder(Locale.ENGLISH)
 
 And now you can use the different messages for translation:
 ```java
-System.out.println(bundle.resolveMessage("test", new StringResultBuilder()).get());
+System.out.println(bundle.resolveMessage("test", StringResultFactory.construct()).get());
 ```
 
 ```console
